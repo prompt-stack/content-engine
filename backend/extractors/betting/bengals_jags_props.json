@@ -1,0 +1,3709 @@
+{
+  "DraftKings": {
+    "player_pass_tds": [
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.43,
+        "point": 1.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 2.65,
+        "point": 1.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.95,
+        "point": 1.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.77,
+        "point": 1.5
+      }
+    ],
+    "player_pass_yds": [
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.91,
+        "point": 277.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.91,
+        "point": 277.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.91,
+        "point": 264.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.91,
+        "point": 264.5
+      }
+    ],
+    "player_pass_completions": [
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.8,
+        "point": 25.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.95,
+        "point": 25.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.95,
+        "point": 23.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.8,
+        "point": 23.5
+      }
+    ],
+    "player_pass_attempts": [
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.8,
+        "point": 36.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.95,
+        "point": 36.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.91,
+        "point": 36.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.83,
+        "point": 36.5
+      }
+    ],
+    "player_pass_interceptions": [
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.95,
+        "point": 0.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.8,
+        "point": 0.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.83,
+        "point": 0.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.91,
+        "point": 0.5
+      }
+    ],
+    "player_pass_longest_completion": [
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.91,
+        "point": 36.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.83,
+        "point": 36.5
+      },
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.87,
+        "point": 35.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.87,
+        "point": 35.5
+      }
+    ],
+    "player_rush_yds": [
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 1.87,
+        "point": 68.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 1.87,
+        "point": 68.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 1.87,
+        "point": 51.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.87,
+        "point": 51.5
+      },
+      {
+        "name": "Over",
+        "description": "Bhayshul Tuten",
+        "price": 1.83,
+        "point": 15.5
+      },
+      {
+        "name": "Under",
+        "description": "Bhayshul Tuten",
+        "price": 1.91,
+        "point": 15.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.87,
+        "point": 12.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.87,
+        "point": 12.5
+      },
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.91,
+        "point": 7.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.83,
+        "point": 7.5
+      }
+    ],
+    "player_rush_attempts": [
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 2.0,
+        "point": 18.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 1.77,
+        "point": 18.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 1.91,
+        "point": 13.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.83,
+        "point": 13.5
+      },
+      {
+        "name": "Over",
+        "description": "Bhayshul Tuten",
+        "price": 1.87,
+        "point": 4.5
+      },
+      {
+        "name": "Under",
+        "description": "Bhayshul Tuten",
+        "price": 1.87,
+        "point": 4.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 2.0,
+        "point": 3.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.77,
+        "point": 3.5
+      },
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 2.0,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.77,
+        "point": 2.5
+      }
+    ],
+    "player_rush_longest": [
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 1.87,
+        "point": 13.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.87,
+        "point": 13.5
+      },
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 1.95,
+        "point": 13.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 1.8,
+        "point": 13.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.87,
+        "point": 8.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.87,
+        "point": 8.5
+      },
+      {
+        "name": "Over",
+        "description": "Bhayshul Tuten",
+        "price": 2.0,
+        "point": 8.5
+      },
+      {
+        "name": "Under",
+        "description": "Bhayshul Tuten",
+        "price": 1.77,
+        "point": 8.5
+      },
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.91,
+        "point": 6.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.83,
+        "point": 6.5
+      }
+    ],
+    "player_receptions": [
+      {
+        "name": "Over",
+        "description": "Brian Thomas Jr",
+        "price": 1.95,
+        "point": 7.5
+      },
+      {
+        "name": "Under",
+        "description": "Brian Thomas Jr",
+        "price": 1.8,
+        "point": 7.5
+      },
+      {
+        "name": "Over",
+        "description": "Ja'Marr Chase",
+        "price": 1.71,
+        "point": 6.5
+      },
+      {
+        "name": "Under",
+        "description": "Ja'Marr Chase",
+        "price": 2.1,
+        "point": 6.5
+      },
+      {
+        "name": "Over",
+        "description": "Tee Higgins",
+        "price": 1.91,
+        "point": 5.5
+      },
+      {
+        "name": "Under",
+        "description": "Tee Higgins",
+        "price": 1.83,
+        "point": 5.5
+      },
+      {
+        "name": "Over",
+        "description": "Dyami Brown",
+        "price": 1.91,
+        "point": 3.5
+      },
+      {
+        "name": "Under",
+        "description": "Dyami Brown",
+        "price": 1.83,
+        "point": 3.5
+      },
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 2.0,
+        "point": 3.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 1.77,
+        "point": 3.5
+      },
+      {
+        "name": "Over",
+        "description": "Brenton Strange",
+        "price": 2.2,
+        "point": 3.5
+      },
+      {
+        "name": "Under",
+        "description": "Brenton Strange",
+        "price": 1.65,
+        "point": 3.5
+      },
+      {
+        "name": "Over",
+        "description": "Noah Fant",
+        "price": 2.05,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Noah Fant",
+        "price": 1.74,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 2.3,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.6,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Mike Gesicki",
+        "price": 2.35,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Mike Gesicki",
+        "price": 1.57,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Andrei Iosivas",
+        "price": 1.57,
+        "point": 1.5
+      },
+      {
+        "name": "Under",
+        "description": "Andrei Iosivas",
+        "price": 2.35,
+        "point": 1.5
+      }
+    ],
+    "player_reception_yds": [
+      {
+        "name": "Over",
+        "description": "Brian Thomas Jr",
+        "price": 1.87,
+        "point": 91.5
+      },
+      {
+        "name": "Under",
+        "description": "Brian Thomas Jr",
+        "price": 1.87,
+        "point": 91.5
+      },
+      {
+        "name": "Over",
+        "description": "Ja'Marr Chase",
+        "price": 1.87,
+        "point": 84.5
+      },
+      {
+        "name": "Under",
+        "description": "Ja'Marr Chase",
+        "price": 1.87,
+        "point": 84.5
+      },
+      {
+        "name": "Over",
+        "description": "Tee Higgins",
+        "price": 1.87,
+        "point": 64.5
+      },
+      {
+        "name": "Under",
+        "description": "Tee Higgins",
+        "price": 1.87,
+        "point": 64.5
+      },
+      {
+        "name": "Over",
+        "description": "Dyami Brown",
+        "price": 1.87,
+        "point": 46.5
+      },
+      {
+        "name": "Under",
+        "description": "Dyami Brown",
+        "price": 1.87,
+        "point": 46.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Hunter",
+        "price": 1.91,
+        "point": 36.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Hunter",
+        "price": 1.83,
+        "point": 36.5
+      },
+      {
+        "name": "Over",
+        "description": "Brenton Strange",
+        "price": 1.91,
+        "point": 32.5
+      },
+      {
+        "name": "Under",
+        "description": "Brenton Strange",
+        "price": 1.83,
+        "point": 32.5
+      },
+      {
+        "name": "Over",
+        "description": "Noah Fant",
+        "price": 1.87,
+        "point": 22.5
+      },
+      {
+        "name": "Under",
+        "description": "Noah Fant",
+        "price": 1.87,
+        "point": 22.5
+      },
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 1.83,
+        "point": 20.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 1.91,
+        "point": 20.5
+      },
+      {
+        "name": "Over",
+        "description": "Mike Gesicki",
+        "price": 1.87,
+        "point": 19.5
+      },
+      {
+        "name": "Under",
+        "description": "Mike Gesicki",
+        "price": 1.87,
+        "point": 19.5
+      },
+      {
+        "name": "Over",
+        "description": "Andrei Iosivas",
+        "price": 1.87,
+        "point": 18.5
+      },
+      {
+        "name": "Under",
+        "description": "Andrei Iosivas",
+        "price": 1.87,
+        "point": 18.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 1.91,
+        "point": 13.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.83,
+        "point": 13.5
+      }
+    ],
+    "player_reception_longest": [
+      {
+        "name": "Over",
+        "description": "Ja'Marr Chase",
+        "price": 1.91,
+        "point": 25.5
+      },
+      {
+        "name": "Under",
+        "description": "Ja'Marr Chase",
+        "price": 1.83,
+        "point": 25.5
+      },
+      {
+        "name": "Over",
+        "description": "Brian Thomas Jr",
+        "price": 1.87,
+        "point": 24.5
+      },
+      {
+        "name": "Under",
+        "description": "Brian Thomas Jr",
+        "price": 1.87,
+        "point": 24.5
+      },
+      {
+        "name": "Over",
+        "description": "Tee Higgins",
+        "price": 1.87,
+        "point": 21.5
+      },
+      {
+        "name": "Under",
+        "description": "Tee Higgins",
+        "price": 1.87,
+        "point": 21.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Hunter",
+        "price": 1.91,
+        "point": 18.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Hunter",
+        "price": 1.83,
+        "point": 18.5
+      },
+      {
+        "name": "Over",
+        "description": "Dyami Brown",
+        "price": 1.87,
+        "point": 17.5
+      },
+      {
+        "name": "Under",
+        "description": "Dyami Brown",
+        "price": 1.87,
+        "point": 17.5
+      },
+      {
+        "name": "Over",
+        "description": "Brenton Strange",
+        "price": 1.95,
+        "point": 16.5
+      },
+      {
+        "name": "Under",
+        "description": "Brenton Strange",
+        "price": 1.8,
+        "point": 16.5
+      },
+      {
+        "name": "Over",
+        "description": "Noah Fant",
+        "price": 1.8,
+        "point": 12.5
+      },
+      {
+        "name": "Under",
+        "description": "Noah Fant",
+        "price": 1.95,
+        "point": 12.5
+      },
+      {
+        "name": "Over",
+        "description": "Andrei Iosivas",
+        "price": 1.87,
+        "point": 12.5
+      },
+      {
+        "name": "Under",
+        "description": "Andrei Iosivas",
+        "price": 1.87,
+        "point": 12.5
+      },
+      {
+        "name": "Over",
+        "description": "Mike Gesicki",
+        "price": 1.8,
+        "point": 11.5
+      },
+      {
+        "name": "Under",
+        "description": "Mike Gesicki",
+        "price": 1.95,
+        "point": 11.5
+      },
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 1.87,
+        "point": 11.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 1.87,
+        "point": 11.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 1.95,
+        "point": 10.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.8,
+        "point": 10.5
+      }
+    ],
+    "player_kicking_points": [
+      {
+        "name": "Over",
+        "description": "Cam Little",
+        "price": 1.95,
+        "point": 8.5
+      },
+      {
+        "name": "Under",
+        "description": "Cam Little",
+        "price": 1.8,
+        "point": 8.5
+      },
+      {
+        "name": "Over",
+        "description": "Evan McPherson",
+        "price": 2.05,
+        "point": 7.5
+      },
+      {
+        "name": "Under",
+        "description": "Evan McPherson",
+        "price": 1.74,
+        "point": 7.5
+      }
+    ],
+    "player_field_goals": [
+      {
+        "name": "Over",
+        "description": "Cam Little",
+        "price": 1.7,
+        "point": 1.5
+      },
+      {
+        "name": "Under",
+        "description": "Cam Little",
+        "price": 2.12,
+        "point": 1.5
+      },
+      {
+        "name": "Over",
+        "description": "Evan McPherson",
+        "price": 1.97,
+        "point": 1.5
+      },
+      {
+        "name": "Under",
+        "description": "Evan McPherson",
+        "price": 1.81,
+        "point": 1.5
+      }
+    ],
+    "player_tackles_assists": [
+      {
+        "name": "Over",
+        "description": "Logan Wilson",
+        "price": 1.91,
+        "point": 8.5
+      },
+      {
+        "name": "Under",
+        "description": "Logan Wilson",
+        "price": 1.83,
+        "point": 8.5
+      },
+      {
+        "name": "Over",
+        "description": "Foyesade Oluokun",
+        "price": 2.0,
+        "point": 8.5
+      },
+      {
+        "name": "Under",
+        "description": "Foyesade Oluokun",
+        "price": 1.77,
+        "point": 8.5
+      },
+      {
+        "name": "Over",
+        "description": "Eric Murray",
+        "price": 1.95,
+        "point": 6.5
+      },
+      {
+        "name": "Under",
+        "description": "Eric Murray",
+        "price": 1.8,
+        "point": 6.5
+      },
+      {
+        "name": "Over",
+        "description": "Jordan Battle",
+        "price": 1.87,
+        "point": 5.5
+      },
+      {
+        "name": "Under",
+        "description": "Jordan Battle",
+        "price": 1.87,
+        "point": 5.5
+      },
+      {
+        "name": "Over",
+        "description": "Travon Walker",
+        "price": 1.8,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Travon Walker",
+        "price": 1.95,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Josh Allen",
+        "price": 1.83,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Josh Allen",
+        "price": 1.91,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Trey Hendrickson",
+        "price": 1.91,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Trey Hendrickson",
+        "price": 1.83,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Arik Armstead",
+        "price": 1.51,
+        "point": 1.5
+      },
+      {
+        "name": "Under",
+        "description": "Arik Armstead",
+        "price": 2.5,
+        "point": 1.5
+      },
+      {
+        "name": "Over",
+        "description": "Joseph Ossai",
+        "price": 1.56,
+        "point": 1.5
+      },
+      {
+        "name": "Under",
+        "description": "Joseph Ossai",
+        "price": 2.4,
+        "point": 1.5
+      }
+    ],
+    "player_1st_td": [
+      {
+        "name": "Yes",
+        "description": "Chase Brown",
+        "price": 5.5
+      },
+      {
+        "name": "Yes",
+        "description": "Ja'Marr Chase",
+        "price": 6.0
+      },
+      {
+        "name": "Yes",
+        "description": "Travis Etienne Jr.",
+        "price": 9.5
+      },
+      {
+        "name": "Yes",
+        "description": "Tee Higgins",
+        "price": 10.0
+      },
+      {
+        "name": "Yes",
+        "description": "Brian Thomas Jr",
+        "price": 10.5
+      },
+      {
+        "name": "Yes",
+        "description": "Bhayshul Tuten",
+        "price": 17.0
+      },
+      {
+        "name": "Yes",
+        "description": "Travis Hunter",
+        "price": 18.0
+      },
+      {
+        "name": "Yes",
+        "description": "Mike Gesicki",
+        "price": 21.0
+      },
+      {
+        "name": "Yes",
+        "description": "Brenton Strange",
+        "price": 21.0
+      },
+      {
+        "name": "Yes",
+        "description": "Andrei Iosivas",
+        "price": 26.0
+      },
+      {
+        "name": "Yes",
+        "description": "Noah Fant",
+        "price": 26.0
+      },
+      {
+        "name": "Yes",
+        "description": "Dyami Brown",
+        "price": 26.0
+      },
+      {
+        "name": "Yes",
+        "description": "Trevor Lawrence",
+        "price": 26.0
+      },
+      {
+        "name": "Yes",
+        "description": "Jacksonville Jaguars D/ST",
+        "price": 26.0
+      },
+      {
+        "name": "Yes",
+        "description": "Cincinnati Bengals D/ST",
+        "price": 29.0
+      },
+      {
+        "name": "Yes",
+        "description": "Joe Burrow",
+        "price": 31.0
+      },
+      {
+        "name": "Yes",
+        "description": "Samaje Perine",
+        "price": 41.0
+      },
+      {
+        "name": "Yes",
+        "description": "LeQuint Allen Jr.",
+        "price": 46.0
+      },
+      {
+        "name": "Yes",
+        "description": "Parker Washington",
+        "price": 51.0
+      },
+      {
+        "name": "Yes",
+        "description": "Drew Sample",
+        "price": 61.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tim Patrick",
+        "price": 61.0
+      },
+      {
+        "name": "Yes",
+        "description": "Hunter Long",
+        "price": 66.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tanner Hudson",
+        "price": 71.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tahj Brooks",
+        "price": 71.0
+      },
+      {
+        "name": "Yes",
+        "description": "Mitchell Tinsley",
+        "price": 71.0
+      },
+      {
+        "name": "Yes",
+        "description": "Johnny Mundt",
+        "price": 76.0
+      },
+      {
+        "name": "Yes",
+        "description": "Charlie Jones",
+        "price": 91.0
+      },
+      {
+        "name": "Yes",
+        "description": "Quintin Morris",
+        "price": 91.0
+      },
+      {
+        "name": "Yes",
+        "description": "No Touchdown",
+        "price": 161.0
+      }
+    ],
+    "player_last_td": [
+      {
+        "name": "Yes",
+        "description": "Chase Brown",
+        "price": 5.75
+      },
+      {
+        "name": "Yes",
+        "description": "Ja'Marr Chase",
+        "price": 6.0
+      },
+      {
+        "name": "Yes",
+        "description": "Brian Thomas Jr",
+        "price": 7.5
+      },
+      {
+        "name": "Yes",
+        "description": "Travis Etienne Jr.",
+        "price": 7.5
+      },
+      {
+        "name": "Yes",
+        "description": "Tee Higgins",
+        "price": 9.5
+      },
+      {
+        "name": "Yes",
+        "description": "Travis Hunter",
+        "price": 12.0
+      },
+      {
+        "name": "Yes",
+        "description": "Bhayshul Tuten",
+        "price": 14.0
+      },
+      {
+        "name": "Yes",
+        "description": "Brenton Strange",
+        "price": 15.0
+      },
+      {
+        "name": "Yes",
+        "description": "Mike Gesicki",
+        "price": 19.0
+      },
+      {
+        "name": "Yes",
+        "description": "Dyami Brown",
+        "price": 20.0
+      },
+      {
+        "name": "Yes",
+        "description": "Andrei Iosivas",
+        "price": 23.0
+      },
+      {
+        "name": "Yes",
+        "description": "Noah Fant",
+        "price": 23.0
+      },
+      {
+        "name": "Yes",
+        "description": "Trevor Lawrence",
+        "price": 23.0
+      },
+      {
+        "name": "Yes",
+        "description": "Cincinnati Bengals D/ST",
+        "price": 23.0
+      },
+      {
+        "name": "Yes",
+        "description": "Jacksonville Jaguars D/ST",
+        "price": 26.0
+      },
+      {
+        "name": "Yes",
+        "description": "Samaje Perine",
+        "price": 29.0
+      },
+      {
+        "name": "Yes",
+        "description": "Joe Burrow",
+        "price": 31.0
+      },
+      {
+        "name": "Yes",
+        "description": "Parker Washington",
+        "price": 36.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tim Patrick",
+        "price": 41.0
+      },
+      {
+        "name": "Yes",
+        "description": "LeQuint Allen Jr.",
+        "price": 41.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tahj Brooks",
+        "price": 51.0
+      },
+      {
+        "name": "Yes",
+        "description": "Hunter Long",
+        "price": 51.0
+      },
+      {
+        "name": "Yes",
+        "description": "Drew Sample",
+        "price": 56.0
+      },
+      {
+        "name": "Yes",
+        "description": "Johnny Mundt",
+        "price": 56.0
+      },
+      {
+        "name": "Yes",
+        "description": "Mitchell Tinsley",
+        "price": 61.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tanner Hudson",
+        "price": 81.0
+      },
+      {
+        "name": "Yes",
+        "description": "Quintin Morris",
+        "price": 81.0
+      },
+      {
+        "name": "Yes",
+        "description": "Charlie Jones",
+        "price": 101.0
+      },
+      {
+        "name": "Yes",
+        "description": "No Touchdown",
+        "price": 151.0
+      }
+    ],
+    "player_anytime_td": [
+      {
+        "name": "Yes",
+        "description": "Chase Brown",
+        "price": 1.59
+      },
+      {
+        "name": "Yes",
+        "description": "Ja'Marr Chase",
+        "price": 1.65
+      },
+      {
+        "name": "Yes",
+        "description": "Travis Etienne Jr.",
+        "price": 2.05
+      },
+      {
+        "name": "Yes",
+        "description": "Brian Thomas Jr",
+        "price": 2.25
+      },
+      {
+        "name": "Yes",
+        "description": "Tee Higgins",
+        "price": 2.35
+      },
+      {
+        "name": "Yes",
+        "description": "Travis Hunter",
+        "price": 3.35
+      },
+      {
+        "name": "Yes",
+        "description": "Bhayshul Tuten",
+        "price": 3.6
+      },
+      {
+        "name": "Yes",
+        "description": "Brenton Strange",
+        "price": 4.3
+      },
+      {
+        "name": "Yes",
+        "description": "Mike Gesicki",
+        "price": 4.5
+      },
+      {
+        "name": "Yes",
+        "description": "Dyami Brown",
+        "price": 5.0
+      },
+      {
+        "name": "Yes",
+        "description": "Andrei Iosivas",
+        "price": 5.25
+      },
+      {
+        "name": "Yes",
+        "description": "Trevor Lawrence",
+        "price": 5.5
+      },
+      {
+        "name": "Yes",
+        "description": "Noah Fant",
+        "price": 5.75
+      },
+      {
+        "name": "Yes",
+        "description": "Jacksonville Jaguars D/ST",
+        "price": 5.75
+      },
+      {
+        "name": "Yes",
+        "description": "Cincinnati Bengals D/ST",
+        "price": 6.0
+      },
+      {
+        "name": "Yes",
+        "description": "Samaje Perine",
+        "price": 7.5
+      },
+      {
+        "name": "Yes",
+        "description": "Joe Burrow",
+        "price": 8.0
+      },
+      {
+        "name": "Yes",
+        "description": "Parker Washington",
+        "price": 10.0
+      },
+      {
+        "name": "Yes",
+        "description": "LeQuint Allen Jr.",
+        "price": 10.5
+      },
+      {
+        "name": "Yes",
+        "description": "Tahj Brooks",
+        "price": 14.0
+      },
+      {
+        "name": "Yes",
+        "description": "Drew Sample",
+        "price": 15.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tim Patrick",
+        "price": 15.0
+      },
+      {
+        "name": "Yes",
+        "description": "Mitchell Tinsley",
+        "price": 16.0
+      },
+      {
+        "name": "Yes",
+        "description": "Johnny Mundt",
+        "price": 16.0
+      },
+      {
+        "name": "Yes",
+        "description": "Hunter Long",
+        "price": 17.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tanner Hudson",
+        "price": 19.0
+      },
+      {
+        "name": "Yes",
+        "description": "Quintin Morris",
+        "price": 23.0
+      },
+      {
+        "name": "Yes",
+        "description": "Charlie Jones",
+        "price": 26.0
+      }
+    ],
+    "totals": [
+      {
+        "name": "Over",
+        "price": 1.91,
+        "point": 51.5
+      },
+      {
+        "name": "Under",
+        "price": 1.83,
+        "point": 51.5
+      }
+    ],
+    "spreads": [
+      {
+        "name": "Cincinnati Bengals",
+        "price": 1.87,
+        "point": -1.5
+      },
+      {
+        "name": "Jacksonville Jaguars",
+        "price": 1.87,
+        "point": 1.5
+      }
+    ],
+    "h2h": [
+      {
+        "name": "Cincinnati Bengals",
+        "price": 1.77
+      },
+      {
+        "name": "Jacksonville Jaguars",
+        "price": 2.0
+      }
+    ]
+  },
+  "BetMGM": {
+    "player_pass_tds": [
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.4,
+        "point": 1.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 2.85,
+        "point": 1.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 2.0,
+        "point": 1.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.77,
+        "point": 1.5
+      }
+    ],
+    "player_pass_yds": [
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.87,
+        "point": 275.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.87,
+        "point": 275.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.87,
+        "point": 246.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.87,
+        "point": 246.5
+      }
+    ],
+    "player_pass_completions": [
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.8,
+        "point": 25.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.95,
+        "point": 25.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.95,
+        "point": 22.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.8,
+        "point": 22.5
+      }
+    ],
+    "player_pass_attempts": [
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.91,
+        "point": 36.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.83,
+        "point": 36.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.91,
+        "point": 34.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.85,
+        "point": 34.5
+      }
+    ],
+    "player_pass_interceptions": [
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.77,
+        "point": 0.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 2.0,
+        "point": 0.5
+      },
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 2.05,
+        "point": 0.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.71,
+        "point": 0.5
+      }
+    ],
+    "player_pass_longest_completion": [
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.85,
+        "point": 35.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.91,
+        "point": 35.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.91,
+        "point": 36.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.83,
+        "point": 36.5
+      }
+    ],
+    "player_rush_yds": [
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.87,
+        "point": 13.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.87,
+        "point": 13.5
+      },
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 1.87,
+        "point": 70.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 1.87,
+        "point": 70.5
+      },
+      {
+        "name": "Over",
+        "description": "Bhayshul Tuten",
+        "price": 1.69,
+        "point": 17.5
+      },
+      {
+        "name": "Under",
+        "description": "Bhayshul Tuten",
+        "price": 2.1,
+        "point": 17.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 1.91,
+        "point": 53.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.85,
+        "point": 53.5
+      },
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.91,
+        "point": 7.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.83,
+        "point": 7.5
+      }
+    ],
+    "player_rush_attempts": [
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.85,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.91,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.91,
+        "point": 3.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.83,
+        "point": 3.5
+      },
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 1.95,
+        "point": 18.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 1.8,
+        "point": 18.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 1.91,
+        "point": 13.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.83,
+        "point": 13.5
+      },
+      {
+        "name": "Over",
+        "description": "Bhayshul Tuten",
+        "price": 1.71,
+        "point": 4.5
+      },
+      {
+        "name": "Under",
+        "description": "Bhayshul Tuten",
+        "price": 2.05,
+        "point": 4.5
+      }
+    ],
+    "player_rush_longest": [
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.85,
+        "point": 8.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.91,
+        "point": 8.5
+      },
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 1.95,
+        "point": 13.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 1.77,
+        "point": 13.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 1.91,
+        "point": 13.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.83,
+        "point": 13.5
+      },
+      {
+        "name": "Over",
+        "description": "Bhayshul Tuten",
+        "price": 2.0,
+        "point": 8.5
+      },
+      {
+        "name": "Under",
+        "description": "Bhayshul Tuten",
+        "price": 1.77,
+        "point": 8.5
+      },
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.95,
+        "point": 6.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.83,
+        "point": 6.5
+      }
+    ],
+    "player_receptions": [
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 2.05,
+        "point": 3.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 1.71,
+        "point": 3.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 1.87,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.87,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Dyami Brown",
+        "price": 1.69,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Dyami Brown",
+        "price": 2.1,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Noah Fant",
+        "price": 2.05,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Noah Fant",
+        "price": 1.71,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Mike Gesicki",
+        "price": 2.45,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Mike Gesicki",
+        "price": 1.5,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Andrei Iosivas",
+        "price": 1.69,
+        "point": 1.5
+      },
+      {
+        "name": "Under",
+        "description": "Andrei Iosivas",
+        "price": 2.1,
+        "point": 1.5
+      },
+      {
+        "name": "Over",
+        "description": "Ja'Marr Chase",
+        "price": 1.71,
+        "point": 6.5
+      },
+      {
+        "name": "Under",
+        "description": "Ja'Marr Chase",
+        "price": 2.05,
+        "point": 6.5
+      },
+      {
+        "name": "Over",
+        "description": "Brian Thomas Jr",
+        "price": 2.0,
+        "point": 5.5
+      },
+      {
+        "name": "Under",
+        "description": "Brian Thomas Jr",
+        "price": 1.77,
+        "point": 5.5
+      },
+      {
+        "name": "Over",
+        "description": "Tee Higgins",
+        "price": 2.0,
+        "point": 5.5
+      },
+      {
+        "name": "Under",
+        "description": "Tee Higgins",
+        "price": 1.77,
+        "point": 5.5
+      },
+      {
+        "name": "Over",
+        "description": "Brenton Strange",
+        "price": 1.87,
+        "point": 3.5
+      },
+      {
+        "name": "Under",
+        "description": "Brenton Strange",
+        "price": 1.85,
+        "point": 3.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Hunter",
+        "price": 1.74,
+        "point": 3.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Hunter",
+        "price": 2.0,
+        "point": 3.5
+      }
+    ],
+    "player_reception_yds": [
+      {
+        "name": "Over",
+        "description": "Tee Higgins",
+        "price": 1.87,
+        "point": 64.5
+      },
+      {
+        "name": "Under",
+        "description": "Tee Higgins",
+        "price": 1.87,
+        "point": 64.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 1.8,
+        "point": 15.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.95,
+        "point": 15.5
+      },
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 1.85,
+        "point": 20.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 1.91,
+        "point": 20.5
+      },
+      {
+        "name": "Over",
+        "description": "Noah Fant",
+        "price": 1.85,
+        "point": 21.5
+      },
+      {
+        "name": "Under",
+        "description": "Noah Fant",
+        "price": 1.91,
+        "point": 21.5
+      },
+      {
+        "name": "Over",
+        "description": "Mike Gesicki",
+        "price": 1.91,
+        "point": 19.5
+      },
+      {
+        "name": "Under",
+        "description": "Mike Gesicki",
+        "price": 1.85,
+        "point": 19.5
+      },
+      {
+        "name": "Over",
+        "description": "Andrei Iosivas",
+        "price": 1.87,
+        "point": 18.5
+      },
+      {
+        "name": "Under",
+        "description": "Andrei Iosivas",
+        "price": 1.87,
+        "point": 18.5
+      },
+      {
+        "name": "Over",
+        "description": "Ja'Marr Chase",
+        "price": 1.87,
+        "point": 84.5
+      },
+      {
+        "name": "Under",
+        "description": "Ja'Marr Chase",
+        "price": 1.87,
+        "point": 84.5
+      },
+      {
+        "name": "Over",
+        "description": "Brenton Strange",
+        "price": 1.91,
+        "point": 35.5
+      },
+      {
+        "name": "Under",
+        "description": "Brenton Strange",
+        "price": 1.85,
+        "point": 35.5
+      },
+      {
+        "name": "Over",
+        "description": "Brian Thomas Jr",
+        "price": 1.87,
+        "point": 73.5
+      },
+      {
+        "name": "Under",
+        "description": "Brian Thomas Jr",
+        "price": 1.87,
+        "point": 73.5
+      },
+      {
+        "name": "Over",
+        "description": "Dyami Brown",
+        "price": 1.87,
+        "point": 32.5
+      },
+      {
+        "name": "Under",
+        "description": "Dyami Brown",
+        "price": 1.87,
+        "point": 32.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Hunter",
+        "price": 1.85,
+        "point": 40.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Hunter",
+        "price": 1.87,
+        "point": 40.5
+      }
+    ],
+    "player_reception_longest": [
+      {
+        "name": "Over",
+        "description": "Ja'Marr Chase",
+        "price": 1.91,
+        "point": 25.5
+      },
+      {
+        "name": "Under",
+        "description": "Ja'Marr Chase",
+        "price": 1.83,
+        "point": 25.5
+      },
+      {
+        "name": "Over",
+        "description": "Brian Thomas Jr",
+        "price": 1.87,
+        "point": 24.5
+      },
+      {
+        "name": "Under",
+        "description": "Brian Thomas Jr",
+        "price": 1.87,
+        "point": 24.5
+      },
+      {
+        "name": "Over",
+        "description": "Tee Higgins",
+        "price": 1.87,
+        "point": 21.5
+      },
+      {
+        "name": "Under",
+        "description": "Tee Higgins",
+        "price": 1.87,
+        "point": 21.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 1.91,
+        "point": 10.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.83,
+        "point": 10.5
+      },
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 1.91,
+        "point": 11.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 1.85,
+        "point": 11.5
+      },
+      {
+        "name": "Over",
+        "description": "Dyami Brown",
+        "price": 1.87,
+        "point": 17.5
+      },
+      {
+        "name": "Under",
+        "description": "Dyami Brown",
+        "price": 1.87,
+        "point": 17.5
+      },
+      {
+        "name": "Over",
+        "description": "Noah Fant",
+        "price": 1.83,
+        "point": 12.5
+      },
+      {
+        "name": "Under",
+        "description": "Noah Fant",
+        "price": 1.91,
+        "point": 12.5
+      },
+      {
+        "name": "Over",
+        "description": "Andrei Iosivas",
+        "price": 1.87,
+        "point": 12.5
+      },
+      {
+        "name": "Under",
+        "description": "Andrei Iosivas",
+        "price": 1.87,
+        "point": 12.5
+      },
+      {
+        "name": "Over",
+        "description": "Mike Gesicki",
+        "price": 1.8,
+        "point": 11.5
+      },
+      {
+        "name": "Under",
+        "description": "Mike Gesicki",
+        "price": 1.95,
+        "point": 11.5
+      },
+      {
+        "name": "Over",
+        "description": "Brenton Strange",
+        "price": 1.91,
+        "point": 16.5
+      },
+      {
+        "name": "Under",
+        "description": "Brenton Strange",
+        "price": 1.83,
+        "point": 16.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Hunter",
+        "price": 1.91,
+        "point": 18.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Hunter",
+        "price": 1.85,
+        "point": 18.5
+      }
+    ],
+    "player_kicking_points": [
+      {
+        "name": "Over",
+        "description": "Evan McPherson",
+        "price": 1.95,
+        "point": 7.5
+      },
+      {
+        "name": "Under",
+        "description": "Evan McPherson",
+        "price": 1.8,
+        "point": 7.5
+      },
+      {
+        "name": "Over",
+        "description": "Cam Little",
+        "price": 2.1,
+        "point": 7.5
+      },
+      {
+        "name": "Under",
+        "description": "Cam Little",
+        "price": 1.69,
+        "point": 7.5
+      }
+    ],
+    "player_field_goals": [
+      {
+        "name": "Over",
+        "description": "Evan McPherson",
+        "price": 1.85,
+        "point": 1.5
+      },
+      {
+        "name": "Under",
+        "description": "Evan McPherson",
+        "price": 1.91,
+        "point": 1.5
+      },
+      {
+        "name": "Over",
+        "description": "Cam Little",
+        "price": 1.85,
+        "point": 1.5
+      },
+      {
+        "name": "Under",
+        "description": "Cam Little",
+        "price": 1.91,
+        "point": 1.5
+      }
+    ],
+    "player_tackles_assists": [
+      {
+        "name": "Over",
+        "description": "Trey Hendrickson",
+        "price": 1.74,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Trey Hendrickson",
+        "price": 2.0,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Travon Walker",
+        "price": 1.71,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Travon Walker",
+        "price": 2.05,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Josh Allen",
+        "price": 1.91,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Josh Allen",
+        "price": 1.85,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Arik Armstead",
+        "price": 1.5,
+        "point": 1.5
+      },
+      {
+        "name": "Under",
+        "description": "Arik Armstead",
+        "price": 2.45,
+        "point": 1.5
+      },
+      {
+        "name": "Over",
+        "description": "Joseph Ossai",
+        "price": 2.25,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Joseph Ossai",
+        "price": 1.61,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Logan Wilson",
+        "price": 2.05,
+        "point": 8.5
+      },
+      {
+        "name": "Under",
+        "description": "Logan Wilson",
+        "price": 1.69,
+        "point": 8.5
+      },
+      {
+        "name": "Over",
+        "description": "Eric Murray",
+        "price": 1.95,
+        "point": 6.5
+      },
+      {
+        "name": "Under",
+        "description": "Eric Murray",
+        "price": 1.77,
+        "point": 6.5
+      },
+      {
+        "name": "Over",
+        "description": "Jordan Battle",
+        "price": 1.65,
+        "point": 5.5
+      },
+      {
+        "name": "Under",
+        "description": "Jordan Battle",
+        "price": 2.2,
+        "point": 5.5
+      }
+    ],
+    "player_1st_td": [
+      {
+        "name": "Yes",
+        "description": "Trevor Lawrence",
+        "price": 26.0
+      },
+      {
+        "name": "Yes",
+        "description": "Travis Etienne Jr.",
+        "price": 8.5
+      },
+      {
+        "name": "Yes",
+        "description": "Bhayshul Tuten",
+        "price": 15.0
+      },
+      {
+        "name": "Yes",
+        "description": "LeQuint Allen Jr.",
+        "price": 36.0
+      },
+      {
+        "name": "Yes",
+        "description": "Brian Thomas Jr",
+        "price": 11.0
+      },
+      {
+        "name": "Yes",
+        "description": "Dyami Brown",
+        "price": 26.0
+      },
+      {
+        "name": "Yes",
+        "description": "Travis Hunter",
+        "price": 18.0
+      },
+      {
+        "name": "Yes",
+        "description": "Parker Washington",
+        "price": 36.0
+      },
+      {
+        "name": "Yes",
+        "description": "Brenton Strange",
+        "price": 23.0
+      },
+      {
+        "name": "Yes",
+        "description": "Johnny Mundt",
+        "price": 61.0
+      },
+      {
+        "name": "Yes",
+        "description": "Hunter Long",
+        "price": 61.0
+      },
+      {
+        "name": "Yes",
+        "description": "Joe Burrow",
+        "price": 31.0
+      },
+      {
+        "name": "Yes",
+        "description": "Chase Brown",
+        "price": 5.75
+      },
+      {
+        "name": "Yes",
+        "description": "Samaje Perine",
+        "price": 31.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tahj Brooks",
+        "price": 61.0
+      },
+      {
+        "name": "Yes",
+        "description": "Ja'Marr Chase",
+        "price": 6.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tee Higgins",
+        "price": 9.0
+      },
+      {
+        "name": "Yes",
+        "description": "Andrei Iosivas",
+        "price": 19.0
+      },
+      {
+        "name": "Yes",
+        "description": "Charlie Jones",
+        "price": 61.0
+      },
+      {
+        "name": "Yes",
+        "description": "Mitchell Tinsley",
+        "price": 81.0
+      },
+      {
+        "name": "Yes",
+        "description": "Mike Gesicki",
+        "price": 21.0
+      },
+      {
+        "name": "Yes",
+        "description": "Drew Sample",
+        "price": 51.0
+      },
+      {
+        "name": "Yes",
+        "description": "Noah Fant",
+        "price": 21.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tanner Hudson",
+        "price": 61.0
+      },
+      {
+        "name": "Yes",
+        "description": "Cincinnati Bengals D/ST",
+        "price": 31.0
+      },
+      {
+        "name": "Yes",
+        "description": "No Touchdown",
+        "price": 126.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tim Patrick",
+        "price": 51.0
+      },
+      {
+        "name": "Yes",
+        "description": "Jacksonville Jaguars D/ST",
+        "price": 31.0
+      }
+    ],
+    "player_anytime_td": [
+      {
+        "name": "Yes",
+        "description": "Trevor Lawrence",
+        "price": 6.0
+      },
+      {
+        "name": "Yes",
+        "description": "Travis Etienne Jr.",
+        "price": 2.15
+      },
+      {
+        "name": "Yes",
+        "description": "Bhayshul Tuten",
+        "price": 3.75
+      },
+      {
+        "name": "Yes",
+        "description": "LeQuint Allen Jr.",
+        "price": 7.5
+      },
+      {
+        "name": "Yes",
+        "description": "Brian Thomas Jr",
+        "price": 2.3
+      },
+      {
+        "name": "Yes",
+        "description": "Dyami Brown",
+        "price": 4.8
+      },
+      {
+        "name": "Yes",
+        "description": "Travis Hunter",
+        "price": 3.25
+      },
+      {
+        "name": "Yes",
+        "description": "Tim Patrick",
+        "price": 11.0
+      },
+      {
+        "name": "Yes",
+        "description": "Parker Washington",
+        "price": 7.0
+      },
+      {
+        "name": "Yes",
+        "description": "Brenton Strange",
+        "price": 4.33
+      },
+      {
+        "name": "Yes",
+        "description": "Johnny Mundt",
+        "price": 12.0
+      },
+      {
+        "name": "Yes",
+        "description": "Hunter Long",
+        "price": 9.5
+      },
+      {
+        "name": "Yes",
+        "description": "Jacksonville Jaguars D/ST",
+        "price": 5.75
+      },
+      {
+        "name": "Yes",
+        "description": "Joe Burrow",
+        "price": 7.5
+      },
+      {
+        "name": "Yes",
+        "description": "Chase Brown",
+        "price": 1.61
+      },
+      {
+        "name": "Yes",
+        "description": "Samaje Perine",
+        "price": 6.5
+      },
+      {
+        "name": "Yes",
+        "description": "Tahj Brooks",
+        "price": 12.0
+      },
+      {
+        "name": "Yes",
+        "description": "Ja'Marr Chase",
+        "price": 1.69
+      },
+      {
+        "name": "Yes",
+        "description": "Tee Higgins",
+        "price": 2.3
+      },
+      {
+        "name": "Yes",
+        "description": "Andrei Iosivas",
+        "price": 4.75
+      },
+      {
+        "name": "Yes",
+        "description": "Charlie Jones",
+        "price": 17.0
+      },
+      {
+        "name": "Yes",
+        "description": "Mitchell Tinsley",
+        "price": 17.0
+      },
+      {
+        "name": "Yes",
+        "description": "Mike Gesicki",
+        "price": 4.75
+      },
+      {
+        "name": "Yes",
+        "description": "Drew Sample",
+        "price": 13.0
+      },
+      {
+        "name": "Yes",
+        "description": "Noah Fant",
+        "price": 6.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tanner Hudson",
+        "price": 13.0
+      },
+      {
+        "name": "Yes",
+        "description": "Cincinnati Bengals D/ST",
+        "price": 6.75
+      }
+    ],
+    "totals": [
+      {
+        "name": "Over",
+        "price": 1.87,
+        "point": 51.5
+      },
+      {
+        "name": "Under",
+        "price": 1.87,
+        "point": 51.5
+      }
+    ],
+    "spreads": [
+      {
+        "name": "Cincinnati Bengals",
+        "price": 1.87,
+        "point": -2.5
+      },
+      {
+        "name": "Jacksonville Jaguars",
+        "price": 1.87,
+        "point": 2.5
+      }
+    ],
+    "h2h": [
+      {
+        "name": "Cincinnati Bengals",
+        "price": 1.71
+      },
+      {
+        "name": "Jacksonville Jaguars",
+        "price": 2.1
+      }
+    ]
+  },
+  "FanDuel": {
+    "player_pass_tds": [
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 2.66,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.47,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.98,
+        "point": 1.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.81,
+        "point": 1.5
+      }
+    ],
+    "player_pass_yds": [
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.88,
+        "point": 269.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.88,
+        "point": 269.5
+      },
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.88,
+        "point": 270.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.88,
+        "point": 270.5
+      }
+    ],
+    "player_pass_completions": [
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.94,
+        "point": 22.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.83,
+        "point": 22.5
+      },
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.78,
+        "point": 24.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 2.0,
+        "point": 24.5
+      }
+    ],
+    "player_pass_attempts": [
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.88,
+        "point": 34.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.88,
+        "point": 34.5
+      },
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.85,
+        "point": 35.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.91,
+        "point": 35.5
+      }
+    ],
+    "player_pass_interceptions": [
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.98,
+        "point": 0.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.78,
+        "point": 0.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.85,
+        "point": 0.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.91,
+        "point": 0.5
+      }
+    ],
+    "player_pass_longest_completion": [
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.89,
+        "point": 34.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.89,
+        "point": 34.5
+      },
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.89,
+        "point": 34.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.89,
+        "point": 34.5
+      }
+    ],
+    "player_rush_yds": [
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.83,
+        "point": 12.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.91,
+        "point": 12.5
+      },
+      {
+        "name": "Over",
+        "description": "Bhayshul Tuten",
+        "price": 1.88,
+        "point": 16.5
+      },
+      {
+        "name": "Under",
+        "description": "Bhayshul Tuten",
+        "price": 1.88,
+        "point": 16.5
+      },
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 1.88,
+        "point": 10.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.88,
+        "point": 10.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 1.89,
+        "point": 53.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.85,
+        "point": 53.5
+      },
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 1.88,
+        "point": 67.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 1.88,
+        "point": 67.5
+      }
+    ],
+    "player_rush_attempts": [
+      {
+        "name": "Over",
+        "description": "Trevor Lawrence",
+        "price": 1.98,
+        "point": 3.5
+      },
+      {
+        "name": "Under",
+        "description": "Trevor Lawrence",
+        "price": 1.77,
+        "point": 3.5
+      },
+      {
+        "name": "Over",
+        "description": "Joe Burrow",
+        "price": 2.16,
+        "point": 3.5
+      },
+      {
+        "name": "Under",
+        "description": "Joe Burrow",
+        "price": 1.65,
+        "point": 3.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 1.93,
+        "point": 13.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.82,
+        "point": 13.5
+      },
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 1.76,
+        "point": 17.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 2.0,
+        "point": 17.5
+      }
+    ],
+    "player_receptions": [
+      {
+        "name": "Over",
+        "description": "Brenton Strange",
+        "price": 2.08,
+        "point": 3.5
+      },
+      {
+        "name": "Under",
+        "description": "Brenton Strange",
+        "price": 1.72,
+        "point": 3.5
+      },
+      {
+        "name": "Over",
+        "description": "Andrei Iosivas",
+        "price": 1.63,
+        "point": 1.5
+      },
+      {
+        "name": "Under",
+        "description": "Andrei Iosivas",
+        "price": 2.24,
+        "point": 1.5
+      },
+      {
+        "name": "Over",
+        "description": "Ja'Marr Chase",
+        "price": 1.75,
+        "point": 6.5
+      },
+      {
+        "name": "Under",
+        "description": "Ja'Marr Chase",
+        "price": 2.06,
+        "point": 6.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 1.96,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.82,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Mike Gesicki",
+        "price": 2.3,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Mike Gesicki",
+        "price": 1.6,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Brian Thomas Jr",
+        "price": 2.08,
+        "point": 5.5
+      },
+      {
+        "name": "Under",
+        "description": "Brian Thomas Jr",
+        "price": 1.74,
+        "point": 5.5
+      },
+      {
+        "name": "Over",
+        "description": "Noah Fant",
+        "price": 1.93,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Noah Fant",
+        "price": 1.85,
+        "point": 2.5
+      },
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 2.34,
+        "point": 3.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 1.58,
+        "point": 3.5
+      },
+      {
+        "name": "Over",
+        "description": "Tee Higgins",
+        "price": 1.98,
+        "point": 5.5
+      },
+      {
+        "name": "Under",
+        "description": "Tee Higgins",
+        "price": 1.81,
+        "point": 5.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Hunter",
+        "price": 1.82,
+        "point": 4.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Hunter",
+        "price": 1.94,
+        "point": 4.5
+      },
+      {
+        "name": "Over",
+        "description": "Dyami Brown",
+        "price": 1.64,
+        "point": 2.5
+      },
+      {
+        "name": "Under",
+        "description": "Dyami Brown",
+        "price": 2.22,
+        "point": 2.5
+      }
+    ],
+    "player_reception_yds": [
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 1.88,
+        "point": 13.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.88,
+        "point": 13.5
+      },
+      {
+        "name": "Over",
+        "description": "Brian Thomas Jr",
+        "price": 1.88,
+        "point": 90.5
+      },
+      {
+        "name": "Under",
+        "description": "Brian Thomas Jr",
+        "price": 1.88,
+        "point": 90.5
+      },
+      {
+        "name": "Over",
+        "description": "Noah Fant",
+        "price": 1.89,
+        "point": 23.5
+      },
+      {
+        "name": "Under",
+        "description": "Noah Fant",
+        "price": 1.85,
+        "point": 23.5
+      },
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 1.89,
+        "point": 18.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 1.85,
+        "point": 18.5
+      },
+      {
+        "name": "Over",
+        "description": "Tee Higgins",
+        "price": 1.88,
+        "point": 63.5
+      },
+      {
+        "name": "Under",
+        "description": "Tee Higgins",
+        "price": 1.88,
+        "point": 63.5
+      },
+      {
+        "name": "Over",
+        "description": "Ja'Marr Chase",
+        "price": 1.88,
+        "point": 84.5
+      },
+      {
+        "name": "Under",
+        "description": "Ja'Marr Chase",
+        "price": 1.88,
+        "point": 84.5
+      },
+      {
+        "name": "Over",
+        "description": "Andrei Iosivas",
+        "price": 1.85,
+        "point": 18.5
+      },
+      {
+        "name": "Under",
+        "description": "Andrei Iosivas",
+        "price": 1.89,
+        "point": 18.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Hunter",
+        "price": 1.89,
+        "point": 41.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Hunter",
+        "price": 1.85,
+        "point": 41.5
+      },
+      {
+        "name": "Over",
+        "description": "Dyami Brown",
+        "price": 1.89,
+        "point": 47.5
+      },
+      {
+        "name": "Under",
+        "description": "Dyami Brown",
+        "price": 1.85,
+        "point": 47.5
+      },
+      {
+        "name": "Over",
+        "description": "Brenton Strange",
+        "price": 1.85,
+        "point": 33.5
+      },
+      {
+        "name": "Under",
+        "description": "Brenton Strange",
+        "price": 1.89,
+        "point": 33.5
+      },
+      {
+        "name": "Over",
+        "description": "Mike Gesicki",
+        "price": 1.85,
+        "point": 19.5
+      },
+      {
+        "name": "Under",
+        "description": "Mike Gesicki",
+        "price": 1.89,
+        "point": 19.5
+      }
+    ],
+    "player_reception_longest": [
+      {
+        "name": "Over",
+        "description": "Brian Thomas Jr",
+        "price": 1.83,
+        "point": 24.5
+      },
+      {
+        "name": "Under",
+        "description": "Brian Thomas Jr",
+        "price": 1.91,
+        "point": 24.5
+      },
+      {
+        "name": "Over",
+        "description": "Noah Fant",
+        "price": 1.96,
+        "point": 13.5
+      },
+      {
+        "name": "Under",
+        "description": "Noah Fant",
+        "price": 1.78,
+        "point": 13.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Hunter",
+        "price": 1.83,
+        "point": 17.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Hunter",
+        "price": 1.91,
+        "point": 17.5
+      },
+      {
+        "name": "Over",
+        "description": "Chase Brown",
+        "price": 1.8,
+        "point": 9.5
+      },
+      {
+        "name": "Under",
+        "description": "Chase Brown",
+        "price": 1.94,
+        "point": 9.5
+      },
+      {
+        "name": "Over",
+        "description": "Brenton Strange",
+        "price": 1.83,
+        "point": 17.5
+      },
+      {
+        "name": "Under",
+        "description": "Brenton Strange",
+        "price": 1.91,
+        "point": 17.5
+      },
+      {
+        "name": "Over",
+        "description": "Tee Higgins",
+        "price": 1.85,
+        "point": 22.5
+      },
+      {
+        "name": "Under",
+        "description": "Tee Higgins",
+        "price": 1.89,
+        "point": 22.5
+      },
+      {
+        "name": "Over",
+        "description": "Andrei Iosivas",
+        "price": 1.88,
+        "point": 12.5
+      },
+      {
+        "name": "Under",
+        "description": "Andrei Iosivas",
+        "price": 1.88,
+        "point": 12.5
+      },
+      {
+        "name": "Over",
+        "description": "Ja'Marr Chase",
+        "price": 1.91,
+        "point": 25.5
+      },
+      {
+        "name": "Under",
+        "description": "Ja'Marr Chase",
+        "price": 1.83,
+        "point": 25.5
+      },
+      {
+        "name": "Over",
+        "description": "Travis Etienne Jr.",
+        "price": 1.89,
+        "point": 9.5
+      },
+      {
+        "name": "Under",
+        "description": "Travis Etienne Jr.",
+        "price": 1.85,
+        "point": 9.5
+      },
+      {
+        "name": "Over",
+        "description": "Mike Gesicki",
+        "price": 1.94,
+        "point": 12.5
+      },
+      {
+        "name": "Under",
+        "description": "Mike Gesicki",
+        "price": 1.8,
+        "point": 12.5
+      },
+      {
+        "name": "Over",
+        "description": "Dyami Brown",
+        "price": 1.89,
+        "point": 16.5
+      },
+      {
+        "name": "Under",
+        "description": "Dyami Brown",
+        "price": 1.85,
+        "point": 16.5
+      }
+    ],
+    "player_1st_td": [
+      {
+        "name": "Yes",
+        "description": "Chase Brown",
+        "price": 5.5
+      },
+      {
+        "name": "Yes",
+        "description": "Ja'Marr Chase",
+        "price": 6.0
+      },
+      {
+        "name": "Yes",
+        "description": "Travis Etienne Jr.",
+        "price": 7.5
+      },
+      {
+        "name": "Yes",
+        "description": "Brian Thomas Jr",
+        "price": 9.5
+      },
+      {
+        "name": "Yes",
+        "description": "Tee Higgins",
+        "price": 9.5
+      },
+      {
+        "name": "Yes",
+        "description": "Travis Hunter",
+        "price": 15.0
+      },
+      {
+        "name": "Yes",
+        "description": "Mike Gesicki",
+        "price": 19.0
+      },
+      {
+        "name": "Yes",
+        "description": "Bhayshul Tuten",
+        "price": 18.0
+      },
+      {
+        "name": "Yes",
+        "description": "Brenton Strange",
+        "price": 21.0
+      },
+      {
+        "name": "Yes",
+        "description": "Andrei Iosivas",
+        "price": 23.0
+      },
+      {
+        "name": "Yes",
+        "description": "Dyami Brown",
+        "price": 23.0
+      },
+      {
+        "name": "Yes",
+        "description": "Trevor Lawrence",
+        "price": 28.0
+      },
+      {
+        "name": "Yes",
+        "description": "Noah Fant",
+        "price": 28.0
+      },
+      {
+        "name": "Yes",
+        "description": "Joe Burrow",
+        "price": 34.0
+      },
+      {
+        "name": "Yes",
+        "description": "Jacksonville Jaguars Defense",
+        "price": 36.0
+      },
+      {
+        "name": "Yes",
+        "description": "Cincinnati Bengals Defense",
+        "price": 36.0
+      },
+      {
+        "name": "Yes",
+        "description": "Samaje Perine",
+        "price": 61.0
+      },
+      {
+        "name": "Yes",
+        "description": "Parker Washington",
+        "price": 66.0
+      },
+      {
+        "name": "Yes",
+        "description": "LeQuint Allen Jr.",
+        "price": 81.0
+      },
+      {
+        "name": "Yes",
+        "description": "Mitchell Tinsley",
+        "price": 101.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tanner Hudson",
+        "price": 101.0
+      },
+      {
+        "name": "Yes",
+        "description": "Drew Sample",
+        "price": 101.0
+      },
+      {
+        "name": "Yes",
+        "description": "Hunter Long",
+        "price": 101.0
+      },
+      {
+        "name": "Yes",
+        "description": "Charlie Jones",
+        "price": 101.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tim Patrick",
+        "price": 101.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tahj Brooks",
+        "price": 101.0
+      },
+      {
+        "name": "Yes",
+        "description": "Johnny Mundt",
+        "price": 101.0
+      },
+      {
+        "name": "Yes",
+        "description": "Quintin Morris",
+        "price": 101.0
+      }
+    ],
+    "player_last_td": [
+      {
+        "name": "Yes",
+        "description": "Chase Brown",
+        "price": 6.5
+      },
+      {
+        "name": "Yes",
+        "description": "Ja'Marr Chase",
+        "price": 7.5
+      },
+      {
+        "name": "Yes",
+        "description": "Travis Etienne Jr.",
+        "price": 8.5
+      },
+      {
+        "name": "Yes",
+        "description": "Brian Thomas Jr",
+        "price": 9.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tee Higgins",
+        "price": 10.5
+      },
+      {
+        "name": "Yes",
+        "description": "Travis Hunter",
+        "price": 13.0
+      },
+      {
+        "name": "Yes",
+        "description": "Bhayshul Tuten",
+        "price": 14.0
+      },
+      {
+        "name": "Yes",
+        "description": "Mike Gesicki",
+        "price": 18.0
+      },
+      {
+        "name": "Yes",
+        "description": "Brenton Strange",
+        "price": 19.0
+      },
+      {
+        "name": "Yes",
+        "description": "Dyami Brown",
+        "price": 20.0
+      },
+      {
+        "name": "Yes",
+        "description": "Trevor Lawrence",
+        "price": 21.0
+      },
+      {
+        "name": "Yes",
+        "description": "Samaje Perine",
+        "price": 23.0
+      },
+      {
+        "name": "Yes",
+        "description": "Andrei Iosivas",
+        "price": 23.0
+      },
+      {
+        "name": "Yes",
+        "description": "Noah Fant",
+        "price": 28.0
+      },
+      {
+        "name": "Yes",
+        "description": "Cincinnati Bengals Defense",
+        "price": 31.0
+      },
+      {
+        "name": "Yes",
+        "description": "Parker Washington",
+        "price": 31.0
+      },
+      {
+        "name": "Yes",
+        "description": "Joe Burrow",
+        "price": 31.0
+      },
+      {
+        "name": "Yes",
+        "description": "Jacksonville Jaguars Defense",
+        "price": 34.0
+      },
+      {
+        "name": "Yes",
+        "description": "LeQuint Allen Jr.",
+        "price": 41.0
+      },
+      {
+        "name": "Yes",
+        "description": "Johnny Mundt",
+        "price": 51.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tim Patrick",
+        "price": 51.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tahj Brooks",
+        "price": 51.0
+      },
+      {
+        "name": "Yes",
+        "description": "Drew Sample",
+        "price": 66.0
+      },
+      {
+        "name": "Yes",
+        "description": "Hunter Long",
+        "price": 71.0
+      },
+      {
+        "name": "Yes",
+        "description": "Mitchell Tinsley",
+        "price": 71.0
+      },
+      {
+        "name": "Yes",
+        "description": "Charlie Jones",
+        "price": 76.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tanner Hudson",
+        "price": 81.0
+      },
+      {
+        "name": "Yes",
+        "description": "Quintin Morris",
+        "price": 101.0
+      }
+    ],
+    "player_anytime_td": [
+      {
+        "name": "Yes",
+        "description": "Chase Brown",
+        "price": 1.61
+      },
+      {
+        "name": "Yes",
+        "description": "Ja'Marr Chase",
+        "price": 1.74
+      },
+      {
+        "name": "Yes",
+        "description": "Travis Etienne Jr.",
+        "price": 2.05
+      },
+      {
+        "name": "Yes",
+        "description": "Brian Thomas Jr",
+        "price": 2.2
+      },
+      {
+        "name": "Yes",
+        "description": "Tee Higgins",
+        "price": 2.4
+      },
+      {
+        "name": "Yes",
+        "description": "Travis Hunter",
+        "price": 3.2
+      },
+      {
+        "name": "Yes",
+        "description": "Bhayshul Tuten",
+        "price": 3.5
+      },
+      {
+        "name": "Yes",
+        "description": "Brenton Strange",
+        "price": 4.5
+      },
+      {
+        "name": "Yes",
+        "description": "Mike Gesicki",
+        "price": 4.2
+      },
+      {
+        "name": "Yes",
+        "description": "Trevor Lawrence",
+        "price": 5.4
+      },
+      {
+        "name": "Yes",
+        "description": "Dyami Brown",
+        "price": 4.9
+      },
+      {
+        "name": "Yes",
+        "description": "Andrei Iosivas",
+        "price": 5.9
+      },
+      {
+        "name": "Yes",
+        "description": "Noah Fant",
+        "price": 6.5
+      },
+      {
+        "name": "Yes",
+        "description": "Samaje Perine",
+        "price": 7.5
+      },
+      {
+        "name": "Yes",
+        "description": "Cincinnati Bengals Defense",
+        "price": 7.5
+      },
+      {
+        "name": "Yes",
+        "description": "Jacksonville Jaguars Defense",
+        "price": 7.5
+      },
+      {
+        "name": "Yes",
+        "description": "Joe Burrow",
+        "price": 8.0
+      },
+      {
+        "name": "Yes",
+        "description": "Parker Washington",
+        "price": 10.5
+      },
+      {
+        "name": "Yes",
+        "description": "LeQuint Allen Jr.",
+        "price": 12.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tahj Brooks",
+        "price": 16.0
+      },
+      {
+        "name": "Yes",
+        "description": "Johnny Mundt",
+        "price": 17.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tim Patrick",
+        "price": 17.0
+      },
+      {
+        "name": "Yes",
+        "description": "Drew Sample",
+        "price": 16.0
+      },
+      {
+        "name": "Yes",
+        "description": "Mitchell Tinsley",
+        "price": 19.0
+      },
+      {
+        "name": "Yes",
+        "description": "Hunter Long",
+        "price": 23.0
+      },
+      {
+        "name": "Yes",
+        "description": "Charlie Jones",
+        "price": 23.0
+      },
+      {
+        "name": "Yes",
+        "description": "Tanner Hudson",
+        "price": 26.0
+      },
+      {
+        "name": "Yes",
+        "description": "Quintin Morris",
+        "price": 28.0
+      }
+    ],
+    "totals": [
+      {
+        "name": "Over",
+        "price": 2.0,
+        "point": 51.5
+      },
+      {
+        "name": "Under",
+        "price": 1.76,
+        "point": 51.5
+      }
+    ],
+    "spreads": [
+      {
+        "name": "Cincinnati Bengals",
+        "price": 1.83,
+        "point": -2.5
+      },
+      {
+        "name": "Jacksonville Jaguars",
+        "price": 1.91,
+        "point": 2.5
+      }
+    ],
+    "h2h": [
+      {
+        "name": "Cincinnati Bengals",
+        "price": 1.68
+      },
+      {
+        "name": "Jacksonville Jaguars",
+        "price": 2.14
+      }
+    ]
+  }
+}

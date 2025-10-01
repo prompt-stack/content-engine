@@ -1,0 +1,178 @@
+{
+  "prompts": {
+    "summarize": {
+      "id": "summarize",
+      "name": "Summarize",
+      "description": "Create a concise summary",
+      "category": "General",
+      "icon": "📝",
+      "template": "Provide a concise summary of the following content:\n\n{content}",
+      "variables": ["content"],
+      "output_format": "paragraph",
+      "estimated_tokens": 200
+    },
+    "summarize_twitter": {
+      "id": "summarize_twitter",
+      "name": "Twitter Summary",
+      "description": "Fit in a tweet (280 chars)",
+      "category": "Social Media",
+      "icon": "🐦",
+      "template": "Summarize the following content in exactly 280 characters or less. Make it engaging and tweet-ready:\n\n{content}",
+      "variables": ["content"],
+      "output_format": "text",
+      "estimated_tokens": 100
+    },
+    "summarize_linkedin": {
+      "id": "summarize_linkedin",
+      "name": "LinkedIn Post",
+      "description": "Professional summary with hashtags",
+      "category": "Social Media",
+      "icon": "💼",
+      "template": "Create a professional LinkedIn post summary (max 3000 chars) with 3-5 relevant hashtags. Make it engaging and professional:\n\n{content}",
+      "variables": ["content"],
+      "output_format": "paragraph",
+      "estimated_tokens": 400
+    },
+    "twitter_thread": {
+      "id": "twitter_thread",
+      "name": "Twitter Thread",
+      "description": "Multi-tweet thread (280 chars each)",
+      "category": "Social Media",
+      "icon": "🧵",
+      "template": "Convert the following content into a Twitter thread. Each tweet must be 280 characters or less. Number each tweet (1/n, 2/n, etc.). Make it engaging:\n\n{content}",
+      "variables": ["content"],
+      "output_format": "numbered_list",
+      "estimated_tokens": 500
+    },
+    "extract_key_points": {
+      "id": "extract_key_points",
+      "name": "Key Points",
+      "description": "Bullet list of main takeaways",
+      "category": "General",
+      "icon": "🔑",
+      "template": "Extract the key points from the following content as a concise bullet list. Focus on the most important insights:\n\n{content}",
+      "variables": ["content"],
+      "output_format": "bullet_list",
+      "estimated_tokens": 300
+    },
+    "blog_outline": {
+      "id": "blog_outline",
+      "name": "Blog Outline",
+      "description": "Structured blog post outline",
+      "category": "Content Creation",
+      "icon": "📄",
+      "template": "Create a detailed blog post outline based on the following content. Include: title, introduction, main sections with subpoints, and conclusion:\n\n{content}",
+      "variables": ["content"],
+      "output_format": "structured",
+      "estimated_tokens": 500
+    },
+    "email_newsletter": {
+      "id": "email_newsletter",
+      "name": "Email Newsletter",
+      "description": "Newsletter-ready format",
+      "category": "Content Creation",
+      "icon": "📧",
+      "template": "Convert the following content into an engaging email newsletter. Include: catchy subject line, intro paragraph, main content, and call-to-action:\n\n{content}",
+      "variables": ["content"],
+      "output_format": "structured",
+      "estimated_tokens": 600
+    },
+    "analyze_sentiment": {
+      "id": "analyze_sentiment",
+      "name": "Sentiment Analysis",
+      "description": "Positive, negative, or neutral",
+      "category": "Analysis",
+      "icon": "😊",
+      "template": "Analyze the sentiment of the following content (positive, negative, or neutral) and explain why in 2-3 sentences:\n\n{content}",
+      "variables": ["content"],
+      "output_format": "paragraph",
+      "estimated_tokens": 150
+    },
+    "generate_tags": {
+      "id": "generate_tags",
+      "name": "Generate Tags",
+      "description": "5-10 relevant keywords",
+      "category": "SEO",
+      "icon": "🏷️",
+      "template": "Generate 5-10 relevant tags/keywords for the following content. Use hashtag format (#keyword):\n\n{content}",
+      "variables": ["content"],
+      "output_format": "list",
+      "estimated_tokens": 100
+    },
+    "extract_entities": {
+      "id": "extract_entities",
+      "name": "Named Entities",
+      "description": "People, organizations, locations",
+      "category": "Analysis",
+      "icon": "🏢",
+      "template": "Extract all named entities (people, organizations, locations, dates, products) from the following content. Format as a categorized list:\n\n{content}",
+      "variables": ["content"],
+      "output_format": "structured",
+      "estimated_tokens": 200
+    },
+    "eli5": {
+      "id": "eli5",
+      "name": "Explain Like I'm 5",
+      "description": "Simple, easy-to-understand explanation",
+      "category": "Education",
+      "icon": "👶",
+      "template": "Explain the following content in simple terms that a 5-year-old could understand. Use analogies and avoid jargon:\n\n{content}",
+      "variables": ["content"],
+      "output_format": "paragraph",
+      "estimated_tokens": 300
+    },
+    "actionable_insights": {
+      "id": "actionable_insights",
+      "name": "Actionable Insights",
+      "description": "Practical takeaways and next steps",
+      "category": "Business",
+      "icon": "✅",
+      "template": "Extract actionable insights and practical next steps from the following content. Focus on what the reader should DO:\n\n{content}",
+      "variables": ["content"],
+      "output_format": "bullet_list",
+      "estimated_tokens": 300
+    },
+    "compare_contrast": {
+      "id": "compare_contrast",
+      "name": "Compare & Contrast",
+      "description": "Identify similarities and differences",
+      "category": "Analysis",
+      "icon": "⚖️",
+      "template": "Analyze the following content and identify key comparisons, contrasts, or tensions. Present as pros/cons or similarities/differences:\n\n{content}",
+      "variables": ["content"],
+      "output_format": "structured",
+      "estimated_tokens": 400
+    },
+    "questions_answered": {
+      "id": "questions_answered",
+      "name": "Questions Answered",
+      "description": "Q&A format extraction",
+      "category": "Education",
+      "icon": "❓",
+      "template": "Convert the following content into a Q&A format. Extract the main questions addressed and provide concise answers:\n\n{content}",
+      "variables": ["content"],
+      "output_format": "qa_list",
+      "estimated_tokens": 400
+    },
+    "tldr": {
+      "id": "tldr",
+      "name": "TL;DR",
+      "description": "One-sentence summary",
+      "category": "General",
+      "icon": "⚡",
+      "template": "Provide a TL;DR (Too Long; Didn't Read) summary of the following content in ONE sentence:\n\n{content}",
+      "variables": ["content"],
+      "output_format": "text",
+      "estimated_tokens": 50
+    }
+  },
+  "categories": [
+    { "id": "general", "name": "General", "icon": "📋" },
+    { "id": "social_media", "name": "Social Media", "icon": "📱" },
+    { "id": "content_creation", "name": "Content Creation", "icon": "✍️" },
+    { "id": "analysis", "name": "Analysis", "icon": "🔍" },
+    { "id": "seo", "name": "SEO", "icon": "🔎" },
+    { "id": "education", "name": "Education", "icon": "🎓" },
+    { "id": "business", "name": "Business", "icon": "💼" }
+  ]
+}

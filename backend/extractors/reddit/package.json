@@ -1,0 +1,10 @@
+{
+  "name": "reddit-extractor",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Reddit post and comments extractor for Content Stack",
+  "main": "reddit-extractor.js",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
