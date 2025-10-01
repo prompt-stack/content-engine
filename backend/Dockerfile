@@ -18,7 +18,7 @@ RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o 
     && yt-dlp --version
 
 # Install Python dependencies
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Install Playwright for Article extractor (Reddit may also benefit from it)
@@ -27,7 +27,7 @@ RUN pip install playwright \
     && playwright install-deps chromium
 
 # Copy application code
-COPY . .
+COPY backend/ .
 
 # Expose port (Railway will set this dynamically)
 EXPOSE 8000
