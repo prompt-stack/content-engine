@@ -29,6 +29,13 @@ RUN pip install playwright \
 # Copy application code
 COPY backend/ .
 
+# Install Node.js dependencies for extractors
+RUN cd extractors/youtube && npm install && \
+    cd ../reddit && npm install && \
+    cd ../tiktok && npm install && \
+    cd ../article && npm install && \
+    cd ../..
+
 # Expose port (Railway will set this dynamically)
 EXPOSE 8000
 
