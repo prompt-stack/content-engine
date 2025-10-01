@@ -15,19 +15,19 @@ class Settings(BaseSettings):
     # Application
     ENVIRONMENT: str = "development"
     DEBUG: bool = True
-    SECRET_KEY: str
+    SECRET_KEY: str = "dev-secret-key-change-in-production"
     API_PORT: int = 8765
 
-    # Database
+    # Database (optional - only needed if using auth features)
     POSTGRES_PORT: int = 5433
-    DATABASE_URL: str
+    DATABASE_URL: str = "sqlite:///./content_engine.db"
 
     # Redis
     REDIS_PORT: int = 6380
     REDIS_URL: str = "redis://localhost:6380/0"
 
-    # Authentication
-    JWT_SECRET: str
+    # Authentication (optional - only needed if using auth features)
+    JWT_SECRET: str = "dev-jwt-secret-change-in-production"
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
