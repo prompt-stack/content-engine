@@ -35,12 +35,13 @@ AI-powered content extraction and processing platform. Extract content from mult
 docker-compose up -d
 
 # Services (using non-standard ports to avoid conflicts):
-# - Backend API:  http://localhost:8765
-# - PostgreSQL:   localhost:5433
-# - Redis:        localhost:6380
-# - API docs:     http://localhost:8765/docs
+# - Frontend:     http://localhost:3456
+# - Backend API:  http://localhost:9765
+# - PostgreSQL:   localhost:7654
+# - Redis:        localhost:8765
+# - API docs:     http://localhost:9765/docs
 #
-# To change ports, edit .env file in project root
+# To change ports, edit backend/.env file
 ```
 
 ## Project Structure
