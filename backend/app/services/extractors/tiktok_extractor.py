@@ -129,11 +129,15 @@ class TikTokExtractor(BaseExtractor):
                     if i + 1 < len(lines):
                         description = lines[i + 1].strip()
                 elif '💬 Transcript:' in line:
-                    # Everything after this is transcript
+                    # Everything after this is transcript (until next section)
                     in_transcript = True
                     continue
-                elif in_transcript and line.strip():
-                    transcript += line + '\n'
+                elif in_transcript:
+                    # Stop at next section markers
+                    if line.startswith('👤 Creator Stats:') or line.startswith('💭') or line.startswith('💾'):
+                        in_transcript = False
+                    elif line.strip():
+                        transcript += line + '\n'
 
             transcript = transcript.strip()
 
