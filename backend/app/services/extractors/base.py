@@ -78,9 +78,9 @@ class PlatformDetector:
     """Detect which platform a URL belongs to."""
 
     _patterns = {
-        "tiktok": [r"tiktok\.com/@[\w.-]+/video/\d+", r"vm\.tiktok\.com/\w+"],
+        "tiktok": [r"tiktok\.com/@[\w.-]+/video/\d+", r"vm\.tiktok\.com/\w+", r"vt\.tiktok\.com/\w+", r"tiktok\.com/t/\w+"],
         "youtube": [r"youtube\.com/watch\?v=[\w-]+", r"youtu\.be/[\w-]+"],
-        "reddit": [r"reddit\.com/r/[\w-]+/comments/[\w-]+"],
+        "reddit": [r"reddit\.com/r/[\w-]+/comments/[\w-]+", r"redd\.it/\w+"],
         "article": [r"^https?://"],  # Fallback for any HTTP(S) URL
     }
 
