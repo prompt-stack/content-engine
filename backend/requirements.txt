@@ -29,6 +29,7 @@ html2text==2024.2.26
 
 # Social Media
 yt-dlp==2024.8.6
+youtube-transcript-api==1.2.2
 
 # Email
 google-auth-oauthlib==1.2.0

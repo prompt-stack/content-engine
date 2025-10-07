@@ -1,9 +1,10 @@
-"""YouTube Transcript Extractor - Uses yt-dlp to extract video transcripts."""
+"""YouTube Transcript Extractor - Uses yt-dlp with YouTube API fallback."""
 
 import re
 import json
 import asyncio
 import tempfile
+import os
 from pathlib import Path
 from typing import Dict, Any, Optional
 from .base import BaseExtractor, ExtractionError
@@ -29,6 +30,8 @@ class YouTubeExtractor(BaseExtractor):
     async def extract(self, url: str) -> Dict[str, Any]:
         """
         Extract YouTube video transcript.
+        Uses youtube-transcript-api first (works better on cloud),
+        falls back to yt-dlp if that fails.
 
         Args:
             url: YouTube video URL
@@ -36,49 +39,50 @@ class YouTubeExtractor(BaseExtractor):
         Returns:
             Standardized content dict with transcript
         """
+        video_id = self._extract_video_id(url)
+
+        # Try youtube-transcript-api first (more reliable on cloud)
         try:
-            # Check if yt-dlp is installed
-            await self._check_ytdlp()
+            return await self._extract_via_transcript_api(video_id, url)
+        except Exception as transcript_error:
+            # If transcript API fails, try yt-dlp as fallback
+            try:
+                await self._check_ytdlp()
+                video_info = await self._get_video_info(url)
+                transcript = await self._get_transcript(url, video_id)
 
-            # Extract video ID
-            video_id = self._extract_video_id(url)
+                if transcript:
+                    content = self._format_with_transcript(video_info, transcript)
+                    has_transcript = True
+                else:
+                    content = self._format_no_transcript(video_info)
+                    has_transcript = False
 
-            # Get video info
-            video_info = await self._get_video_info(url)
+                return self._standardize_output(
+                    url=video_info.get("webpage_url", url),
+                    title=video_info.get("title", "YouTube Video"),
+                    author=video_info.get("uploader", "Unknown"),
+                    content=content,
+                    metadata={
+                        "video_id": video_id,
+                        "duration": video_info.get("duration"),
+                        "view_count": video_info.get("view_count"),
+                        "upload_date": video_info.get("upload_date"),
+                        "channel": video_info.get("channel"),
+                        "has_transcript": has_transcript,
+                        "description": video_info.get("description", "")[:500],
+                        "method": "yt-dlp-fallback",
+                    },
+                )
 
-            # Try to get transcript
-            transcript = await self._get_transcript(url, video_id)
-
-            if transcript:
-                content = self._format_with_transcript(video_info, transcript)
-                has_transcript = True
-            else:
-                content = self._format_no_transcript(video_info)
-                has_transcript = False
-
-            return self._standardize_output(
-                url=video_info.get("webpage_url", url),
-                title=video_info.get("title", "YouTube Video"),
-                author=video_info.get("uploader", "Unknown"),
-                content=content,
-                metadata={
-                    "video_id": video_id,
-                    "duration": video_info.get("duration"),
-                    "view_count": video_info.get("view_count"),
-                    "upload_date": video_info.get("upload_date"),
-                    "channel": video_info.get("channel"),
-                    "has_transcript": has_transcript,
-                    "description": video_info.get("description", "")[:500],  # Truncate long descriptions
-                },
-            )
-
-        except Exception as e:
-            raise ExtractionError(
-                message=f"Failed to extract YouTube content: {str(e)}",
-                platform=self.platform,
-                url=url,
-                original_error=e,
-            )
+            except Exception as ytdlp_error:
+                # Both methods failed
+                raise ExtractionError(
+                    message=f"Failed to extract YouTube content. Transcript API: {str(transcript_error)[:100]}. yt-dlp: {str(ytdlp_error)[:100]}",
+                    platform=self.platform,
+                    url=url,
+                    original_error=transcript_error,
+                )
 
     async def _check_ytdlp(self) -> None:
         """Check if yt-dlp is installed."""
@@ -269,3 +273,175 @@ You may need to watch the video to understand the content."""
         if hours > 0:
             return f"{hours}:{minutes:02d}:{secs:02d}"
         return f"{minutes}:{secs:02d}"
+
+    async def _extract_via_transcript_api(self, video_id: str, url: str) -> Dict[str, Any]:
+        """
+        Extract using youtube-transcript-api library.
+        This method works better on cloud servers than yt-dlp.
+        """
+        try:
+            from youtube_transcript_api import YouTubeTranscriptApi
+            import httpx
+
+            # Run in thread pool since library is synchronous
+            def get_transcript_sync():
+                api = YouTubeTranscriptApi()
+                transcript_list = api.list(video_id)
+                transcript = transcript_list.find_transcript(['en'])
+                return transcript.fetch()
+
+            # Run synchronous code in thread pool
+            loop = asyncio.get_event_loop()
+            text_data = await loop.run_in_executor(None, get_transcript_sync)
+
+            # Combine transcript text
+            transcript_text = ' '.join([entry.text for entry in text_data])
+
+            # Get video info using yt-dlp for metadata (metadata extraction rarely gets blocked)
+            try:
+                await self._check_ytdlp()
+                video_info = await self._get_video_info(url)
+            except:
+                # If yt-dlp fails for metadata, use httpx to scrape basic info
+                async with httpx.AsyncClient() as client:
+                    response = await client.get(url)
+                    # Extract title from page (basic fallback)
+                    import re
+                    title_match = re.search(r'<title>(.+?)</title>', response.text)
+                    title = title_match.group(1).replace(' - YouTube', '') if title_match else f"YouTube Video {video_id}"
+
+                    video_info = {
+                        'title': title,
+                        'uploader': 'Unknown',
+                        'channel': 'Unknown',
+                        'description': '',
+                        'duration': None,
+                        'view_count': 0,
+                        'upload_date': '',
+                        'webpage_url': url,
+                    }
+
+            content = self._format_with_transcript(video_info, transcript_text)
+
+            return self._standardize_output(
+                url=url,
+                title=video_info.get('title', 'YouTube Video'),
+                author=video_info.get('uploader', 'Unknown'),
+                content=content,
+                metadata={
+                    "video_id": video_id,
+                    "duration": video_info.get("duration"),
+                    "view_count": video_info.get("view_count"),
+                    "upload_date": video_info.get("upload_date"),
+                    "channel": video_info.get("channel"),
+                    "has_transcript": True,
+                    "description": video_info.get("description", "")[:500],
+                    "method": "transcript-api",
+                },
+            )
+
+        except Exception as e:
+            raise RuntimeError(f"Transcript API error: {str(e)}")
+
+    async def _extract_via_youtube_api(self, video_id: str, url: str) -> Dict[str, Any]:
+        """
+        Fallback method using YouTube Data API v3.
+        Requires YOUTUBE_API_KEY environment variable.
+        """
+        api_key = os.getenv("YOUTUBE_API_KEY")
+        if not api_key:
+            raise ValueError("YOUTUBE_API_KEY not set. Cannot use YouTube API fallback.")
+
+        try:
+            from googleapiclient.discovery import build
+
+            # Build YouTube API client
+            youtube = build('youtube', 'v3', developerKey=api_key)
+
+            # Get video details
+            video_response = youtube.videos().list(
+                part='snippet,contentDetails,statistics',
+                id=video_id
+            ).execute()
+
+            if not video_response.get('items'):
+                raise ValueError(f"Video {video_id} not found")
+
+            video_data = video_response['items'][0]
+            snippet = video_data['snippet']
+            statistics = video_data.get('statistics', {})
+
+            # Try to get captions
+            captions_response = youtube.captions().list(
+                part='snippet',
+                videoId=video_id
+            ).execute()
+
+            transcript = ""
+            has_transcript = False
+
+            # Check if captions are available
+            if captions_response.get('items'):
+                # Find English caption
+                for caption in captions_response['items']:
+                    if caption['snippet']['language'] == 'en':
+                        # Note: Downloading caption content requires OAuth
+                        # For now, we'll just note that captions exist
+                        has_transcript = True
+                        transcript = "[Captions available but require OAuth to download. Video has English captions.]"
+                        break
+
+            # Parse duration from ISO 8601 format
+            duration_str = video_data['contentDetails']['duration']
+            duration_seconds = self._parse_iso_duration(duration_str)
+
+            video_info = {
+                'title': snippet['title'],
+                'uploader': snippet['channelTitle'],
+                'channel': snippet['channelTitle'],
+                'description': snippet['description'],
+                'duration': duration_seconds,
+                'view_count': int(statistics.get('viewCount', 0)),
+                'upload_date': snippet['publishedAt'][:10].replace('-', ''),
+                'webpage_url': url,
+            }
+
+            if has_transcript and transcript:
+                content = self._format_with_transcript(video_info, transcript)
+            else:
+                content = self._format_no_transcript(video_info)
+
+            return self._standardize_output(
+                url=url,
+                title=video_info['title'],
+                author=video_info['uploader'],
+                content=content,
+                metadata={
+                    "video_id": video_id,
+                    "duration": duration_seconds,
+                    "view_count": video_info['view_count'],
+                    "upload_date": video_info['upload_date'],
+                    "channel": video_info['channel'],
+                    "has_transcript": has_transcript,
+                    "description": video_info['description'][:500],
+                    "method": "youtube-api",
+                },
+            )
+
+        except ImportError:
+            raise ValueError("google-api-python-client not installed")
+        except Exception as e:
+            raise RuntimeError(f"YouTube API error: {str(e)}")
+
+    def _parse_iso_duration(self, duration: str) -> int:
+        """Parse ISO 8601 duration (e.g., PT1H2M10S) to seconds."""
+        import re
+        match = re.match(r'PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?', duration)
+        if not match:
+            return 0
+
+        hours = int(match.group(1) or 0)
+        minutes = int(match.group(2) or 0)
+        seconds = int(match.group(3) or 0)
+
+        return hours * 3600 + minutes * 60 + seconds
