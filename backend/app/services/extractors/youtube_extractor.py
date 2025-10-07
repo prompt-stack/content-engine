@@ -276,12 +276,55 @@ You may need to watch the video to understand the content."""
 
     async def _extract_via_transcript_api(self, video_id: str, url: str) -> Dict[str, Any]:
         """
-        Extract using youtube-transcript-api library.
-        This method works better on cloud servers than yt-dlp.
+        Extract using SupaData API first (cloud-friendly, designed for this),
+        fallback to youtube-transcript-api library.
         """
+        import httpx
+
+        # Try SupaData API first if key is available
+        supadata_key = os.getenv("SUPA_DATA_API")
+        if supadata_key:
+            try:
+                async with httpx.AsyncClient(timeout=30.0) as client:
+                    response = await client.get(
+                        "https://api.supadata.ai/v1/youtube/transcript",
+                        params={"url": url, "text": "true"},
+                        headers={"x-api-key": supadata_key}
+                    )
+
+                    if response.status_code == 200:
+                        data = response.json()
+                        transcript_text = data.get("content", "")
+
+                        if transcript_text:
+                            # Get metadata using yt-dlp or httpx
+                            video_info = await self._get_video_metadata(url, video_id)
+                            content = self._format_with_transcript(video_info, transcript_text)
+
+                            return self._standardize_output(
+                                url=url,
+                                title=video_info['title'],
+                                author=video_info['uploader'],
+                                content=content,
+                                metadata={
+                                    "video_id": video_id,
+                                    "duration": video_info.get("duration"),
+                                    "view_count": video_info.get("view_count"),
+                                    "upload_date": video_info.get("upload_date"),
+                                    "channel": video_info.get("channel"),
+                                    "has_transcript": True,
+                                    "description": video_info.get("description", "")[:500],
+                                    "method": "supadata",
+                                    "transcript_lang": data.get("lang"),
+                                },
+                            )
+            except Exception as e:
+                # SupaData failed, continue to fallback
+                pass
+
+        # Fallback to youtube-transcript-api
         try:
             from youtube_transcript_api import YouTubeTranscriptApi
-            import httpx
 
             # Run in thread pool since library is synchronous
             def get_transcript_sync():
@@ -297,29 +340,8 @@ You may need to watch the video to understand the content."""
             # Combine transcript text
             transcript_text = ' '.join([entry.text for entry in text_data])
 
-            # Get video info using yt-dlp for metadata (metadata extraction rarely gets blocked)
-            try:
-                await self._check_ytdlp()
-                video_info = await self._get_video_info(url)
-            except:
-                # If yt-dlp fails for metadata, use httpx to scrape basic info
-                async with httpx.AsyncClient() as client:
-                    response = await client.get(url)
-                    # Extract title from page (basic fallback)
-                    import re
-                    title_match = re.search(r'<title>(.+?)</title>', response.text)
-                    title = title_match.group(1).replace(' - YouTube', '') if title_match else f"YouTube Video {video_id}"
-
-                    video_info = {
-                        'title': title,
-                        'uploader': 'Unknown',
-                        'channel': 'Unknown',
-                        'description': '',
-                        'duration': None,
-                        'view_count': 0,
-                        'upload_date': '',
-                        'webpage_url': url,
-                    }
+            # Get video metadata
+            video_info = await self._get_video_metadata(url, video_id)
 
             content = self._format_with_transcript(video_info, transcript_text)
 
@@ -445,3 +467,45 @@ You may need to watch the video to understand the content."""
         seconds = int(match.group(3) or 0)
 
         return hours * 3600 + minutes * 60 + seconds
+
+    async def _get_video_metadata(self, url: str, video_id: str) -> Dict[str, Any]:
+        """
+        Get video metadata. Try yt-dlp first, fallback to basic scraping.
+        """
+        import httpx
+        import re
+
+        # Try yt-dlp first
+        try:
+            await self._check_ytdlp()
+            return await self._get_video_info(url)
+        except:
+            # Fallback: scrape basic info from page
+            try:
+                async with httpx.AsyncClient() as client:
+                    response = await client.get(url)
+                    title_match = re.search(r'<title>(.+?)</title>', response.text)
+                    title = title_match.group(1).replace(' - YouTube', '') if title_match else f"YouTube Video {video_id}"
+
+                    return {
+                        'title': title,
+                        'uploader': 'Unknown',
+                        'channel': 'Unknown',
+                        'description': '',
+                        'duration': None,
+                        'view_count': 0,
+                        'upload_date': '',
+                        'webpage_url': url,
+                    }
+            except:
+                # Last resort fallback
+                return {
+                    'title': f"YouTube Video {video_id}",
+                    'uploader': 'Unknown',
+                    'channel': 'Unknown',
+                    'description': '',
+                    'duration': None,
+                    'view_count': 0,
+                    'upload_date': '',
+                    'webpage_url': url,
+                }
