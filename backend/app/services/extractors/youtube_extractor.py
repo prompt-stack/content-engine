@@ -92,6 +92,13 @@ class YouTubeExtractor(BaseExtractor):
             stdout, _ = await process.communicate()
             if process.returncode != 0:
                 raise FileNotFoundError()
+            # Update yt-dlp in the background to ensure we have the latest version
+            # This helps with YouTube's frequent changes
+            await asyncio.create_subprocess_exec(
+                "yt-dlp", "-U",
+                stdout=asyncio.subprocess.DEVNULL,
+                stderr=asyncio.subprocess.DEVNULL,
+            )
         except FileNotFoundError:
             raise ValueError(
                 "yt-dlp is not installed. Install with: pip install yt-dlp "
@@ -122,6 +129,8 @@ class YouTubeExtractor(BaseExtractor):
             "yt-dlp",
             "--dump-json",
             "--no-warnings",
+            "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "--extractor-args", "youtube:player_client=android,web",
             url,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
@@ -148,6 +157,8 @@ class YouTubeExtractor(BaseExtractor):
                 "--convert-subs",
                 "srt",
                 "--skip-download",
+                "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "--extractor-args", "youtube:player_client=android,web",
                 "--paths",
                 str(temp_path),
                 "--output",
