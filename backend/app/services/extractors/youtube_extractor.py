@@ -125,14 +125,13 @@ class YouTubeExtractor(BaseExtractor):
 
     async def _get_video_info(self, url: str) -> Dict[str, Any]:
         """Get video metadata using yt-dlp."""
+        # Use multiple player clients as fallback strategy
         process = await asyncio.create_subprocess_exec(
             "yt-dlp",
             "--dump-json",
             "--no-warnings",
             "--no-check-certificates",
-            "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            "--extractor-args", "youtube:player_client=android,web;player_skip=webpage,configs",
-            "--add-header", "Accept-Language:en-US,en;q=0.9",
+            "--extractor-args", "youtube:player_client=android_creator,android,web",
             url,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
@@ -151,6 +150,7 @@ class YouTubeExtractor(BaseExtractor):
             temp_path = Path(temp_dir)
 
             # Try to download subtitles (prefer auto-generated English)
+            # Use android_creator client which has better subtitle access
             process = await asyncio.create_subprocess_exec(
                 "yt-dlp",
                 "--write-auto-sub",
@@ -160,9 +160,7 @@ class YouTubeExtractor(BaseExtractor):
                 "srt",
                 "--skip-download",
                 "--no-check-certificates",
-                "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-                "--extractor-args", "youtube:player_client=android,web;player_skip=webpage,configs",
-                "--add-header", "Accept-Language:en-US,en;q=0.9",
+                "--extractor-args", "youtube:player_client=android_creator,android,web",
                 "--paths",
                 str(temp_path),
                 "--output",
