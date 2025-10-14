@@ -15,6 +15,7 @@ class ExtractRequest(BaseModel):
     """Request model for content extraction."""
     url: HttpUrl
     max_comments: int = 20
+    title: str | None = None  # Optional title for Reddit short links
 
 
 class ExtractResponse(BaseModel):
@@ -33,12 +34,17 @@ async def extract_reddit(request: ExtractRequest):
     """
     Extract content from a Reddit post.
 
-    - **url**: Reddit post URL
+    - **url**: Reddit post URL (supports short links like /r/subreddit/s/xxxxx)
     - **max_comments**: Maximum number of top-level comments (default: 20)
+    - **title**: Post title (optional, helps resolve short links if redirect blocked)
     """
     try:
         extractor = RedditExtractor()
-        result = await extractor.extract(str(request.url), max_comments=request.max_comments)
+        result = await extractor.extract(
+            str(request.url),
+            max_comments=request.max_comments,
+            title=request.title
+        )
         return result
     except ExtractionError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -116,7 +122,7 @@ async def extract_auto(request: ExtractRequest):
     try:
         if platform == "reddit":
             extractor = RedditExtractor()
-            result = await extractor.extract(url, max_comments=request.max_comments)
+            result = await extractor.extract(url, max_comments=request.max_comments, title=request.title)
             return result
         elif platform == "tiktok":
             extractor = TikTokExtractor()

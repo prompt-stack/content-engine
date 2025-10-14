@@ -80,7 +80,7 @@ class PlatformDetector:
     _patterns = {
         "tiktok": [r"tiktok\.com/@[\w.-]+/video/\d+", r"vm\.tiktok\.com/\w+", r"vt\.tiktok\.com/\w+", r"tiktok\.com/t/\w+"],
         "youtube": [r"youtube\.com/watch\?v=[\w-]+", r"youtu\.be/[\w-]+"],
-        "reddit": [r"reddit\.com/r/[\w-]+/comments/[\w-]+", r"redd\.it/\w+"],
+        "reddit": [r"reddit\.com/r/[\w-]+/comments/[\w-]+", r"reddit\.com/r/[\w-]+/s/\w+", r"redd\.it/\w+"],
         "article": [r"^https?://"],  # Fallback for any HTTP(S) URL
     }
 

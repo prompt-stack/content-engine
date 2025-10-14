@@ -106,10 +106,10 @@ export const api = {
       });
     },
 
-    reddit: (url: string, max_comments = 20): Promise<ExtractedContent> => {
+    reddit: (url: string, max_comments = 20, title?: string): Promise<ExtractedContent> => {
       return apiRequest<ExtractedContent>('/api/extract/reddit', {
         method: 'POST',
-        body: JSON.stringify({ url, max_comments }),
+        body: JSON.stringify({ url, max_comments, title }),
       });
     },
 

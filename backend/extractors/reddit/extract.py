@@ -8,23 +8,96 @@ import json
 import subprocess
 import re
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 import requests
+from url_resolver import (
+    is_short_link,
+    is_canonical_permalink,
+    extract_subreddit_from_short_link,
+    resolve_reddit_short_link
+)
 
-def extract_reddit(url: str) -> Dict[str, Any]:
+def extract_reddit(url: str, title: Optional[str] = None) -> Dict[str, Any]:
     """
     Extract Reddit post and comments using Node.js extractor
-    
+
     Args:
-        url: Reddit post URL
-        
+        url: Reddit post URL (can be short link or canonical permalink)
+        title: Post title (REQUIRED if url is a short link)
+
     Returns:
         Dictionary with extraction results
     """
     try:
-        # Clean up the URL - handle shortened URLs
-        if '/s/' in url:
-            # For shortened URLs, we need to follow the redirect
+        # Handle short links - try redirect first, search as fallback
+        if is_short_link(url):
+            # Method 1: Try following the redirect directly (fastest, free, but can be blocked)
+            redirect_worked = False
+            try:
+                # Use multiple User-Agent strategies to avoid blocking
+                user_agents = [
+                    'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1',
+                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'python-requests/2.31.0'
+                ]
+
+                for ua in user_agents:
+                    try:
+                        headers = {'User-Agent': ua}
+                        response = requests.head(url, headers=headers, allow_redirects=True, timeout=10)
+                        if response.status_code == 200 and is_canonical_permalink(response.url):
+                            url = response.url.split('?')[0].rstrip('/')
+                            print(f"✅ Resolved short link via redirect: {url}")
+                            redirect_worked = True
+                            break
+                    except:
+                        continue
+
+                if not redirect_worked:
+                    raise Exception("All redirect attempts failed or were blocked")
+
+            except Exception as redirect_error:
+                # Method 2: Use search API as fallback (requires title)
+                print(f"⚠️  Redirect method failed: {redirect_error}")
+
+                if not title:
+                    return {
+                        'success': False,
+                        'error': (
+                            'Reddit blocked the redirect. Please provide the post title so we can search for it.\n'
+                            f'Error: {redirect_error}'
+                        ),
+                        'title': 'Reddit Post',
+                        'url': url
+                    }
+
+                subreddit = extract_subreddit_from_short_link(url)
+                if not subreddit:
+                    return {
+                        'success': False,
+                        'error': 'Could not extract subreddit from short link',
+                        'title': 'Reddit Post',
+                        'url': url
+                    }
+
+                try:
+                    url = resolve_reddit_short_link(title, subreddit)
+                    print(f"✅ Resolved short link via search API: {url}")
+                except ValueError as search_error:
+                    return {
+                        'success': False,
+                        'error': (
+                            f'Could not resolve short link.\n'
+                            f'Redirect: {redirect_error}\n'
+                            f'Search: {search_error}\n'
+                            f'The post might be too recent or in a private subreddit.'
+                        ),
+                        'title': title,
+                        'url': url
+                    }
+
+        # Try following redirects for other shortened URLs
+        elif not is_canonical_permalink(url):
             try:
                 headers = {'User-Agent': 'ContentHub/1.0'}
                 response = requests.head(url, headers=headers, allow_redirects=True)

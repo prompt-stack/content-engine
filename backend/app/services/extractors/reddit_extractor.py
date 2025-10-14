@@ -1,19 +1,20 @@
-"""Reddit Extractor - Uses Node.js based extractor"""
+"""Reddit Extractor - Uses Python wrapper with short link resolution"""
 
 import subprocess
 import json
 import tempfile
 import os
 import re
+import sys
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from datetime import datetime
 from .base import BaseExtractor, ExtractionError
 from .url_utils import expand_url, is_mobile_or_shortened_url
 
 
 class RedditExtractor(BaseExtractor):
-    """Extract Reddit posts and comments using Node.js extractor."""
+    """Extract Reddit posts and comments using Python wrapper with Brave/Tavily fallback."""
 
     @property
     def platform(self) -> str:
@@ -27,105 +28,57 @@ class RedditExtractor(BaseExtractor):
             r"redd\.it/\w+",
         ]
 
-    async def extract(self, url: str, max_comments: int = 20) -> Dict[str, Any]:
+    async def extract(self, url: str, max_comments: int = 20, title: Optional[str] = None) -> Dict[str, Any]:
         """
-        Extract Reddit post and comments.
+        Extract Reddit post and comments using Python wrapper with short link resolution.
 
         Args:
-            url: Reddit post URL (supports mobile/shortened URLs)
+            url: Reddit post URL (supports short links, permalinks)
             max_comments: Maximum number of comments to extract (default: 20)
+            title: Post title (optional, helps resolve short links if redirect fails)
 
         Returns:
             Standardized content dict with post and comments
         """
         try:
-            # Expand mobile/shortened URLs
-            if is_mobile_or_shortened_url(url):
-                url = await expand_url(url)
-            # Get path to the Node.js extractor
+            # Get path to the Python wrapper (extract.py)
             backend_root = Path(__file__).parent.parent.parent.parent
             extractor_dir = backend_root / "extractors" / "reddit"
-            extractor_path = extractor_dir / "reddit-extractor.js"
+            python_wrapper = extractor_dir / "extract.py"
 
-            if not extractor_path.exists():
-                raise ExtractionError("Reddit extractor script not found", "reddit", url)
+            if not python_wrapper.exists():
+                raise ExtractionError("Reddit Python wrapper not found", "reddit", url)
 
-            # Create a temp file for output
-            with tempfile.NamedTemporaryFile(mode='w+', suffix='.md', delete=False) as f:
-                temp_file = f.name
+            # Add the extractor dir to Python path so it can import url_resolver
+            sys.path.insert(0, str(extractor_dir))
 
             try:
-                # Run the Node.js extractor
-                result = subprocess.run(
-                    ["node", str(extractor_path), url, temp_file],
-                    capture_output=True,
-                    text=True,
-                    cwd=str(extractor_dir),
-                    timeout=30
-                )
+                # Import and use the updated extract function
+                from extractors.reddit.extract import extract_reddit
 
-                if result.returncode != 0:
-                    error_msg = result.stderr or result.stdout
-                    raise ExtractionError(f"Failed to extract Reddit content: {error_msg}", "reddit", url)
+                # Call the Python wrapper with title parameter
+                result = extract_reddit(url, title=title)
 
-                # Read the extracted content
-                with open(temp_file, 'r') as f:
-                    content = f.read()
+                if not result.get('success'):
+                    error_msg = result.get('error', 'Unknown error')
+                    raise ExtractionError(f"Reddit extraction failed: {error_msg}", "reddit", url)
 
-                # Parse metadata from content
-                title = "Reddit Post"
-                author = ""
-                subreddit = ""
-                score = 0
-                comments_count = 0
-
-                # Extract title
-                title_match = re.search(r'^#\s+(.+)$', content, re.MULTILINE)
-                if title_match:
-                    title = title_match.group(1).strip()
-
-                # Extract author
-                author_match = re.search(r'\*\*Posted by\*\*\s+(u/[\w-]+)', content)
-                if author_match:
-                    author = author_match.group(1)
-
-                # Extract subreddit
-                sub_match = re.search(r'\*\*Subreddit:\*\*\s+r/([\w-]+)', content)
-                if sub_match:
-                    subreddit = sub_match.group(1)
-
-                # Extract score
-                score_match = re.search(r'\*\*Score:\*\*\s+(\d+)', content)
-                if score_match:
-                    score = int(score_match.group(1))
-
-                # Extract comment count
-                comments_match = re.search(r'\*\*Comments:\*\*\s+(\d+)', content)
-                if comments_match:
-                    comments_count = int(comments_match.group(1))
-
+                # Return standardized output
                 return self._standardize_output(
-                    url=url,
-                    title=title,
-                    author=author,
-                    content=content,
-                    metadata={
-                        'subreddit': subreddit,
-                        'score': score,
-                        'comments': comments_count,
-                        'platform': 'reddit'
-                    }
+                    url=result.get('url', url),
+                    title=result.get('title', 'Reddit Post'),
+                    author=result.get('author', ''),
+                    content=result.get('content', ''),
+                    metadata=result.get('metadata', {})
                 )
 
             finally:
-                # Clean up temp file
-                if os.path.exists(temp_file):
-                    os.unlink(temp_file)
+                # Clean up sys.path
+                if str(extractor_dir) in sys.path:
+                    sys.path.remove(str(extractor_dir))
 
-        except subprocess.TimeoutExpired:
-            raise ExtractionError("Reddit extraction timed out after 30 seconds", "reddit", url)
-        except FileNotFoundError:
-            raise ExtractionError("Node.js not installed or extractor not found", "reddit", url)
+        except ImportError as e:
+            raise ExtractionError(f"Failed to import Reddit extractor: {str(e)}", "reddit", url)
         except Exception as e:
             if isinstance(e, ExtractionError):
                 raise
