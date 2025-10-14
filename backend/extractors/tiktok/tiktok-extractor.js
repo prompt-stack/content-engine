@@ -88,42 +88,66 @@ export async function extractTikTokForContentStack(url) {
   try {
     console.log('Fetching TikTok page...');
     const result = await getTranscript(url);
-    
+
     if (!result.hasTranscript) {
-      return {
-        platform: 'tiktok',
-        title: `TikTok by @${result.metadata.user}`,
-        url: result.link,
-        content: `TikTok Video (No Transcript Available)
+      const content = `# TikTok: @${result.metadata.user}
 
-@${result.metadata.user}
-${result.metadata.description || 'No description'}
+**Video ID:** ${result.metadata.videoId}
+**URL:** ${result.link}
 
-This video doesn't have captions. You may need to:
-1. Watch the video and transcribe manually
-2. Use speech-to-text tools
-3. Check if captions are available in TikTok app`,
-        metadata: result.metadata
-      };
-    }
-    
-    return {
-      platform: 'tiktok',
-      title: `TikTok by @${result.metadata.user}`,
-      url: result.link,
-      content: `TikTok Video Transcript
+## Description
 
-@${result.metadata.user}
-Language: ${result.metadata.language}
-
-Description:
 ${result.metadata.description || 'No description'}
 
 ---
 
-Transcript:
-${result.text}`,
-      metadata: result.metadata,
+**Note:** This video doesn't have captions available. You may need to:
+1. Watch the video and transcribe manually
+2. Use speech-to-text tools
+3. Check if captions are available in TikTok app`;
+
+      return {
+        platform: 'tiktok',
+        title: `TikTok by @${result.metadata.user}`,
+        url: result.link,
+        content: content,
+        metadata: result.metadata,
+        hasTranscript: false,
+        success: true
+      };
+    }
+
+    // Calculate word count
+    const wordCount = result.text.split(/\s+/).filter(w => w.length > 0).length;
+
+    const content = `# TikTok: @${result.metadata.user}
+
+**Language:** ${result.metadata.language}
+**Video ID:** ${result.metadata.videoId}
+**URL:** ${result.link}
+
+## Description
+
+${result.metadata.description || 'No description'}
+
+---
+
+## Transcript
+
+**Word Count:** ${wordCount.toLocaleString()}
+
+${result.text}`;
+
+    return {
+      platform: 'tiktok',
+      title: `TikTok by @${result.metadata.user}`,
+      url: result.link,
+      content: content,
+      metadata: {
+        ...result.metadata,
+        transcriptWordCount: wordCount
+      },
+      hasTranscript: true,
       success: true
     };
     

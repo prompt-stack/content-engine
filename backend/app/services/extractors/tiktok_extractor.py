@@ -148,11 +148,50 @@ class TikTokExtractor(BaseExtractor):
             elif not title:
                 title = f"TikTok by @{creator}" if creator else "TikTok Video"
 
+            # Format content with markdown
+            if transcript:
+                # Calculate word count
+                word_count = len(transcript.split())
+
+                content = f"""# TikTok: @{creator}
+
+**Language:** eng
+**Video ID:** {url.split('/')[-1] if '/' in url else 'unknown'}
+**URL:** {url}
+
+## Description
+
+{description or 'No description'}
+
+---
+
+## Transcript
+
+**Word Count:** {word_count:,}
+
+{transcript}"""
+            else:
+                content = f"""# TikTok: @{creator}
+
+**Video ID:** {url.split('/')[-1] if '/' in url else 'unknown'}
+**URL:** {url}
+
+## Description
+
+{description or 'No description'}
+
+---
+
+**Note:** This video doesn't have captions available. You may need to:
+1. Watch the video and transcribe manually
+2. Use speech-to-text tools
+3. Check if captions are available in TikTok app"""
+
             return self._standardize_output(
                 url=url,
                 title=title,
                 author=creator,
-                content=transcript,
+                content=content,
                 metadata={
                     'description': description,
                     'has_transcript': bool(transcript),
@@ -161,6 +200,7 @@ class TikTokExtractor(BaseExtractor):
                     'comments': comments,
                     'shares': shares,
                     'duration': duration,
+                    'transcriptWordCount': len(transcript.split()) if transcript else 0,
                 }
             )
 

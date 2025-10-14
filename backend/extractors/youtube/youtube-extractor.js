@@ -262,61 +262,93 @@ export async function getYouTubeTranscript(url) {
 export async function extractYouTubeForContentStack(url) {
     try {
         const result = await getYouTubeTranscript(url);
-        
-        const duration = result.duration ? 
-            `${Math.floor(result.duration / 60)} minutes ${result.duration % 60} seconds` : 
-            'Unknown duration';
-        
+
+        const duration = result.duration ?
+            `${Math.floor(result.duration / 60)} minutes ${result.duration % 60} seconds` :
+            'Unknown';
+
+        // Format upload date if available
+        const uploadDate = result.metadata?.uploadDate ?
+            result.metadata.uploadDate.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3') :
+            'Unknown';
+
         if (!result.hasTranscript) {
+            const content = `# YouTube: ${result.title}
+
+**Channel:** ${result.author}
+**Duration:** ${duration}
+**Views:** ${result.metadata?.viewCount?.toLocaleString() || 'N/A'}
+**Published:** ${uploadDate}
+**URL:** ${result.url}
+
+## Description
+
+${result.description || 'No description available'}
+
+---
+
+**Note:** ${result.error || 'No transcript available for this video'}`;
+
             return {
                 platform: 'youtube',
                 title: result.title || 'YouTube Video',
                 author: result.author,
                 url: result.url,
-                content: `YouTube Video: ${result.title}
-
-Author: ${result.author}
-Duration: ${duration}
-Views: ${result.metadata?.viewCount?.toLocaleString() || 'N/A'}
-
-Description:
-${result.description || 'No description available'}
-
-Note: ${result.error || 'No transcript available for this video'}`,
+                content: content,
                 metadata: result.metadata,
                 success: true
             };
         }
-        
+
+        // Calculate word count
+        const wordCount = result.transcript.split(/\s+/).filter(w => w.length > 0).length;
+
+        const content = `# YouTube: ${result.title}
+
+**Channel:** ${result.author}
+**Duration:** ${duration}
+**Views:** ${result.metadata?.viewCount?.toLocaleString() || 'N/A'}
+**Published:** ${uploadDate}
+**URL:** ${result.url}
+
+## Description
+
+${result.description || 'No description available'}
+
+---
+
+## Transcript
+
+**Word Count:** ${wordCount.toLocaleString()}
+
+${result.transcript}`;
+
         return {
             platform: 'youtube',
             title: result.title,
             author: result.author,
             url: result.url,
-            content: `YouTube Video: ${result.title}
-
-Author: ${result.author}
-Duration: ${duration}
-Views: ${result.metadata?.viewCount?.toLocaleString() || 'N/A'}
-
-Description:
-${result.description}
-
----
-
-Transcript:
-${result.transcript}`,
-            metadata: result.metadata,
+            content: content,
+            metadata: {
+                ...result.metadata,
+                transcriptWordCount: wordCount
+            },
             hasTranscript: true,
             success: true
         };
-        
+
     } catch (error) {
         return {
             platform: 'youtube',
             title: 'YouTube Video',
             url: url,
-            content: `Failed to extract YouTube content: ${error.message}`,
+            content: `# YouTube Video
+
+**Error:** Failed to extract content
+
+${error.message}
+
+**URL:** ${url}`,
             error: error.message,
             success: false
         };

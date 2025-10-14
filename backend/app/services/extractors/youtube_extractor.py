@@ -230,36 +230,63 @@ class YouTubeExtractor(BaseExtractor):
         return text.strip()
 
     def _format_with_transcript(self, video_info: Dict[str, Any], transcript: str) -> str:
-        """Format content with transcript."""
-        return f"""YouTube Video Transcript
+        """Format content with transcript in LLM-optimized markdown."""
+        # Format duration
+        duration = self._format_duration(video_info.get('duration'))
 
-Title: {video_info.get('title', 'Unknown')}
-Channel: {video_info.get('uploader', 'Unknown')}
-Duration: {self._format_duration(video_info.get('duration'))}
-Views: {video_info.get('view_count', 0):,}
+        # Format upload date from YYYYMMDD to YYYY-MM-DD
+        upload_date = video_info.get('upload_date', '')
+        if upload_date and len(upload_date) == 8:
+            upload_date = f"{upload_date[:4]}-{upload_date[4:6]}-{upload_date[6:]}"
 
-Description:
-{video_info.get('description', 'No description')[:500]}
+        # Calculate word count
+        word_count = len(transcript.split())
+
+        return f"""# YouTube: {video_info.get('title', 'Unknown')}
+
+**Channel:** {video_info.get('uploader', 'Unknown')}
+**Duration:** {duration}
+**Views:** {video_info.get('view_count', 0):,}
+**Published:** {upload_date or 'Unknown'}
+**URL:** {video_info.get('webpage_url', '')}
+
+## Description
+
+{video_info.get('description', 'No description available')}
 
 ---
 
-Transcript:
+## Transcript
+
+**Word Count:** {word_count:,}
+
 {transcript}"""
 
     def _format_no_transcript(self, video_info: Dict[str, Any]) -> str:
         """Format content when no transcript is available."""
-        return f"""YouTube Video (No Transcript Available)
+        # Format duration
+        duration = self._format_duration(video_info.get('duration'))
 
-Title: {video_info.get('title', 'Unknown')}
-Channel: {video_info.get('uploader', 'Unknown')}
-Duration: {self._format_duration(video_info.get('duration'))}
-Views: {video_info.get('view_count', 0):,}
+        # Format upload date from YYYYMMDD to YYYY-MM-DD
+        upload_date = video_info.get('upload_date', '')
+        if upload_date and len(upload_date) == 8:
+            upload_date = f"{upload_date[:4]}-{upload_date[4:6]}-{upload_date[6:]}"
 
-Description:
-{video_info.get('description', 'No description')[:500]}
+        return f"""# YouTube: {video_info.get('title', 'Unknown')}
 
-This video doesn't have captions/subtitles available.
-You may need to watch the video to understand the content."""
+**Channel:** {video_info.get('uploader', 'Unknown')}
+**Duration:** {duration}
+**Views:** {video_info.get('view_count', 0):,}
+**Published:** {upload_date or 'Unknown'}
+**URL:** {video_info.get('webpage_url', '')}
+
+## Description
+
+{video_info.get('description', 'No description available')}
+
+---
+
+**Note:** This video doesn't have captions/subtitles available. You may need to watch the video to understand the content."""
 
     def _format_duration(self, seconds: Optional[int]) -> str:
         """Format duration in seconds to human-readable format."""
