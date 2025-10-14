@@ -32,40 +32,46 @@ export default function Home() {
       <div className="text-center space-y-6 max-w-2xl">
         <h1 className="text-4xl font-bold">Content Engine</h1>
         <p className="text-xl text-muted-foreground">
-          AI-powered content extraction and processing
+          Extract clean, LLM-ready content from social media and articles
         </p>
 
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>Backend Status</CardTitle>
-            <CardDescription>Connection to API server</CardDescription>
+            <CardTitle>Supported Platforms</CardTitle>
+            <CardDescription>Extract from any of these sources</CardDescription>
           </CardHeader>
           <CardContent>
-            {loading && <p>Checking connection...</p>}
-            {error && <p className="text-destructive">❌ {error}</p>}
-            {health && (
-              <div className="space-y-2 text-left">
-                <p className="text-green-600 font-semibold">✅ Connected</p>
-                <p className="text-sm"><strong>Status:</strong> {health.status}</p>
-                <p className="text-sm"><strong>Environment:</strong> {health.environment}</p>
-                <div className="text-sm">
-                  <strong>Features:</strong>
-                  <ul className="ml-4 mt-1 space-y-1">
-                    <li>OpenAI: {health.features?.openai ? '✅' : '❌'}</li>
-                    <li>Anthropic: {health.features?.anthropic ? '✅' : '❌'}</li>
-                    <li>Gemini: {health.features?.gemini ? '✅' : '❌'}</li>
-                    <li>DeepSeek: {health.features?.deepseek ? '✅' : '❌'}</li>
-                    <li>Default LLM: {health.features?.default_llm}</li>
-                  </ul>
-                </div>
+            <div className="grid grid-cols-2 gap-4 text-left">
+              <div className="space-y-2">
+                <p className="font-semibold">Social Media</p>
+                <ul className="text-sm space-y-1">
+                  <li>✅ YouTube (with transcripts)</li>
+                  <li>✅ TikTok (with captions)</li>
+                  <li>✅ Reddit (posts + comments)</li>
+                </ul>
               </div>
-            )}
+              <div className="space-y-2">
+                <p className="font-semibold">Web Content</p>
+                <ul className="text-sm space-y-1">
+                  <li>✅ Articles & Blogs</li>
+                  <li>✅ News Sites</li>
+                  <li>✅ Any Web Page</li>
+                </ul>
+              </div>
+            </div>
+            <div className="mt-4 pt-4 border-t">
+              {loading && <p className="text-sm">Checking connection...</p>}
+              {error && <p className="text-sm text-destructive">❌ API: {error}</p>}
+              {health && (
+                <p className="text-sm text-green-600 font-semibold">✅ API Connected ({health.environment})</p>
+              )}
+            </div>
           </CardContent>
         </Card>
 
         <div className="flex gap-4 justify-center mt-6">
           <Link href="/extract">
-            <Button>Extract Content</Button>
+            <Button size="lg">Start Extracting →</Button>
           </Link>
         </div>
       </div>
