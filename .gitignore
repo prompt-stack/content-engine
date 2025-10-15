@@ -90,3 +90,9 @@ tmp/
 *-TESTED.md
 *-FINDINGS.md
 *-ANALYSIS.md
+
+# Extractor test outputs
+backend/extractors/**/*-full.json
+backend/extractors/**/test-*.json
+backend/extractors/**/test-*.md
+backend/extractors/**/-
