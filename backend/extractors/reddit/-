@@ -1,0 +1,356 @@
+# What is the best SaaS/Micro SaaS ideas to build right now?
+
+**Posted by** u/Tajammul82 in r/SaaS
+**Score:** 70 points (93% upvoted)
+**Comments:** 121
+**Posted:** 10/26/2024, 7:07:17 PM
+
+---
+
+I am sole developer and wanted to start my entrepreneur journey. From quite many days I am looking for ideas but failed to get any. Can you please help me with ideas that I can build to start SaaaS/micro Saaa product.
+
+Thanks in advance 🙃
+
+---
+
+## Comments
+
+u/AdNo403 • 70 points
+Finding ideas are super easy nowadays with social media. Go onto a professional Facebook group for a specific occupation/industry and listen to their complaints. Take note of what's working and the common questions, then introduce an MVP solution concept to get early adopters. Next, you could build a landing page, then the app.
+
+  u/Tajammul82 • 2 points
+  I really like your idea, and I’ll definitely look into it.
+
+  u/Far-Proposal-8773 • 2 points
+  this dude is kinda smart
+
+  u/Eshan2703 • 2 points
+  can anyone make a saas that will do it for me
+
+    u/AdNo403 • 2 points
+    I've got a feature on my [Build TBD](http://buildtbd.com) app that will guide you through different form I puts to collect your resources, interests, desired business model, skills, etc and will output a business proposition. Once you have the rough idea, create a "business" in the app and go through the business model canvas. Once that is finished, the AI is always a click away - finds customer personas, aligns marketing strategies, finds jobs to be done, etc.
+
+      u/papillon-and-on • 1 points
+      The home page goes blank for me on iOS. I can see text then it blanks out.
+      
+      Btw I have an ad blocker. Which is probably the reason.
+
+        u/AdNo403 • 1 points
+        Are you able to scroll down? I just tested on my phone and it looks like one of the recent changes I made isn't responsive (I'll correct it soon). I added some pictures in a carousel.
+
+          u/papillon-and-on • 2 points
+          Yes, I hadn't tried that. It takes a while to get to the content though. In fact, I've tried the site on a few different browsers, some with adblockers and some without but I still see the same problem.
+          
+          [https://www.loom.com/share/00ffc3a7005c43c8a477dd843dd6b21e?sid=750fc27c-f0de-497c-83e5-cdb84ec04d5e](https://www.loom.com/share/00ffc3a7005c43c8a477dd843dd6b21e?sid=750fc27c-f0de-497c-83e5-cdb84ec04d5e)
+          
+          I had a look at the code, but unfortunately with the obfuscation from webpack combined with my lack of knowledge of Elementor I wasn't able to pinpoint the problem. My best guess is it has something to do with Elementor's implementation of swiper.js - which is a bit out of date. Your version is 8.4.5 but the latest is 11.x. But that's just a guess.
+
+  u/Klutzy_Ad_9488 • 1 points
+  Hardest thing bro can't find ideas. ![gif](emote|free_emotes_pack|facepalm)
+
+---
+
+u/topGfusion • 24 points
+Here is the biggest secret. 
+
+Fix shit in your life, share it, see what happens 
+
+Try that and you have a better chance and less wasting time on something you believe would work. 
+
+Work with feedback not YouTube as your driving source.
+
+  u/Tajammul82 • 4 points
+  I really love your approach—it’s a fantastic insight. Thank you!
+
+    u/DollarAkshay • 2 points
+    Bot Response
+
+      u/Tajammul82 • 3 points
+      😶
+
+        u/topGfusion • 2 points
+        If you hang out with LLm's all day, your response—will look like this.
+        
+        It will look cool—we will know you used AI. 
+        
+        The human response will have a clear tell--because of that specific symbol —
+
+          u/jamesmakan • 3 points
+          Lol hey! I used em dashes regularly long before chatgpt became popular
+
+            u/yogeshaggarwal • 1 points
+            Correct me too bro. Cz it looks cool.
+
+              u/jamesmakan • 1 points
+              i know right
+
+  u/NoConcentrate7845 • 2 points
+  True. Worst case at least you have something personally useful.
+
+  u/Klutzy_Ad_9488 • 2 points
+  I don't have problem in my life that how my brain function when thinking about my own problem.![gif](emote|free_emotes_pack|poop)
+
+  u/f1xie • 1 points
+  this is the move imo (and how we built our first revenue-generating startup)
+  
+  I always tell people to start a non-SaaS business (dropshipping, a service business, whatever) and then write software to solve the problems you encounter
+  
+  that's how I've found every problem that actually made money, and you simultaneously build out a case study while also making money (our non-SaaS biz actually got acquired which gave us the capital to work on the SaaS)
+  
+  if you don't have a business, just get one of the many insta-marketed courses out there, like [https://pdffarming.com/](https://pdffarming.com/), [https://buildatinysaas.com/](https://buildatinysaas.com/), or [https://www.dropship.io/](https://www.dropship.io/) and start (doesn't matter which -- just stick with one and get profitable)
+
+---
+
+u/Arindam_200 • 8 points
+Ig to get a SaaS start with a problem that you've personally faced.
+
+  u/Tajammul82 • 0 points
+  I’m having difficulty finalizing it. What would be a great idea for rapid growth? Any suggestions?
+
+---
+
+u/Che_Ara • 13 points
+You don't find ideas to build a SaaS product. Change that mindset. In business you need to start with a problem not the solution. Who knows you could solve a problem with a service, need not be a SaaS product.
+
+Looks like you are thinking you have got technical skills specifically some tech stack which you want to put in use. It means you are solving your problem. JUST YOUR PROBLEM. That is not business.
+
+You need to solve at least a few people's problems and if that problem is yours as well then fantastic. Depending on the scale you want to achieve, you need to pick the right problem.
+
+  u/Tajammul82 • 1 points
+  Thank you for responding—I really like your approach and mindset. Could you suggest how I can identify problems to build a business around?
+
+    u/Che_Ara • 4 points
+    Others can't find problems for you because what we think  as problems may not be problems in your opinion. Or those problems may not inspire you. Or you don't have enough resources to solve those problems. So you need to figure that out.
+    
+    As a kid, I saw my parents failing in multiple businesses. That is my motivation to do business.
+    
+    I entered IT field in the early 2000s (I am an accidental software professional). With that experience, I decided to do a technology enabled business. I found a passion for edtech domain because I struggled to complete my education. So, I concluded to build something for that.
+    
+    That is how you decide what you want to build. I hope you get that.
+    
+    It doesn't end there. Your passion doesn't matter if the market doesn't need your product like what I developed. Without studying or understanding well, I spent time and money building a social networking platform exclusively for indian society. It failed terribly. So, you don't make that mistake. 
+    
+    Whatever you build, get enough validation and build it small.
+
+      u/Tajammul82 • 1 points
+      Thank you for responding and I appreciate your approach. I won’t pursue this idea further; I’ll focus solely on building my passion. Thanks for your suggestion.
+
+        u/Che_Ara • 1 points
+        Good luck. Reach out to me in case you need any further inputs.
+
+      u/Plus_Information8597 • 1 points
+      edtech business and solving others problems... ![gif](emote|free_emotes_pack|shrug)
+
+  u/[deleted] • 1 points
+  [removed]
+
+    u/Che_Ara • 1 points
+    Haven't heard of this; will check. Thank you for sharing the link. Are you related to it?
+
+  u/blakdevroku • 1 points
+  And yet this comment has 11 upvotes!!! Your advice doesn't ring a bell with most developers, they think code is the product.
+
+    u/Che_Ara • 1 points
+    Yeah, I know. Unfortunately, in startup world people learn things with costly mistakes.
+
+---
+
+u/ahaanpandit • 11 points
+Build something that solves a problem. 
+
+  
+Try subs like r/SomebodyMakeThis  to find some inspirations.
+
+  u/Tajammul82 • 2 points
+  Thanks👍
+
+  u/GDongLin • 1 points
+  this is great idea
+  
+  ![gif](giphy|dlbVFtcLUhaoAY2scH)
+
+---
+
+u/whitebird53 • 2 points
+Idas are everywhere, ideas are mostly generic and inbounded, but instead problems are context based, specific and more importants to focus on:
+
+Many people talk about the concept, without clarifying it, here an example to understand the difference:
+
+Idea: build and inventory management system for companies.
+
+Problem: distribution companies always need to search in inventory and warehouses, they can't operate without a system that can search and get items information in real time, so they can timely serve their customer.
+
+Search here is the pain point.. So, when you want to build an inventory management system, starting with the problem means prioritize first how to solve the main pain points first, and if many of your product user personnas have he same pain point, then chances you have a good product market segment fit. And, so on you expend your product solution based on the problem first not the idea itself.
+
+  u/WahedSikder • 1 points
+  You have explained it well!
+
+---
+
+u/Specialist-Pitch3704 • 3 points
+To do app - no.. joking 😃
+
+  u/coldhand100 • 2 points
+  I was thinking of a counter button 😝
+
+    u/papillon-and-on • 1 points
+    So like an up button and down button? Put it in the blockchain. Mix in some AI and you got yourself a million dollar idea!
+
+  u/Tajammul82 • 1 points
+  Do you really think a to-do list app will achieve growth at this time?
+
+---
+
+u/[deleted] • 3 points
+[removed]
+
+  u/Tajammul82 • 2 points
+  Thank you for the advice and encouragement! Your suggestions resonate, especially starting small with an MVP. I’d love any insights from your experience at Fission AI Lab on identifying target audiences and gathering feedback. Thanks again, and I may reach out as I progress!
+
+---
+
+u/pknerd • 2 points
+Sorry for shameless self-promotion, I build and talk about "AI Wrappers" aka "AI Apps" on my blog. Take a look: https://blog.adnansiddiqi.me/develop-a-recipe-generator-ai-app-in-php-using-openai/
+
+  u/hydration_hustler • 2 points
+  great blog!
+
+  u/Tajammul82 • 1 points
+  👍
+
+  u/[deleted] • 1 points
+  [removed]
+
+    u/pknerd • 1 points
+    I did not get whether it is just another "Idea Directory" or you help to make an idea a reality.
+
+      u/[deleted] • 1 points
+      [removed]
+
+        u/pknerd • 1 points
+        Already such services available
+
+---
+
+u/FortuneGrouchy4701 • 2 points
+How is going with your SaaS?
+
+---
+
+u/Particular_Knee_9044 • 1 points
+Please don’t vomit out yet another garbage site. Please 🛑.
+
+  u/Tajammul82 • 1 points
+  😶
+
+---
+
+u/[deleted] • 1 points
+[deleted]
+
+  u/RTooDTo • 2 points
+  I am a software engineer with over 20 yoe. I’d be interested to hear more and potentially partner up. DM if interested.
+
+    u/Academic_Target2674 • 1 points
+    Can we have a chat?
+
+      u/pknerd • 1 points
+      I myself is a developer over 15 years of experience. These days I am dabbling with trading and AI automation related tools using GPT and other LLM APis, making chatbots connected with orgnization knowledgebase and other stuff. DM me if interested
+
+      u/RTooDTo • 1 points
+      Sure. My DMs are open.
+
+  u/pknerd • 2 points
+  I myself is a developer over 15 years of experience. These days I am dabbling with trading and AI automation related tools using GPT and other LLM APis, making chatbots connected with orgnization knowledgebase and other stuff. DM me if interested.
+  
+  Learn more about me at: https://adnansiddiqi.me/
+
+  u/Tajammul82 • 1 points
+  I’m excited to work with you! I’m a software developer with experience in both front-end and back-end. I’m currently attending DMU. Please accept my request—I’d love to discuss your idea and collaborate with you.
+
+---
+
+u/ComprehensiveChapter • 1 points
+FinOps is going to be a very hot space. Every CIO wants to reduce their cloud expenses, Saas expense and now their AI expenses.
+
+  u/antreas89 • 1 points
+  Heard reducing of cloud expenses before. What are the trends? Are companies going in premise web services?
+
+  u/pknerd • 1 points
+  Can you elaborate?
+
+---
+
+u/[deleted] • 1 points
+[removed]
+
+  u/coldhand100 • 1 points
+  Interesting idea but your site, at least for me, offers nothing but enticing. Where’s the stats that’s gone on to build and prove your info is indeed validated and there’s a demand for it.
+
+    u/[deleted] • 1 points
+    [removed]
+
+      u/coldhand100 • 1 points
+      That’s interesting, but playing devils advocate, why not build them yourself?
+      
+      (I’m not bashing, just curious)
+
+---
+
+u/DollarAkshay • 1 points
+I believe this is a bot account based on the comments.   
+Also this account was made on October 26th 2024
+
+  u/Tajammul82 • 2 points
+  No, this isn’t a bot account—I’m a real person. I recently deleted all my social media apps and decided to switch over to Reddit. I’m a new user here.
+
+---
+
+u/nsshing • 1 points
+Imo you either find a niche problem that no one bothered to solve, like others said here or you find problems that were not possible to solve before LLM or reasoning models maybe. Or both
+
+I am building a research tool that was not possible to build without LLMs for example. It can save my users a lot of time to screen them manually/ expensive to hire people to do it.
+
+---
+
+u/Aggressive_Arm_6295 • 1 points
+Bilmiyorum
+
+---
+
+u/Kasubijo • 1 points
+I’m using painkillerideas.com to find ideas
+
+  u/Tajammul82 • 2 points
+  This is a paid platform, and there is no free trial available.
+
+    u/Kasubijo • 2 points
+    These are facts
+
+  u/[deleted] • 1 points
+  [removed]
+
+    u/Kasubijo • 2 points
+    Seems quick similar, but with more focus on the pain than the idea. I might try both
+
+---
+
+u/NodeJS4Lyfe • 0 points
+If you don't have any ideas, yoou should go get a job as a developer instead of trying to be an entrepreneur. Entrepreneurs use their ideas to build companies that hire developers like you. Don't try to be someone you're not.
+
+  u/Positive_Dirt_7020 • 10 points
+  Fuck you. He wants to be an entrepreneur so be it, he just need the idea.
+
+    u/NodeJS4Lyfe • 1 points
+    A good idea would be to get a job.
+
+---
+
+u/NodeJS4Lyfe • -1 points
+If you don't have any ideas, yoou should go get a job as a developer instead of trying to be an entrepreneur. Entrepreneurs use their ideas to build companies that hire developers like you. Don't try to be someone you're not.
+
+  u/Tajammul82 • 13 points
+  I’ve been working for the past 5 years, and now I want to create something of my own.
+
+---
+

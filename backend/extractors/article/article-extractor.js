@@ -143,19 +143,127 @@ function htmlToMarkdown(html) {
     codeBlockStyle: 'fenced',
     bulletListMarker: '-'
   });
-  
+
   // Add custom rules
   turndownService.addRule('removeImages', {
     filter: 'img',
     replacement: () => ''
   });
-  
+
   turndownService.addRule('removeVideos', {
     filter: ['video', 'iframe'],
     replacement: () => ''
   });
-  
+
   return turndownService.turndown(html);
+}
+
+/**
+ * Convert HTML table to Markdown table
+ */
+function tableToMarkdown($table) {
+  const rows = [];
+
+  // Extract headers
+  const headers = [];
+  $table.find('thead tr th, thead tr td').each((i, el) => {
+    headers.push(cheerio.load(el).text().trim() || `Col ${i + 1}`);
+  });
+
+  // If no thead, try first row
+  if (headers.length === 0) {
+    $table.find('tbody tr:first-child th, tbody tr:first-child td, tr:first-child th, tr:first-child td').each((i, el) => {
+      headers.push(cheerio.load(el).text().trim() || `Col ${i + 1}`);
+    });
+  }
+
+  if (headers.length === 0) {
+    return ''; // No valid table structure
+  }
+
+  // Add header row
+  rows.push('| ' + headers.join(' | ') + ' |');
+  rows.push('| ' + headers.map(() => '---').join(' | ') + ' |');
+
+  // Extract data rows
+  $table.find('tbody tr, tr').each((i, row) => {
+    const cells = [];
+    cheerio.load(row)('td, th').each((j, cell) => {
+      cells.push(cheerio.load(cell).text().trim().replace(/\n/g, ' '));
+    });
+
+    // Skip header row if it's in tbody
+    if (cells.length > 0 && cells.length === headers.length) {
+      rows.push('| ' + cells.join(' | ') + ' |');
+    }
+  });
+
+  return rows.length > 2 ? rows.join('\n') : ''; // Only return if we have data rows
+}
+
+/**
+ * Extract structured content (tables + headings) for data-heavy pages
+ */
+function extractStructuredContent(html, url) {
+  const $ = cheerio.load(html);
+
+  // Remove unwanted elements
+  $('script, style, noscript, nav, header, footer, aside, .ad, .advertisement, .social-share').remove();
+
+  const parts = [];
+
+  // Get title
+  const title = $('meta[property="og:title"]').attr('content') ||
+                $('meta[name="twitter:title"]').attr('content') ||
+                $('title').text() ||
+                $('h1').first().text();
+
+  if (title) {
+    parts.push(`# ${title.trim()}`);
+    parts.push('');
+  }
+
+  // Process main content area or body
+  const contentArea = $('main, article, [role="main"], #content, .content, body').first();
+
+  // Extract headings and tables in order
+  contentArea.find('h1, h2, h3, h4, table, p').each((i, elem) => {
+    const tagName = elem.tagName.toLowerCase();
+
+    if (tagName === 'h1' || tagName === 'h2' || tagName === 'h3' || tagName === 'h4') {
+      const text = $(elem).text().trim();
+      if (text && text !== title) {
+        const level = tagName === 'h1' ? '# ' : tagName === 'h2' ? '## ' : tagName === 'h3' ? '### ' : '#### ';
+        parts.push('');
+        parts.push(level + text);
+        parts.push('');
+      }
+    } else if (tagName === 'table') {
+      const markdown = tableToMarkdown($(elem));
+      if (markdown) {
+        parts.push('');
+        parts.push(markdown);
+        parts.push('');
+      }
+    } else if (tagName === 'p') {
+      const text = $(elem).text().trim();
+      if (text && text.length > 50) { // Only include substantial paragraphs
+        parts.push(text);
+        parts.push('');
+      }
+    }
+  });
+
+  const content = parts.join('\n').trim();
+
+  return {
+    title: title?.trim() || 'Untitled',
+    author: $('meta[name="author"]').attr('content')?.trim() || 'Unknown',
+    description: $('meta[property="og:description"]').attr('content') ||
+                 $('meta[name="description"]').attr('content'),
+    content: content,
+    siteName: new URL(url).hostname
+  };
 }
 
 /**
@@ -230,31 +338,52 @@ export async function scrapeArticle(url) {
       .replace(/^\s+|\s+$/g, '')    // Trim
       .replace(/\t/g, '  ');        // Replace tabs with spaces
     
-    // If content is too short, try Playwright
-    const wordCount = cleanText.split(/\s+/).filter(word => word.length > 0).length;
+    // If content is too short, try Playwright then structured extraction
+    let wordCount = cleanText.split(/\s+/).filter(word => word.length > 0).length;
     if (wordCount < 100) {
-      
+      console.error(`⚠️  Low word count (${wordCount}), trying Playwright...`);
+
       try {
         const playwrightResult = await fetchPageWithPlaywright(url);
-        
+
         // Try extraction again with Playwright-rendered content
         try {
           article = extractWithReadability(playwrightResult.html, playwrightResult.url);
         } catch (e) {
           article = extractWithCheerio(playwrightResult.html, playwrightResult.url);
         }
-        
+
         // Re-convert and clean
         markdown = article.content ? htmlToMarkdown(article.content) : article.textContent || '';
         cleanText = markdown
           .replace(/\n{3,}/g, '\n\n')
           .replace(/^\s+|\s+$/g, '')
           .replace(/\t/g, '  ');
-          
+
+        wordCount = cleanText.split(/\s+/).filter(word => word.length > 0).length;
         finalUrl = playwrightResult.url;
+
+        // If still too short, try structured content extraction (tables + headings)
+        if (wordCount < 100) {
+          console.error(`⚠️  Still low word count (${wordCount}), extracting structured content (tables)...`);
+          article = extractStructuredContent(playwrightResult.html, playwrightResult.url);
+          cleanText = article.content;
+          wordCount = cleanText.split(/\s+/).filter(word => word.length > 0).length;
+          console.error(`✅ Structured extraction: ${wordCount} words`);
+        }
       } catch (playwrightError) {
         console.error('Playwright extraction failed:', playwrightError.message);
-        // Continue with original extraction
+        // Try structured extraction on original HTML as last resort
+        console.error('📊 Trying structured content extraction on original HTML...');
+        try {
+          article = extractStructuredContent(html, finalUrl);
+          cleanText = article.content;
+          wordCount = cleanText.split(/\s+/).filter(word => word.length > 0).length;
+          console.error(`✅ Structured extraction: ${wordCount} words`);
+        } catch (structuredError) {
+          console.error('Structured extraction failed:', structuredError.message);
+          // Continue with original extraction
+        }
       }
     }
     
