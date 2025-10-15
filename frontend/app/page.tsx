@@ -28,20 +28,20 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div className="text-center space-y-6 max-w-2xl">
-        <h1 className="text-4xl font-bold">Content Engine</h1>
-        <p className="text-xl text-muted-foreground">
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 md:p-24">
+      <div className="text-center space-y-6 max-w-2xl w-full">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">Content Engine</h1>
+        <p className="text-base sm:text-lg md:text-xl text-muted-foreground px-4">
           Extract clean, LLM-ready content from social media and articles
         </p>
 
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>Supported Platforms</CardTitle>
-            <CardDescription>Extract from any of these sources</CardDescription>
+            <CardTitle className="text-lg sm:text-xl">Supported Platforms</CardTitle>
+            <CardDescription className="text-sm">Extract from any of these sources</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-4 text-left">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
               <div className="space-y-2">
                 <p className="font-semibold">Social Media</p>
                 <ul className="text-sm space-y-1">
@@ -69,9 +69,9 @@ export default function Home() {
           </CardContent>
         </Card>
 
-        <div className="flex gap-4 justify-center mt-6">
-          <Link href="/extract">
-            <Button size="lg">Start Extracting →</Button>
+        <div className="flex gap-4 justify-center mt-6 px-4">
+          <Link href="/extract" className="w-full sm:w-auto">
+            <Button size="lg" className="w-full sm:w-auto">Start Extracting →</Button>
           </Link>
         </div>
       </div>

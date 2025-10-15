@@ -43,10 +43,23 @@ export function ExtractedContentView({ data }: ExtractedContentViewProps) {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Extracted Content</CardTitle>
-          <CardDescription>
-            Platform: {data.platform || 'Unknown'} • Source: {data.source || 'N/A'}
-          </CardDescription>
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+            <div className="flex-1">
+              <CardTitle>Extracted Content</CardTitle>
+              <CardDescription>
+                Platform: {data.platform || 'Unknown'} • Source: {data.source || 'N/A'}
+              </CardDescription>
+            </div>
+            {/* Quick Actions - Top */}
+            <div className="flex flex-wrap gap-2">
+              <Button onClick={handleCopyText} variant={copied ? "default" : "outline"} size="sm">
+                {copied ? '✅ Copied!' : '📋 Copy'}
+              </Button>
+              <Button onClick={handleDownloadJSON} variant="outline" size="sm">
+                ⬇️ JSON
+              </Button>
+            </div>
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {data.title && (
@@ -69,22 +82,9 @@ export function ExtractedContentView({ data }: ExtractedContentViewProps) {
 
           {data.content && (
             <div className="prose prose-sm max-w-none">
-              <p className="text-sm whitespace-pre-wrap">{data.content}</p>
+              <p className="text-sm whitespace-pre-wrap break-words">{data.content}</p>
             </div>
           )}
-
-          {/* Quick Actions */}
-          <div className="pt-4 border-t">
-            <h4 className="font-semibold text-sm mb-3">Actions</h4>
-            <div className="flex flex-wrap gap-2">
-              <Button onClick={handleCopyText} variant={copied ? "default" : "outline"} size="sm">
-                {copied ? '✅ Copied!' : '📋 Copy Text'}
-              </Button>
-              <Button onClick={handleDownloadJSON} variant="outline" size="sm">
-                ⬇️ Download JSON
-              </Button>
-            </div>
-          </div>
         </CardContent>
       </Card>
     </>
