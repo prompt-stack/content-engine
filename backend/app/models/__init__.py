@@ -1,6 +1,7 @@
 from .base import Base
 from .user import User, UserTier
 from .content import Content, Newsletter, Platform, ProcessingStatus
+from .newsletter_extraction import Extraction, EmailContent, ExtractedLink
 
 __all__ = [
     "Base",
@@ -10,4 +11,7 @@ __all__ = [
     "Newsletter",
     "Platform",
     "ProcessingStatus",
+    "Extraction",
+    "EmailContent",
+    "ExtractedLink",
 ]
