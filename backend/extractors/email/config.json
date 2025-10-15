@@ -1,0 +1,169 @@
+{
+  "newsletters": {
+    "enabled": true,
+    "sources": [
+      {
+        "name": "AlphaSignal",
+        "email": "news@alphasignal.ai",
+        "enabled": true,
+        "category": "tech",
+        "priority": "high"
+      },
+      {
+        "name": "The Rundown Tech",
+        "email": "crew@technews.therundown.ai",
+        "enabled": true,
+        "category": "tech",
+        "priority": "high"
+      },
+      {
+        "name": "The Rundown AI",
+        "email": "news@daily.therundown.ai",
+        "enabled": true,
+        "category": "ai",
+        "priority": "high"
+      }
+    ],
+    "additional_sources": [
+      {
+        "name": "Example - Morning Brew",
+        "email": "morningbrew.com",
+        "enabled": false,
+        "category": "business",
+        "priority": "medium",
+        "note": "Domain-based matching for all Morning Brew newsletters"
+      },
+      {
+        "name": "Example - TechCrunch",
+        "email": "techcrunch.com",
+        "enabled": false,
+        "category": "tech",
+        "priority": "medium"
+      },
+      {
+        "name": "Example - Product Hunt",
+        "email": "producthunt.com",
+        "enabled": false,
+        "category": "product",
+        "priority": "low"
+      }
+    ]
+  },
+  "settings": {
+    "default_days_back": 7,
+    "max_results": 100,
+    "auto_digest": true,
+    "auto_excel": false,
+    "output_format": [
+      "json",
+      "markdown"
+    ],
+    "filter_promotional": true,
+    "extract_links": true,
+    "categories_enabled": [
+      "tech",
+      "ai",
+      "business",
+      "product"
+    ]
+  },
+  "search_patterns": {
+    "include_keywords": [
+      "newsletter",
+      "daily brief",
+      "weekly digest",
+      "the rundown",
+      "alpha signal"
+    ],
+    "exclude_keywords": [
+      "unsubscribe confirmation",
+      "payment receipt",
+      "invoice",
+      "order confirmation"
+    ]
+  },
+  "scheduling": {
+    "daily_extraction": {
+      "enabled": true,
+      "time": "08:00",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ]
+    },
+    "weekly_summary": {
+      "enabled": true,
+      "day": "sunday",
+      "time": "09:00"
+    }
+  },
+  "content_filtering": {
+    "description": "Control which domains/URLs to always accept or reject",
+    "whitelist_domains": [
+      "techcrunch.com",
+      "theverge.com",
+      "wired.com",
+      "arstechnica.com",
+      "reuters.com",
+      "bloomberg.com",
+      "wsj.com",
+      "nytimes.com",
+      "medium.com",
+      "substack.com",
+      "dev.to",
+      "hackernoon.com",
+      "github.com",
+      "arxiv.org",
+      "papers.withgoogle.com",
+      "huggingface.co",
+      "blog.google",
+      "github.blog",
+      "techcommunity.microsoft.com",
+      "aistudio.google.com",
+      "microsoft.ai",
+      "openai.com",
+      "platform.openai.com",
+      "warp.dev",
+      "graphite.io",
+      "ai21.com",
+      "blog.langchain.com",
+      "fiddler.ai",
+      "philschmid.de",
+      "encord.com"
+    ],
+    "blacklist_domains": [
+      "typeform.com",
+      "mailchi.mp",
+      "surveymonkey.com"
+    ],
+    "curator_domains": [
+      "alphasignal.ai",
+      "therundown.ai",
+      "rundown.ai"
+    ],
+    "content_indicators": [
+      "/blog/",
+      "/article/",
+      "/news/",
+      "/post/",
+      "/story/",
+      "/2024/",
+      "/2025/",
+      "/2026/",
+      "/p/",
+      "/thread/",
+      "/status/",
+      "/watch?v=",
+      "/v/",
+      "/guides/",
+      "/guide/",
+      "/collections/",
+      "/resources/"
+    ]
+  }
+}
