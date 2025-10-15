@@ -141,6 +141,10 @@ class TikTokExtractor(BaseExtractor):
 
             transcript = transcript.strip()
 
+            # Check if transcript is placeholder text
+            if transcript in ["No transcript available", "No captions available"]:
+                transcript = ""
+
             # Use first line of transcript as title if no title
             if not title and transcript:
                 first_line = transcript.split('\n')[0][:100]
