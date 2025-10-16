@@ -8,7 +8,6 @@ slowapi==0.1.9
 sqlalchemy[asyncio]==2.0.35
 alembic==1.13.1
 psycopg[binary,pool]==3.2.1
-psycopg2-binary==2.9.9  # Required by Alembic for database migrations
 asyncpg==0.29.0
 
 # Authentication
