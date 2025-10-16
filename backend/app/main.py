@@ -1,8 +1,11 @@
 """Content Engine API - Main application."""
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 from app.core.config import settings
+from app.core.limiter import limiter
 
 # Create FastAPI app
 app = FastAPI(
@@ -13,6 +16,10 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
+# Rate limiting - use shared limiter instance
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -20,6 +27,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    max_age=3600,  # Cache preflight for 1 hour
 )
 
 
@@ -52,7 +60,7 @@ async def health():
 
 
 # Include routers
-from app.api.endpoints import extractors, llm, media, search, prompts, newsletters
+from app.api.endpoints import extractors, llm, media, search, prompts, newsletters, capture
 
 app.include_router(extractors.router, prefix="/api/extract", tags=["extractors"])
 app.include_router(llm.router, prefix="/api/llm", tags=["llm"])
@@ -60,3 +68,4 @@ app.include_router(media.router, prefix="/api/media", tags=["media"])
 app.include_router(search.router, prefix="/api/search", tags=["search"])
 app.include_router(prompts.router, prefix="/api/prompts", tags=["prompts"])
 app.include_router(newsletters.router, prefix="/api/newsletters", tags=["newsletters"])
+app.include_router(capture.router, prefix="/api/capture", tags=["capture"])

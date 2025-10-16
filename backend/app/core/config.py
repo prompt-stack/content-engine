@@ -31,6 +31,9 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
+    # API Key Authentication (for cost control)
+    API_SECRET_KEY: str = ""  # Set this in production to require API key
+
     # CORS
     CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:3456"]
 
@@ -61,6 +64,8 @@ class Settings(BaseSettings):
     # Feature Flags
     ENABLE_BETTING_EXTRACTOR: bool = False
     ENABLE_EMAIL_EXTRACTOR: bool = True
+    ENABLE_EXTRACTORS: bool = True  # Disable all extractors (for cost control)
+    ENABLE_LLM: bool = True  # Disable LLM endpoints (for cost control)
 
     @property
     def is_production(self) -> bool:

@@ -1,10 +1,12 @@
 """LLM API endpoints for content processing."""
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request, Depends
 from pydantic import BaseModel
 from typing import Optional
+from app.core.limiter import limiter
 from app.services.llm.llm_service import get_llm_service
 from app.models.llm import LLMRequest, LLMResponse as LLMResponseModel
+from app.api.deps import verify_api_key
 
 router = APIRouter()
 
@@ -29,9 +31,17 @@ class ProcessContentResponse(BaseModel):
 
 
 @router.post("/generate", response_model=LLMResponseModel)
-async def generate_text(request: LLMRequest):
+@limiter.limit("10/minute")
+async def generate_text(
+    llm_request: LLMRequest,
+    request: Request,
+    _: bool = Depends(verify_api_key)
+):
     """
     Generate text using specified LLM provider.
+
+    **Rate Limit:** 10 requests per minute
+    **Authentication:** Requires X-API-Key header if API_SECRET_KEY is configured
 
     - **prompt**: Text prompt to send to LLM
     - **provider**: LLM provider (openai, anthropic, gemini, deepseek)
@@ -39,19 +49,26 @@ async def generate_text(request: LLMRequest):
     - **max_tokens**: Maximum tokens in response
     - **temperature**: Sampling temperature (0-1)
     """
+    from app.core.config import settings
+    if not settings.ENABLE_LLM:
+        raise HTTPException(
+            status_code=503,
+            detail="LLM features are currently disabled for cost control. Please contact administrator."
+        )
+
     try:
-        service = get_llm_service(request.provider)
+        service = get_llm_service(llm_request.provider)
 
         # Build kwargs
         kwargs = {}
-        if request.system_prompt:
-            kwargs['system_prompt'] = request.system_prompt
+        if llm_request.system_prompt:
+            kwargs['system_prompt'] = llm_request.system_prompt
 
         response = await service.generate_text(
-            prompt=request.prompt,
-            model=request.model or get_default_model(request.provider),
-            max_tokens=request.max_tokens,
-            temperature=request.temperature,
+            prompt=llm_request.prompt,
+            model=llm_request.model or get_default_model(llm_request.provider),
+            max_tokens=llm_request.max_tokens,
+            temperature=llm_request.temperature,
             **kwargs
         )
 
@@ -63,9 +80,17 @@ async def generate_text(request: LLMRequest):
 
 
 @router.post("/process-content", response_model=ProcessContentResponse)
-async def process_content(request: ProcessContentRequest):
+@limiter.limit("10/minute")
+async def process_content(
+    content_request: ProcessContentRequest,
+    request: Request,
+    _: bool = Depends(verify_api_key)
+):
     """
     Process extracted content with AI.
+
+    **Rate Limit:** 10 requests per minute
+    **Authentication:** Requires X-API-Key header if API_SECRET_KEY is configured
 
     Common tasks:
     - **summarize**: Create a concise summary
@@ -74,22 +99,29 @@ async def process_content(request: ProcessContentRequest):
     - **generate_tags**: Generate relevant tags/keywords
     - **translate**: Translate to another language (specify in task)
     """
+    from app.core.config import settings
+    if not settings.ENABLE_LLM:
+        raise HTTPException(
+            status_code=503,
+            detail="LLM features are currently disabled for cost control. Please contact administrator."
+        )
+
     try:
-        service = get_llm_service(request.provider)
+        service = get_llm_service(content_request.provider)
 
         # Build prompt based on task
-        prompt = build_task_prompt(request.task, request.content)
+        prompt = build_task_prompt(content_request.task, content_request.content)
 
         response = await service.generate_text(
             prompt=prompt,
-            model=request.model or get_default_model(request.provider),
-            max_tokens=request.max_tokens,
-            temperature=request.temperature
+            model=content_request.model or get_default_model(content_request.provider),
+            max_tokens=content_request.max_tokens,
+            temperature=content_request.temperature
         )
 
         return ProcessContentResponse(
             result=response.text,
-            task=request.task,
+            task=content_request.task,
             model=response.model,
             provider=response.provider,
             usage=response.usage.dict()
