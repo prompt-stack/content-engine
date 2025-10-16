@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Engine Shortcut Setup</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f7;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 24px;
+            margin-top: 0;
+        }
+        h2 {
+            font-size: 18px;
+            color: #333;
+            margin-top: 20px;
+        }
+        .copy-box {
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            word-break: break-all;
+            margin: 10px 0;
+            position: relative;
+        }
+        .copy-btn {
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .copy-btn:active {
+            background: #0051D5;
+        }
+        .step {
+            margin: 15px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        .step-number {
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #007AFF;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .success {
+            background: #34C759;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
+            margin-top: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            margin: 10px 0;
+        }
+        .json-code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        .key { color: #9cdcfe; }
+        .string { color: #ce9178; }
+        .variable { color: #4ec9b0; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>📱 Content Engine Capture Shortcut</h1>
+        <p>Set up your iOS Shortcut in 2 minutes!</p>
+    </div>
+
+    <div class="card">
+        <h2>Step 1: Enter Your API URL</h2>
+        <p>Find your Mac's IP address or use localhost:</p>
+        <input type="text" id="apiUrl" placeholder="http://192.168.1.100:9765" value="http://localhost:9765">
+        <button class="copy-btn" onclick="copyApiUrl()">📋 Copy API URL</button>
+        <div class="success" id="urlSuccess">✓ Copied!</div>
+    </div>
+
+    <div class="card">
+        <h2>Step 2: Create Shortcut</h2>
+        <p>Open the Shortcuts app and follow these steps:</p>
+
+        <div class="step">
+            <div class="step-number">1</div>
+            <strong>Get Clipboard</strong><br>
+            <small>Search and add "Get Clipboard"</small>
+        </div>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <strong>Set Variable</strong><br>
+            <small>Name it: "CapturedText"</small>
+        </div>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <strong>Get Contents of URL</strong><br>
+            <small>Configure as follows:</small>
+        </div>
+
+        <div style="margin-left: 30px;">
+            <p><strong>URL:</strong></p>
+            <div class="copy-box" id="urlBox">http://localhost:9765/api/capture/text</div>
+            <button class="copy-btn" onclick="copyUrl()">📋 Copy URL</button>
+
+            <p><strong>Method:</strong> POST</p>
+
+            <p><strong>Headers:</strong></p>
+            <div class="copy-box">Content-Type</div>
+            <button class="copy-btn" onclick="copyText('Content-Type')">📋 Copy Header Name</button>
+
+            <div class="copy-box">application/json</div>
+            <button class="copy-btn" onclick="copyText('application/json')">📋 Copy Header Value</button>
+
+            <p><strong>Request Body:</strong> JSON</p>
+            <p>Copy this structure and replace [CapturedText] with your variable:</p>
+
+            <div class="json-code">
+{<br>
+  <span class="key">"title"</span>: <span class="string">"iOS Capture"</span>,<br>
+  <span class="key">"content"</span>: <span class="variable">[CapturedText]</span>,<br>
+  <span class="key">"meta"</span>: {<br>
+    <span class="key">"source"</span>: <span class="string">"ios-shortcut"</span>,<br>
+    <span class="key">"device"</span>: <span class="string">"iPhone"</span><br>
+  }<br>
+}
+            </div>
+            <button class="copy-btn" onclick="copyJson()">📋 Copy JSON Template</button>
+            <div class="success" id="jsonSuccess">✓ Copied! Remember to replace [CapturedText] with your variable</div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">4</div>
+            <strong>Show Notification</strong><br>
+            <small>Text: "Saved to Content Engine!"</small>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Step 3: Test It!</h2>
+        <p>Copy this test text:</p>
+        <div class="copy-box">This is a test capture from my iOS Shortcut!</div>
+        <button class="copy-btn" onclick="copyText('This is a test capture from my iOS Shortcut!')">📋 Copy Test Text</button>
+        <p style="margin-top: 15px;">Then run your shortcut and check if it appears in your captures!</p>
+    </div>
+
+    <div class="card">
+        <h2>🔧 Troubleshooting</h2>
+        <details>
+            <summary><strong>How do I find my Mac's IP address?</strong></summary>
+            <p>On your Mac, run this command in Terminal:</p>
+            <div class="copy-box">ifconfig | grep "inet " | grep -v 127.0.0.1 | awk '{print $2}'</div>
+            <button class="copy-btn" onclick="copyText('ifconfig | grep &quot;inet &quot; | grep -v 127.0.0.1 | awk \\'{print $2}\\'')">📋 Copy Command</button>
+        </details>
+
+        <details style="margin-top: 10px;">
+            <summary><strong>Can't connect from iPhone?</strong></summary>
+            <p>Make sure your iPhone and Mac are on the same WiFi network.</p>
+            <p>Or use ngrok to expose your local server:</p>
+            <div class="copy-box">ngrok http 9765</div>
+            <button class="copy-btn" onclick="copyText('ngrok http 9765')">📋 Copy Command</button>
+        </details>
+    </div>
+
+    <script>
+        function copyText(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showSuccess();
+                });
+            } else {
+                // Fallback for older browsers
+                const el = document.createElement('textarea');
+                el.value = text;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+                showSuccess();
+            }
+        }
+
+        function copyApiUrl() {
+            const url = document.getElementById('apiUrl').value;
+            document.getElementById('urlBox').textContent = url + '/api/capture/text';
+            copyText(url + '/api/capture/text');
+            document.getElementById('urlSuccess').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('urlSuccess').style.display = 'none';
+            }, 2000);
+        }
+
+        function copyUrl() {
+            const url = document.getElementById('urlBox').textContent;
+            copyText(url);
+        }
+
+        function copyJson() {
+            const json = `{
+  "title": "iOS Capture",
+  "content": [CapturedText],
+  "meta": {
+    "source": "ios-shortcut",
+    "device": "iPhone"
+  }
+}`;
+            copyText(json);
+            document.getElementById('jsonSuccess').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('jsonSuccess').style.display = 'none';
+            }, 3000);
+        }
+
+        function showSuccess() {
+            // Generic success feedback
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '✓ Copied!';
+            btn.style.background = '#34C759';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '#007AFF';
+            }, 2000);
+        }
+
+        // Auto-detect local IP if possible
+        window.onload = function() {
+            // Try to get local IP (this won't work in all browsers)
+            // User will need to enter it manually or we can provide instructions
+        }
+    </script>
+</body>
+</html>

@@ -69,9 +69,15 @@ export default function Home() {
           </CardContent>
         </Card>
 
-        <div className="flex gap-4 justify-center mt-6 px-4">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6 px-4">
           <Link href="/extract" className="w-full sm:w-auto">
             <Button size="lg" className="w-full sm:w-auto">Start Extracting →</Button>
+          </Link>
+          <Link href="/newsletters" className="w-full sm:w-auto">
+            <Button size="lg" variant="outline" className="w-full sm:w-auto">Newsletter Digest</Button>
+          </Link>
+          <Link href="/vault" className="w-full sm:w-auto">
+            <Button size="lg" variant="outline" className="w-full sm:w-auto">Content Vault</Button>
           </Link>
         </div>
       </div>

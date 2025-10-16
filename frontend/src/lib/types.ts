@@ -249,6 +249,28 @@ export interface RenderPromptResponse {
 }
 
 // ----------------------------------------------------------------------------
+// Captures / Content Vault
+// ----------------------------------------------------------------------------
+
+export interface Capture {
+  id: number;
+  title: string | null;
+  content: string;
+  meta: Record<string, any> | null;
+  created_at: string;
+}
+
+export interface CaptureListRequest {
+  limit?: number;
+  offset?: number;
+}
+
+export interface CaptureSearchRequest {
+  q: string;
+  limit?: number;
+}
+
+// ----------------------------------------------------------------------------
 // Error Responses
 // ----------------------------------------------------------------------------
 

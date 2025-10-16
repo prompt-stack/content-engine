@@ -22,6 +22,9 @@ import type {
   PromptCategory,
   RenderPromptRequest,
   RenderPromptResponse,
+  Capture,
+  CaptureListRequest,
+  CaptureSearchRequest,
   APIError,
 } from './types';
 
@@ -295,6 +298,39 @@ export const api = {
         method: 'POST',
         body: JSON.stringify(request),
       });
+    },
+  },
+
+  // --------------------------------------------------------------------------
+  // Captures / Content Vault
+  // --------------------------------------------------------------------------
+
+  capture: {
+    list: (params?: CaptureListRequest): Promise<Capture[]> => {
+      const queryParams = new URLSearchParams();
+      if (params?.limit) queryParams.append('limit', params.limit.toString());
+      if (params?.offset) queryParams.append('offset', params.offset.toString());
+      const query = queryParams.toString() ? `?${queryParams.toString()}` : '';
+      return apiRequest<Capture[]>(`/api/capture/list${query}`);
+    },
+
+    search: (params: CaptureSearchRequest): Promise<Capture[]> => {
+      const queryParams = new URLSearchParams();
+      queryParams.append('q', params.q);
+      if (params.limit) queryParams.append('limit', params.limit.toString());
+      return apiRequest<Capture[]>(`/api/capture/search?${queryParams.toString()}`);
+    },
+
+    get: (id: number): Promise<Capture> => {
+      return apiRequest<Capture>(`/api/capture/${id}`);
+    },
+
+    delete: (id: number): Promise<void> => {
+      return apiRequest<void>(`/api/capture/${id}`, { method: 'DELETE' });
+    },
+
+    count: (): Promise<{ user_id: number; total_captures: number }> => {
+      return apiRequest<{ user_id: number; total_captures: number }>('/api/capture/stats/count');
     },
   },
 };
