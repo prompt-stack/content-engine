@@ -35,7 +35,11 @@ class Settings(BaseSettings):
     API_SECRET_KEY: str = ""  # Set this in production to require API key
 
     # CORS
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:3456"]
+    CORS_ORIGINS: List[str] = [
+        "http://localhost:3000",
+        "http://localhost:3456",
+        # Vercel deployments handled by regex in main.py
+    ]
 
     # LLM Providers
     OPENAI_API_KEY: str = ""
