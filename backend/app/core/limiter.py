@@ -1,43 +1,17 @@
-"""Rate limiter configuration using fastapi-limiter."""
+"""
+Rate limiter configuration using fastapi-limiter.
 
-import logging
-from typing import Callable
-from fastapi import Request
-from fastapi_limiter.depends import RateLimiter
+Note: RateLimiter instances are created directly in endpoint dependencies.
+Example: dependencies=[Depends(RateLimiter(times=10, seconds=60))]
 
-logger = logging.getLogger(__name__)
+This file is kept for documentation purposes.
+"""
 
+# Rate limiting is now configured directly in endpoints using:
+# from fastapi_limiter.depends import RateLimiter
+# dependencies=[Depends(RateLimiter(times=N, seconds=M))]
 
-def get_rate_limit_key(request: Request) -> str:
-    """
-    Get the key for rate limiting (client IP address).
-    Falls back to a default key if IP cannot be determined.
-    """
-    # Try to get real IP from headers (for proxies/load balancers)
-    forwarded = request.headers.get("X-Forwarded-For")
-    if forwarded:
-        # X-Forwarded-For can contain multiple IPs, take the first one
-        return forwarded.split(",")[0].strip()
-
-    # Fall back to direct client IP
-    if request.client:
-        return request.client.host
-
-    # Ultimate fallback
-    return "unknown"
-
-
-# Pre-configured rate limiters for common use cases
-def limit_10_per_minute() -> Callable:
-    """Rate limiter: 10 requests per minute."""
-    return RateLimiter(times=10, seconds=60)
-
-
-def limit_5_per_minute() -> Callable:
-    """Rate limiter: 5 requests per minute."""
-    return RateLimiter(times=5, seconds=60)
-
-
-def limit_100_per_hour() -> Callable:
-    """Rate limiter: 100 requests per hour."""
-    return RateLimiter(times=100, seconds=3600)
+# Common rate limits used in the API:
+# - LLM endpoints: 10 requests/minute
+# - Extractor endpoints: 5 requests/minute
+# - Other endpoints: As needed
