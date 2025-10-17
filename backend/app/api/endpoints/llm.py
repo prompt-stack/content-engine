@@ -3,7 +3,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from typing import Optional
-from app.core.limiter import limit_10_per_minute
+from fastapi_limiter.depends import RateLimiter
 from app.services.llm.llm_service import get_llm_service
 from app.models.llm import LLMRequest, LLMResponse as LLMResponseModel
 from app.api.deps import verify_api_key
@@ -30,7 +30,7 @@ class ProcessContentResponse(BaseModel):
     usage: dict
 
 
-@router.post("/generate", response_model=LLMResponseModel, dependencies=[Depends(limit_10_per_minute)])
+@router.post("/generate", response_model=LLMResponseModel, dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def generate_text(
     llm_request: LLMRequest,
     _: bool = Depends(verify_api_key)
@@ -77,7 +77,7 @@ async def generate_text(
         raise HTTPException(status_code=500, detail=f"LLM generation failed: {str(e)}")
 
 
-@router.post("/process-content", response_model=ProcessContentResponse, dependencies=[Depends(limit_10_per_minute)])
+@router.post("/process-content", response_model=ProcessContentResponse, dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def process_content(
     content_request: ProcessContentRequest,
     _: bool = Depends(verify_api_key)
