@@ -20,6 +20,10 @@ app = FastAPI(
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
+# Proxy middleware - must be BEFORE other middleware for correct IP detection
+from slowapi.middleware import SlowAPIMiddleware
+app.add_middleware(SlowAPIMiddleware)
+
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
