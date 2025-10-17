@@ -1,7 +1,7 @@
 """CRUD operations for captures."""
 
 from typing import List, Optional
-from sqlalchemy import select, or_
+from sqlalchemy import select, or_, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.capture import Capture
@@ -27,16 +27,20 @@ async def create_capture(
     Returns:
         Created Capture instance
     """
-    capture = Capture(
-        user_id=user_id,
-        title=title,
-        content=content,
-        meta=meta or {}
-    )
-    db.add(capture)
-    await db.commit()
-    await db.refresh(capture)
-    return capture
+    try:
+        capture = Capture(
+            user_id=user_id,
+            title=title,
+            content=content,
+            meta=meta or {}
+        )
+        db.add(capture)
+        await db.commit()
+        await db.refresh(capture)
+        return capture
+    except Exception as e:
+        await db.rollback()
+        raise
 
 
 async def get_capture(
@@ -142,13 +146,17 @@ async def delete_capture(
     Returns:
         True if deleted, False if not found or doesn't belong to user
     """
-    capture = await get_capture(db, capture_id, user_id)
-    if not capture:
-        return False
+    try:
+        capture = await get_capture(db, capture_id, user_id)
+        if not capture:
+            return False
 
-    await db.delete(capture)
-    await db.commit()
-    return True
+        await db.delete(capture)
+        await db.commit()
+        return True
+    except Exception as e:
+        await db.rollback()
+        raise
 
 
 async def count_captures(
@@ -166,7 +174,7 @@ async def count_captures(
         Total number of captures
     """
     result = await db.execute(
-        select(Capture)
+        select(func.count(Capture.id))
         .where(Capture.user_id == user_id)
     )
-    return len(list(result.scalars().all()))
+    return result.scalar_one()

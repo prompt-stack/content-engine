@@ -31,7 +31,7 @@ class Capture(Base):
     )
 
     # Content
-    title: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    title: Mapped[Optional[str]] = mapped_column(String(255), nullable=True, index=True)
     content: Mapped[str] = mapped_column(Text, nullable=False)
 
     # Metadata (flexible JSONB field)

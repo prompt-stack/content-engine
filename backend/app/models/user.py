@@ -1,10 +1,13 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from sqlalchemy import String, DateTime, Integer, Enum as SQLEnum
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from fastapi_users.db import SQLAlchemyBaseUserTable
 from .base import Base
 import enum
+
+if TYPE_CHECKING:
+    from .capture import Capture
 
 
 class UserTier(str, enum.Enum):
@@ -54,6 +57,12 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     requests_this_month: Mapped[int] = mapped_column(Integer, default=0)
     requests_reset_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
 
+    # OAuth authentication (Google, GitHub, etc.)
+    oauth_provider: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)  # "google", "github", etc.
+    google_id: Mapped[Optional[str]] = mapped_column(String(255), unique=True, nullable=True, index=True)
+    google_email: Mapped[Optional[str]] = mapped_column(String(320), nullable=True)
+    google_picture: Mapped[Optional[str]] = mapped_column(String(512), nullable=True)
+
     # Social media OAuth tokens (JSON field would be better, but keeping simple)
     twitter_connected: Mapped[bool] = mapped_column(default=False)
     linkedin_connected: Mapped[bool] = mapped_column(default=False)
@@ -68,6 +77,13 @@ class User(SQLAlchemyBaseUserTable[int], Base):
         DateTime,
         default=datetime.utcnow,
         onupdate=datetime.utcnow
+    )
+
+    # Relationships
+    captures: Mapped[list["Capture"]] = relationship(
+        "Capture",
+        back_populates="user",
+        cascade="all, delete-orphan"
     )
 
     @property

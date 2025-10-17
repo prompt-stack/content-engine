@@ -309,7 +309,7 @@ async def search_research(request: ResearchRequest):
         raise HTTPException(status_code=500, detail=f"Research search failed: {str(e)}")
 
 
-@router.get("/search/capabilities")
+@router.get("/capabilities")
 async def get_search_capabilities():
     """
     Get information about available search capabilities
