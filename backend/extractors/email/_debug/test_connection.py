@@ -3,7 +3,7 @@
 Test script to verify Gmail API connection
 """
 
-from gmail_extractor import GmailNewsletterExtractor
+from gmail_extractor import GmailExtractor
 
 
 def test_connection():
@@ -11,11 +11,11 @@ def test_connection():
     print("=" * 50)
     print("Gmail Newsletter Extractor - Connection Test")
     print("=" * 50)
-    
+
     try:
         # Initialize extractor
         print("\n1. Initializing extractor...")
-        extractor = GmailNewsletterExtractor()
+        extractor = GmailExtractor()
         
         # Get user profile
         print("\n2. Getting user profile...")
