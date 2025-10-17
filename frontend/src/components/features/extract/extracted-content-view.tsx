@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/primitives/ui/card';
 import { Button } from '@/components/primitives/ui/button';
 import type { ExtractedContent } from '@/lib/types';
@@ -49,6 +50,16 @@ export function ExtractedContentView({ data }: ExtractedContentViewProps) {
               <CardDescription>
                 Platform: {data.platform || 'Unknown'} • Source: {data.source || 'N/A'}
               </CardDescription>
+              {data.capture_id && (
+                <div className="mt-2 flex items-center gap-2">
+                  <span className="text-sm text-green-600 font-medium">✓ Saved to Vault</span>
+                  <Link href="/vault">
+                    <Button variant="link" size="sm" className="h-auto p-0 text-xs">
+                      View in Vault →
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </div>
             {/* Quick Actions - Top */}
             <div className="flex flex-wrap gap-2">

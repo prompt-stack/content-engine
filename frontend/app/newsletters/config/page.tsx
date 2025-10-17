@@ -222,7 +222,7 @@ export default function NewsletterConfigPage() {
           </Button>
         </div>
         <div className="flex flex-wrap gap-2">
-          {config.content_filtering.whitelist_domains.map((domain) => (
+          {(config.content_filtering.whitelist_domains || []).map((domain) => (
             <div key={domain} className="flex items-center gap-2 bg-green-100 dark:bg-green-900 px-3 py-1 rounded-full text-sm">
               <span>{domain}</span>
               <button
@@ -255,7 +255,7 @@ export default function NewsletterConfigPage() {
           </Button>
         </div>
         <div className="flex flex-wrap gap-2">
-          {config.content_filtering.blacklist_domains.map((domain) => (
+          {(config.content_filtering.blacklist_domains || []).map((domain) => (
             <div key={domain} className="flex items-center gap-2 bg-red-100 dark:bg-red-900 px-3 py-1 rounded-full text-sm">
               <span>{domain}</span>
               <button
@@ -288,7 +288,7 @@ export default function NewsletterConfigPage() {
           </Button>
         </div>
         <div className="flex flex-wrap gap-2">
-          {config.content_filtering.curator_domains.map((domain) => (
+          {(config.content_filtering.curator_domains || []).map((domain) => (
             <div key={domain} className="flex items-center gap-2 bg-yellow-100 dark:bg-yellow-900 px-3 py-1 rounded-full text-sm">
               <span>{domain}</span>
               <button
@@ -321,7 +321,7 @@ export default function NewsletterConfigPage() {
           </Button>
         </div>
         <div className="flex flex-wrap gap-2">
-          {config.content_filtering.content_indicators.map((indicator) => (
+          {(config.content_filtering.content_indicators || []).map((indicator) => (
             <div key={indicator} className="flex items-center gap-2 bg-blue-100 dark:bg-blue-900 px-3 py-1 rounded-full text-sm">
               <span className="font-mono">{indicator}</span>
               <button

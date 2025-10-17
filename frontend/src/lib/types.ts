@@ -39,6 +39,7 @@ export interface ExtractedContent {
   published_at?: string;
   metadata?: Record<string, unknown>;
   extracted_at: string;
+  capture_id?: number;  // Added for vault integration
 }
 
 // ----------------------------------------------------------------------------
