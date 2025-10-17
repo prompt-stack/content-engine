@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_async_session
-from app.models.user import User
+from app.models.user import User, UserRole, UserTier
 
 
 async def get_current_user(
@@ -38,10 +38,22 @@ async def get_current_user(
     user = result.scalar_one_or_none()
 
     if not user:
-        raise HTTPException(
-            status_code=401,
-            detail="User not found. Please run seed_owner_user.py to create OWNER account."
+        # Auto-create OWNER user if it doesn't exist
+        from passlib.context import CryptContext
+        pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+        user = User(
+            email="owner@contentengine.local",
+            hashed_password=pwd_context.hash("owner123"),
+            role=UserRole.OWNER,
+            tier=UserTier.OWNER,
+            is_active=True,
+            is_superuser=True,
+            is_verified=True,
         )
+        db.add(user)
+        await db.commit()
+        await db.refresh(user)
 
     return user
 
