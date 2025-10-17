@@ -1,28 +1,55 @@
 """Content Engine API - Main application."""
 
-from fastapi import FastAPI, Request
+import logging
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from slowapi import _rate_limit_exceeded_handler
-from slowapi.errors import RateLimitExceeded
-from slowapi.middleware import SlowAPIMiddleware
+from fastapi_limiter import FastAPILimiter
+from redis import asyncio as aioredis
 from app.core.config import settings
-from app.core.limiter import limiter
 
-# Create FastAPI app
+logger = logging.getLogger(__name__)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Initialize services on startup and cleanup on shutdown."""
+    # Startup: Initialize rate limiter with Redis
+    try:
+        redis_url = settings.REDIS_URL
+        if redis_url and redis_url != "memory://":
+            logger.info(f"✅ Initializing rate limiter with Redis: {redis_url[:20]}...")
+            redis_connection = await aioredis.from_url(
+                redis_url,
+                encoding="utf-8",
+                decode_responses=True
+            )
+            await FastAPILimiter.init(redis_connection)
+            logger.info("✅ Rate limiter initialized successfully")
+        else:
+            logger.warning("⚠️  No Redis URL configured, rate limiting will not work properly")
+    except Exception as e:
+        logger.error(f"❌ Failed to initialize rate limiter: {e}")
+        logger.warning("⚠️  Continuing without rate limiting")
+
+    yield
+
+    # Shutdown: Close Redis connection
+    try:
+        await FastAPILimiter.close()
+        logger.info("✅ Rate limiter shut down successfully")
+    except:
+        pass
+
+
+# Create FastAPI app with lifespan
 app = FastAPI(
     title="Content Engine API",
     description="AI-powered content extraction and processing platform",
     version="0.1.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
-
-# Rate limiting - use shared limiter instance
-app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-
-# Add SlowAPI middleware - REQUIRED for rate limiting to work!
-app.add_middleware(SlowAPIMiddleware)
 
 # CORS middleware
 app.add_middleware(

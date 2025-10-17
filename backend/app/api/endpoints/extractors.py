@@ -1,9 +1,9 @@
 """Content extraction API endpoints."""
 
-from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel, HttpUrl
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.core.limiter import limiter
+from app.core.limiter import limit_5_per_minute
 from app.services.extractors.reddit_extractor import RedditExtractor
 from app.services.extractors.tiktok_extractor import TikTokExtractor
 from app.services.extractors.youtube_extractor import YouTubeExtractor
@@ -36,11 +36,9 @@ class ExtractResponse(BaseModel):
     capture_id: int | None = None  # Added capture_id
 
 
-@router.post("/reddit", response_model=ExtractResponse)
-@limiter.limit("5/minute")
+@router.post("/reddit", response_model=ExtractResponse, dependencies=[Depends(limit_5_per_minute)])
 async def extract_reddit(
     extract_request: ExtractRequest,
-    request: Request,
     db: AsyncSession = Depends(get_async_session),
     current_user: User = Depends(get_current_active_user),
     _: bool = Depends(verify_api_key)
@@ -93,11 +91,9 @@ async def extract_reddit(
         raise HTTPException(status_code=500, detail=f"Extraction failed: {str(e)}")
 
 
-@router.post("/tiktok", response_model=ExtractResponse)
-@limiter.limit("5/minute")
+@router.post("/tiktok", response_model=ExtractResponse, dependencies=[Depends(limit_5_per_minute)])
 async def extract_tiktok(
     extract_request: ExtractRequest,
-    request: Request,
     db: AsyncSession = Depends(get_async_session),
     current_user: User = Depends(get_current_active_user),
     _: bool = Depends(verify_api_key)
@@ -141,11 +137,9 @@ async def extract_tiktok(
         raise HTTPException(status_code=500, detail=f"Extraction failed: {str(e)}")
 
 
-@router.post("/youtube", response_model=ExtractResponse)
-@limiter.limit("5/minute")
+@router.post("/youtube", response_model=ExtractResponse, dependencies=[Depends(limit_5_per_minute)])
 async def extract_youtube(
     extract_request: ExtractRequest,
-    request: Request,
     db: AsyncSession = Depends(get_async_session),
     current_user: User = Depends(get_current_active_user),
     _: bool = Depends(verify_api_key)
@@ -189,11 +183,9 @@ async def extract_youtube(
         raise HTTPException(status_code=500, detail=f"Extraction failed: {str(e)}")
 
 
-@router.post("/article", response_model=ExtractResponse)
-@limiter.limit("5/minute")
+@router.post("/article", response_model=ExtractResponse, dependencies=[Depends(limit_5_per_minute)])
 async def extract_article(
     extract_request: ExtractRequest,
-    request: Request,
     db: AsyncSession = Depends(get_async_session),
     current_user: User = Depends(get_current_active_user),
     _: bool = Depends(verify_api_key)
@@ -237,11 +229,9 @@ async def extract_article(
         raise HTTPException(status_code=500, detail=f"Extraction failed: {str(e)}")
 
 
-@router.post("/auto", response_model=ExtractResponse)
-@limiter.limit("5/minute")
+@router.post("/auto", response_model=ExtractResponse, dependencies=[Depends(limit_5_per_minute)])
 async def extract_auto(
     extract_request: ExtractRequest,
-    request: Request,
     db: AsyncSession = Depends(get_async_session),
     current_user: User = Depends(get_current_active_user),
     _: bool = Depends(verify_api_key)

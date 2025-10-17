@@ -1,32 +1,43 @@
-"""Shared rate limiter instance for the application."""
+"""Rate limiter configuration using fastapi-limiter."""
 
 import logging
-from slowapi import Limiter
-from slowapi.util import get_remote_address
+from typing import Callable
+from fastapi import Request
+from fastapi_limiter.depends import RateLimiter
 
 logger = logging.getLogger(__name__)
 
-def get_rate_limit_storage_uri():
+
+def get_rate_limit_key(request: Request) -> str:
     """
-    Get storage URI for rate limiting.
-
-    Uses Redis in production (for distributed rate limiting across Railway instances),
-    falls back to in-memory for local development.
+    Get the key for rate limiting (client IP address).
+    Falls back to a default key if IP cannot be determined.
     """
-    from app.core.config import settings
+    # Try to get real IP from headers (for proxies/load balancers)
+    forwarded = request.headers.get("X-Forwarded-For")
+    if forwarded:
+        # X-Forwarded-For can contain multiple IPs, take the first one
+        return forwarded.split(",")[0].strip()
 
-    # Use Redis if available (required for production/Railway)
-    if settings.REDIS_URL:
-        logger.info(f"✅ Rate limiting using Redis: {settings.REDIS_URL}")
-        return settings.REDIS_URL
+    # Fall back to direct client IP
+    if request.client:
+        return request.client.host
 
-    # Fallback to in-memory (only for local dev)
-    logger.warning("⚠️  Using in-memory rate limiting (NOT suitable for production)")
-    return "memory://"
+    # Ultimate fallback
+    return "unknown"
 
-# Create a single limiter instance with appropriate storage URI
-storage_uri = get_rate_limit_storage_uri()
-limiter = Limiter(
-    key_func=get_remote_address,
-    storage_uri=storage_uri
-)
+
+# Pre-configured rate limiters for common use cases
+def limit_10_per_minute() -> Callable:
+    """Rate limiter: 10 requests per minute."""
+    return RateLimiter(times=10, seconds=60)
+
+
+def limit_5_per_minute() -> Callable:
+    """Rate limiter: 5 requests per minute."""
+    return RateLimiter(times=5, seconds=60)
+
+
+def limit_100_per_hour() -> Callable:
+    """Rate limiter: 100 requests per hour."""
+    return RateLimiter(times=100, seconds=3600)
