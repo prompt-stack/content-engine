@@ -74,15 +74,12 @@ async function apiRequest<T>(
     // Get auth token from Clerk
     const token = await getAuthToken();
 
+    // Build headers with conditional Authorization
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
       ...options?.headers,
     };
-
-    // Add Authorization header if we have a token
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
 
     const response = await fetch(`${API_BASE}${endpoint}`, {
       ...options,
