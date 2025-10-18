@@ -38,9 +38,11 @@ ENV/
 backend/.env
 frontend/.env.local
 .env.*.local
+.env
 
-# Keep root .env for Docker Compose port config
-# .env
+# Vercel environment files (contain sensitive tokens)
+frontend/.env.vercel.*
+.env.vercel.*
 
 # Sensitive files
 credentials.json
