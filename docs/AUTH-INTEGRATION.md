@@ -686,37 +686,61 @@ vercel env ls
 
 ### Migration Notes
 
-**Old API Key System → Clerk**
+#### Old Authentication System Deprecated (October 2025)
 
-We removed the old `verify_api_key` authentication dependency from all endpoints:
+**⚠️ IMPORTANT:** The old authentication system in `/backend/app/api/deps.py` is **DEPRECATED**.
+
+**What changed:**
+1. All endpoints now use Clerk JWT authentication
+2. Old `verify_api_key` dependency removed from all endpoints
+3. Old `get_current_user` (hardcoded OWNER) replaced with `get_current_user_from_clerk`
+
+**Deprecated module:** `/backend/app/api/deps.py`
+
+This module now shows deprecation warnings when imported. All functions are marked as deprecated:
+
+| Deprecated Function | New Function | Location |
+|---------------------|--------------|----------|
+| `get_current_user()` | `get_current_user_from_clerk()` | `app.core.clerk` |
+| `get_current_active_user()` | `get_current_user_from_clerk()` | `app.core.clerk` |
+| `get_optional_user()` | `get_optional_clerk_user()` | `app.core.clerk` |
+| `verify_api_key()` | **REMOVED** (use Clerk auth) | N/A |
+
+**Migration examples:**
 
 ```python
-# BEFORE (Old system)
-from app.api.deps import verify_api_key
+# BEFORE (Old deps.py system)
+from app.api.deps import get_current_user, verify_api_key
 
-@router.post("/api/extract/auto")
-async def extract_auto(
-    user: User = Depends(get_current_user_from_clerk),
+@router.post("/endpoint")
+async def endpoint(
+    user: User = Depends(get_current_user),
     _: bool = Depends(verify_api_key)  # ❌ Removed
 ):
     pass
 
-# AFTER (Clerk only)
-@router.post("/api/extract/auto")
-async def extract_auto(
-    user: User = Depends(get_current_user_from_clerk)  # ✅ Only this
+# AFTER (Clerk authentication)
+from app.core.clerk import get_current_user_from_clerk
+
+@router.post("/endpoint")
+async def endpoint(
+    user: User = Depends(get_current_user_from_clerk)  # ✅ Only this needed
 ):
     pass
 ```
 
-**Affected endpoints:**
-- `/api/extract/reddit`
-- `/api/extract/tiktok`
-- `/api/extract/youtube`
-- `/api/extract/article`
-- `/api/extract/auto`
-- All `/api/newsletters/*` endpoints
-- All `/api/capture/*` endpoints
+**Migrated endpoints (October 2025):**
+- ✅ `/api/extract/*` - All extractor endpoints (Reddit, TikTok, YouTube, Article, Auto)
+- ✅ `/api/newsletters/*` - All newsletter endpoints
+- ✅ `/api/capture/*` - All capture/vault endpoints
+- ✅ `/api/llm/generate` - LLM text generation
+- ✅ `/api/llm/process-content` - Content processing
+
+**Why we migrated:**
+- **Security:** JWT tokens with signature verification vs shared API key
+- **Scalability:** No single shared secret
+- **User tracking:** Each user has their own authentication
+- **Industry standard:** JWT is the standard for API authentication
 
 ### Current Production URLs
 
@@ -729,12 +753,14 @@ async def extract_auto(
 ## Related Files
 
 ### Backend
-- Auth utility: `/backend/app/core/clerk.py` - JWT verification & JIT provisioning
-- User model: `/backend/app/models/user.py` - User schema with clerk_user_id
-- Auth endpoints: `/backend/app/api/endpoints/auth.py` - /auth/me endpoint
-- Extractor endpoints: `/backend/app/api/endpoints/extractors.py` - Updated to use Clerk
-- Newsletter endpoints: `/backend/app/api/endpoints/newsletters.py` - Updated to use Clerk
-- Capture endpoints: `/backend/app/api/endpoints/capture.py` - Updated to use Clerk
+- **Auth utility:** `/backend/app/core/clerk.py` - JWT verification & JIT provisioning ✅ **USE THIS**
+- **User model:** `/backend/app/models/user.py` - User schema with clerk_user_id
+- **Auth endpoints:** `/backend/app/api/endpoints/auth.py` - /auth/me endpoint
+- **LLM endpoints:** `/backend/app/api/endpoints/llm.py` - Migrated to Clerk auth (Oct 2025)
+- **Extractor endpoints:** `/backend/app/api/endpoints/extractors.py` - Using Clerk auth
+- **Newsletter endpoints:** `/backend/app/api/endpoints/newsletters.py` - Using Clerk auth
+- **Capture endpoints:** `/backend/app/api/endpoints/capture.py` - Using Clerk auth
+- ⚠️ **Deprecated:** `/backend/app/api/deps.py` - Old auth system (DO NOT USE)
 
 ### Frontend
 - API client: `/frontend/src/lib/api.ts` - Automatic JWT token injection

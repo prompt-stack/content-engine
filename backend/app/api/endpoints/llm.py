@@ -6,7 +6,8 @@ from typing import Optional
 from fastapi_limiter.depends import RateLimiter
 from app.services.llm.llm_service import get_llm_service
 from app.models.llm import LLMRequest, LLMResponse as LLMResponseModel
-from app.api.deps import verify_api_key
+from app.core.clerk import get_current_user_from_clerk
+from app.models.user import User
 
 router = APIRouter()
 
@@ -33,13 +34,13 @@ class ProcessContentResponse(BaseModel):
 @router.post("/generate", response_model=LLMResponseModel, dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def generate_text(
     llm_request: LLMRequest,
-    _: bool = Depends(verify_api_key)
+    current_user: User = Depends(get_current_user_from_clerk)
 ):
     """
     Generate text using specified LLM provider.
 
     **Rate Limit:** 10 requests per minute
-    **Authentication:** Requires X-API-Key header if API_SECRET_KEY is configured
+    **Authentication:** Requires Clerk JWT token in Authorization header
 
     - **prompt**: Text prompt to send to LLM
     - **provider**: LLM provider (openai, anthropic, gemini, deepseek)
@@ -80,13 +81,13 @@ async def generate_text(
 @router.post("/process-content", response_model=ProcessContentResponse, dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def process_content(
     content_request: ProcessContentRequest,
-    _: bool = Depends(verify_api_key)
+    current_user: User = Depends(get_current_user_from_clerk)
 ):
     """
     Process extracted content with AI.
 
     **Rate Limit:** 10 requests per minute
-    **Authentication:** Requires X-API-Key header if API_SECRET_KEY is configured
+    **Authentication:** Requires Clerk JWT token in Authorization header
 
     Common tasks:
     - **summarize**: Create a concise summary
