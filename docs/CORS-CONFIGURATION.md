@@ -111,13 +111,45 @@ NEXT_PUBLIC_API_URL=http://localhost:9765
 
 ### Making Requests
 
-When making API requests from the frontend, include credentials:
+The frontend uses a centralized API client that automatically handles authentication:
+
+**Location:** `/frontend/src/lib/api.ts`
 
 ```typescript
-const response = await fetch(`${API_URL}/api/newsletters/extractions`, {
-  credentials: 'include'  // Required for cookies/auth
-});
+// Automatic JWT token injection
+async function getAuthToken(): Promise<string | null> {
+  if (typeof window !== 'undefined' && (window as any).Clerk) {
+    const session = await (window as any).Clerk.session?.getToken();
+    return session || null;
+  }
+  return null;
+}
+
+async function apiRequest<T>(endpoint: string, options?: RequestInit) {
+  const token = await getAuthToken();
+
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+    ...options?.headers,
+  };
+
+  const response = await fetch(`${API_BASE}${endpoint}`, {
+    ...options,
+    headers,
+  });
+
+  return response.json();
+}
+
+// Usage: All API calls automatically include JWT token
+const extractions = await api.newsletters.extractions();
 ```
+
+**Authentication Method:**
+- ✅ JWT tokens in `Authorization` header (via Clerk)
+- ❌ No longer using cookie-based authentication
+- ✅ `credentials: 'include'` not required (but CORS still needs `allow_credentials=True` for compatibility)
 
 ## How CORS Works
 
@@ -199,17 +231,23 @@ Look for these headers in the response:
 
 ### Issue 2: Authentication Not Working
 
-**Symptom**: Cookies not sent, authentication fails
+**Symptom**: 401 Unauthorized errors, authentication fails
 
 **Causes**:
-1. `allow_credentials` not set to `True`
-2. Frontend not sending `credentials: 'include'`
-3. Origin doesn't exactly match (including protocol and port)
+1. Clerk JWT token not being sent in Authorization header
+2. JWT token expired or invalid
+3. Backend not configured with correct Clerk keys
+4. `Authorization` header blocked by CORS
 
 **Solutions**:
-1. Verify `allow_credentials=True` in backend
-2. Add `credentials: 'include'` to all fetch requests
-3. Ensure origin matches exactly (https vs http, www vs non-www)
+1. Verify frontend is getting token: `await window.Clerk.session?.getToken()`
+2. Check user is signed in: `window.Clerk.user`
+3. Verify backend has Clerk environment variables:
+   ```bash
+   railway variables | grep CLERK
+   ```
+4. Ensure `allow_headers=["*"]` or includes "Authorization"
+5. Check backend logs for JWT verification errors
 
 ### Issue 3: Preflight Fails
 
@@ -300,14 +338,28 @@ When experiencing CORS issues:
 
 ## Related Files
 
-- Backend CORS config: `/backend/app/main.py`
-- Backend settings: `/backend/app/core/config.py`
-- Frontend API client: `/frontend/app/newsletters/page.tsx`
-- Environment configs:
-  - Railway: Railway dashboard > Variables
-  - Vercel: Vercel dashboard > Settings > Environment Variables
-  - Local backend: `/backend/.env`
-  - Local frontend: `/frontend/.env.local`
+### Backend
+- CORS config: `/backend/app/main.py` - CORSMiddleware configuration
+- Settings: `/backend/app/core/config.py` - CORS_ORIGINS environment variable
+- Clerk auth: `/backend/app/core/clerk.py` - JWT verification
+- API endpoints: `/backend/app/api/endpoints/` - All protected with Clerk auth
+
+### Frontend
+- API client: `/frontend/src/lib/api.ts` - Centralized API client with JWT injection
+- Clerk provider: `/frontend/app/layout.tsx` - ClerkProvider wrapper
+- Middleware: `/frontend/middleware.ts` - Protected route handling
+- Environment: `/frontend/.env.local` - NEXT_PUBLIC_API_URL configuration
+
+### Environment Configs
+- Railway: `railway variables` (CLI) or Railway dashboard > Variables
+- Vercel: `vercel env ls` (CLI) or Vercel dashboard > Settings > Environment Variables
+- Local backend: `/backend/.env`
+- Local frontend: `/frontend/.env.local`
+
+### Documentation
+- Authentication: `/docs/AUTH-INTEGRATION.md` - Complete auth system guide
+- Database: `/docs/database-schema.mmd` - Database schema with clerk_user_id
+- Protected Routes: `/frontend/docs/PROTECTED_ROUTES.md` - Frontend route protection
 
 ## References
 
