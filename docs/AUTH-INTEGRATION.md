@@ -120,13 +120,22 @@ async def create_capture(
 **Location:** `/frontend/src/lib/api.ts`
 
 ```typescript
+async function getAuthToken(): Promise<string | null> {
+  if (typeof window !== 'undefined' && (window as any).Clerk) {
+    const session = await (window as any).Clerk.session?.getToken();
+    return session || null;
+  }
+  return null;
+}
+
 async function apiRequest<T>(endpoint: string, options?: RequestInit) {
   // Get token from Clerk
-  const token = await window.Clerk.session?.getToken();
+  const token = await getAuthToken();
 
-  const headers = {
+  // Build headers with conditional Authorization
+  const headers: HeadersInit = {
     'Content-Type': 'application/json',
-    'Authorization': token ? `Bearer ${token}` : undefined,
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
     ...options?.headers,
   };
 
@@ -135,11 +144,218 @@ async function apiRequest<T>(endpoint: string, options?: RequestInit) {
     headers,
   });
 
+  if (!response.ok) {
+    const errorMessage = await parseError(response);
+    throw new Error(errorMessage);
+  }
+
   return response.json();
 }
 ```
 
 **All API calls automatically include auth token!**
+
+### Frontend: Protected Routes Architecture
+
+**Protected routes use Next.js route groups for clean organization.**
+
+#### File Structure
+
+```
+app/
+  (protected)/                     ← Route group (doesn't affect URLs)
+    _components/
+      auth-gate.tsx                ← Client-side auth checking
+    layout.tsx                     ← Server-side protected layout
+    vault/page.tsx                 ← Protected pages
+    newsletters/page.tsx
+    extract/page.tsx
+
+src/
+  config/
+    routes.ts                      ← 🎯 SINGLE SOURCE OF TRUTH
+
+middleware.ts                      ← Server-side route protection
+```
+
+#### Centralized Route Configuration
+
+**Location:** `/frontend/src/config/routes.ts`
+
+```typescript
+/**
+ * Protected route prefixes - SINGLE SOURCE OF TRUTH
+ *
+ * Must match folder names in app/(protected)/
+ * Validation runs automatically during build
+ */
+export const PROTECTED_ROUTE_PREFIXES = [
+  '/vault',       // Content Vault
+  '/newsletters', // Newsletter Extractions & Config
+  '/extract',     // Content Extraction
+] as const;
+
+// Auto-generated patterns for middleware
+export const PROTECTED_ROUTE_PATTERNS = PROTECTED_ROUTE_PREFIXES.map(
+  (prefix) => `${prefix}(.*)`
+);
+
+// Helper function for client-side routing
+export function isProtectedPath(pathname: string): boolean {
+  return PROTECTED_ROUTE_PREFIXES.some((prefix) =>
+    pathname.startsWith(prefix)
+  );
+}
+```
+
+#### Server-Side Protection (Middleware)
+
+**Location:** `/frontend/middleware.ts`
+
+```typescript
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { PROTECTED_ROUTE_PATTERNS } from "@/config/routes";
+
+const isProtectedRoute = createRouteMatcher(PROTECTED_ROUTE_PATTERNS);
+
+export default clerkMiddleware(async (auth, req) => {
+  // Protect routes that require authentication
+  if (isProtectedRoute(req)) {
+    await auth.protect();  // 401 if not authenticated
+  }
+});
+
+export const config = {
+  matcher: [
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    '/(api|trpc)(.*)',
+  ],
+};
+```
+
+#### Client-Side Auth Gate
+
+**Location:** `/frontend/app/(protected)/_components/auth-gate.tsx`
+
+```typescript
+'use client';
+
+import { useAuth, useClerk } from '@clerk/nextjs';
+import { useEffect } from 'react';
+
+export function AuthGate({ children }: { children: React.ReactNode }) {
+  const { isLoaded, isSignedIn } = useAuth();
+  const { redirectToSignIn } = useClerk();
+
+  useEffect(() => {
+    // Redirect to sign-in if not authenticated
+    // Preserve the current URL so user returns here after signing in
+    if (isLoaded && !isSignedIn && typeof window !== 'undefined') {
+      redirectToSignIn({
+        redirectUrl: window.location.href
+      });
+    }
+  }, [isLoaded, isSignedIn, redirectToSignIn]);
+
+  // Show loading while Clerk initializes
+  if (!isLoaded) {
+    return <div>Loading authentication...</div>;
+  }
+
+  // Don't render protected content if not signed in
+  if (!isSignedIn) {
+    return <div>Redirecting to sign in...</div>;
+  }
+
+  // User is authenticated - render the page
+  return <>{children}</>;
+}
+```
+
+**Key Features:**
+- ✅ Waits for Clerk to load before rendering
+- ✅ Redirects unauthenticated users to sign-in
+- ✅ Preserves original URL for post-sign-in redirect
+- ✅ Shows loading states during authentication
+
+#### Protected Layout (Server Component)
+
+**Location:** `/frontend/app/(protected)/layout.tsx`
+
+```typescript
+import { AuthGate } from './_components/auth-gate';
+
+export default function ProtectedLayout({
+  children
+}: {
+  children: React.ReactNode
+}) {
+  return <AuthGate>{children}</AuthGate>;
+}
+```
+
+**Why separate layout and auth gate?**
+- Layout stays server-side → Child pages can use server components
+- Auth gate is client-side → Can use Clerk React hooks
+- Best of both worlds!
+
+#### Build-Time Route Validation
+
+**Location:** `/frontend/scripts/validate-protected-routes.mjs`
+
+Automatically validates that:
+1. All folders in `app/(protected)/` are listed in `routes.ts`
+2. No extra routes in `routes.ts` that don't have folders
+
+```bash
+# Run manually
+npm run validate:routes
+
+# Runs automatically during build
+npm run build
+```
+
+**Example output:**
+```
+🔍 Validating protected routes...
+
+📁 Folders in app/(protected)/:
+   - extract
+   - newsletters
+   - vault
+
+⚙️  Configured in src/config/routes.ts:
+   - vault
+   - newsletters
+   - extract
+
+✅ All protected routes are properly configured!
+```
+
+#### Adding a New Protected Route
+
+1. **Create the folder:**
+   ```bash
+   mkdir app/(protected)/admin
+   ```
+
+2. **Add to config:**
+   ```typescript
+   // src/config/routes.ts
+   export const PROTECTED_ROUTE_PREFIXES = [
+     '/vault',
+     '/newsletters',
+     '/extract',
+     '/admin',  // ← Add this
+   ] as const;
+   ```
+
+3. **Validate:**
+   ```bash
+   npm run validate:routes
+   ```
+
+4. **Done!** The route is now protected and requires authentication.
 
 ---
 
@@ -405,40 +621,138 @@ await db.commit()
 
 ### Checklist
 
-- [ ] Add Clerk keys to Railway environment variables
-- [ ] Add Clerk keys to Vercel environment variables
-- [ ] Run migrations on production database
-- [ ] Update CORS origins to include production frontend URL
-- [ ] Set `CLERK_SECRET_KEY` (production key, not test key)
+- [x] Add Clerk keys to Railway environment variables
+- [x] Add Clerk keys to Vercel environment variables
+- [x] Run migrations on production database
+- [x] Update CORS origins to include production frontend URL
+- [x] Remove old API key authentication system
+- [ ] Set `CLERK_SECRET_KEY` (production key, not test key) - Currently using test keys
 - [ ] Enable HTTPS-only cookies
 
 ### Environment Variables (Production)
 
-**Railway:**
-```env
-CLERK_PUBLISHABLE_KEY=pk_live_...
-CLERK_SECRET_KEY=sk_live_...
-DATABASE_URL=postgresql://...
+**Railway (Backend):**
+```bash
+# Add Clerk keys via CLI
+railway variables --set "CLERK_PUBLISHABLE_KEY=pk_test_..."
+railway variables --set "CLERK_SECRET_KEY=sk_test_..."
+
+# Verify
+railway variables | grep CLERK
 ```
 
-**Vercel:**
-```env
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_...
-CLERK_SECRET_KEY=sk_live_...
-NEXT_PUBLIC_API_URL=https://content-engine-production.up.railway.app
+**Vercel (Frontend):**
+```bash
+# Add Clerk keys for all environments
+echo "pk_test_..." | vercel env add NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY production
+echo "pk_test_..." | vercel env add NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY preview
+echo "pk_test_..." | vercel env add NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY development
+
+echo "sk_test_..." | vercel env add CLERK_SECRET_KEY production
+echo "sk_test_..." | vercel env add CLERK_SECRET_KEY preview
+echo "sk_test_..." | vercel env add CLERK_SECRET_KEY development
+
+# Verify
+vercel env ls
 ```
+
+### Deployment Process
+
+1. **Push changes to GitHub:**
+   ```bash
+   git add .
+   git commit -m "Implement Clerk authentication"
+   git push origin main
+   ```
+
+2. **Railway auto-deploys backend:**
+   - Watches `main` branch
+   - Runs migrations automatically
+   - Picks up new environment variables
+
+3. **Vercel auto-deploys frontend:**
+   - Watches `main` branch
+   - Runs `npm run build` (includes route validation)
+   - Uses environment variables from project settings
+
+4. **Verify deployment:**
+   ```bash
+   # Check backend health
+   curl https://content-engine-production.up.railway.app/health
+
+   # Check frontend
+   curl -I https://content-engine-frontend-green.vercel.app
+   ```
+
+### Migration Notes
+
+**Old API Key System → Clerk**
+
+We removed the old `verify_api_key` authentication dependency from all endpoints:
+
+```python
+# BEFORE (Old system)
+from app.api.deps import verify_api_key
+
+@router.post("/api/extract/auto")
+async def extract_auto(
+    user: User = Depends(get_current_user_from_clerk),
+    _: bool = Depends(verify_api_key)  # ❌ Removed
+):
+    pass
+
+# AFTER (Clerk only)
+@router.post("/api/extract/auto")
+async def extract_auto(
+    user: User = Depends(get_current_user_from_clerk)  # ✅ Only this
+):
+    pass
+```
+
+**Affected endpoints:**
+- `/api/extract/reddit`
+- `/api/extract/tiktok`
+- `/api/extract/youtube`
+- `/api/extract/article`
+- `/api/extract/auto`
+- All `/api/newsletters/*` endpoints
+- All `/api/capture/*` endpoints
+
+### Current Production URLs
+
+- **Backend:** https://content-engine-production.up.railway.app
+- **Frontend:** https://content-engine-frontend-green.vercel.app
+- **Direct Deployment:** https://content-engine-frontend-ghnbnbyhf-prompt-stacks-projects.vercel.app
 
 ---
 
 ## Related Files
 
-- Backend auth utility: `/backend/app/core/clerk.py`
-- User model: `/backend/app/models/user.py`
-- Auth endpoints: `/backend/app/api/endpoints/auth.py`
-- Frontend API client: `/frontend/src/lib/api.ts`
-- Frontend middleware: `/frontend/middleware.ts`
-- Frontend layout: `/frontend/app/layout.tsx`
+### Backend
+- Auth utility: `/backend/app/core/clerk.py` - JWT verification & JIT provisioning
+- User model: `/backend/app/models/user.py` - User schema with clerk_user_id
+- Auth endpoints: `/backend/app/api/endpoints/auth.py` - /auth/me endpoint
+- Extractor endpoints: `/backend/app/api/endpoints/extractors.py` - Updated to use Clerk
+- Newsletter endpoints: `/backend/app/api/endpoints/newsletters.py` - Updated to use Clerk
+- Capture endpoints: `/backend/app/api/endpoints/capture.py` - Updated to use Clerk
+
+### Frontend
+- API client: `/frontend/src/lib/api.ts` - Automatic JWT token injection
+- Middleware: `/frontend/middleware.ts` - Server-side route protection
+- Route config: `/frontend/src/config/routes.ts` - Single source of truth
+- Root layout: `/frontend/app/layout.tsx` - ClerkProvider & Header
+- Protected layout: `/frontend/app/(protected)/layout.tsx` - Protected route wrapper
+- Auth gate: `/frontend/app/(protected)/_components/auth-gate.tsx` - Client auth checking
+- Header: `/frontend/src/components/layout/Header.tsx` - Sign in/out buttons
+
+### Scripts & Validation
+- Route validation: `/frontend/scripts/validate-protected-routes.mjs`
+- Package scripts: `/frontend/package.json` - Build-time validation
+
+### Documentation
 - Database schema: `/docs/database-schema.mmd`
+- Protected routes: `/frontend/docs/PROTECTED_ROUTES.md`
+- This file: `/docs/AUTH-INTEGRATION.md`
 
 ---
 
