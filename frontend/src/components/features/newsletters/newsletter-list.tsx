@@ -7,6 +7,7 @@ import { Accordion, AccordionItem } from '@/components/composed/accordion';
 interface ResolvedLink {
   url: string;
   original_url?: string;
+  curator_description?: string;
 }
 
 interface Newsletter {
@@ -147,7 +148,12 @@ export function NewsletterList({
                           className="p-3 bg-accent/30 rounded-lg hover:bg-accent/50 transition-colors group"
                         >
                           <div className="flex items-start gap-3">
-                            <div className="flex-1 min-w-0">
+                            <div className="flex-1 min-w-0 space-y-1">
+                              {link.curator_description && (
+                                <p className="text-sm font-medium text-foreground">
+                                  {link.curator_description}
+                                </p>
+                              )}
                               <a
                                 href={link.url}
                                 target="_blank"

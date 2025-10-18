@@ -1,85 +1,46 @@
-# Supported URL Formats
+# Supported URL Formats (October 2025)
 
-## ✅ Tested & Working
+The extractors now normalise most desktop and mobile URLs. Short links are automatically expanded before processing (see `backend/app/services/extractors/url_utils.py`).
 
-### TikTok
-**✅ Desktop URLs** (Working):
-```
-https://www.tiktok.com/@hoffdigital/video/7535517761863224606
-```
+## TikTok
 
-**⚠️ Mobile/Short URLs** (Partially working):
-```
-https://www.tiktok.com/t/ZP8SEBDrP/
-```
-- URL expansion works
-- Some videos work, some don't (depends on TikTok's data structure)
-- **Recommendation**: Use desktop URLs for reliable extraction
+- ✅ `https://www.tiktok.com/@user/video/1234567890`
+- ✅ `https://www.tiktok.com/t/ZP8SEBDrP/` (expanded automatically)
+- ✅ `https://vm.tiktok.com/XXXX/`
 
-### Reddit
-**✅ Desktop URLs** (Working):
-```
-https://www.reddit.com/r/pics/comments/1ntym6t/oc_its_funny_when_neighbors_do_things_like_this/
-```
+> **If extraction fails**: TikTok occasionally blocks automated requests. Re-run or try a desktop URL; the extractor handles captions when available.
 
-**❌ Mobile URLs** (Needs work):
-```
-https://www.reddit.com/r/bengals/s/d0oTzG60MY
-```
-- URL expansion works → expands to full URL with query params
-- Node.js extractor doesn't handle URLs with query params
-- **Recommendation**: Use desktop URLs for now
+## Reddit
 
-### YouTube
-**✅ All formats** (Working):
-```
-https://www.youtube.com/watch?v=dQw4w9WgXcQ
-https://youtu.be/dQw4w9WgXcQ
-```
-- yt-dlp handles all YouTube URL formats automatically
+- ✅ `https://www.reddit.com/r/pics/comments/abc123/example_title/`
+- ✅ `https://www.reddit.com/r/pics/s/d0oTzG60MY` (short share links)
+- ✅ `https://redd.it/abc123`
+
+Shortened and mobile links are expanded and cleaned before passing to the Python wrapper (`reddit_extractor.py`).
+
+## YouTube
+
+- ✅ `https://www.youtube.com/watch?v=dQw4w9WgXcQ`
+- ✅ `https://youtu.be/dQw4w9WgXcQ`
+- ✅ `https://www.youtube.com/shorts/dQw4w9WgXcQ`
+- ✅ `https://www.youtube.com/live/dQw4w9WgXcQ`
+
+The extractor uses yt-dlp with multiple client fallbacks, so all standard formats work.
+
+## Articles & Web Pages
+
+- ✅ Any `http(s)://` URL pointing to HTML content. Readability.js cleans the output and removes boilerplate.
+
+## Gmail Newsletters
+
+- URLs are resolved from newsletter HTML, and tracking links are unwrapped (see `backend/extractors/email` pipeline).
 
 ---
 
-## 📝 URL Format Guidelines for Users
+### Best Practices
 
-### Best Practices:
-1. **Use desktop URLs when possible** - Most reliable
-2. **Remove query parameters** from Reddit URLs (everything after `?`)
-3. **TikTok**: Use full `@username/video/ID` format
-4. **Reddit**: Use full `/r/subreddit/comments/ID/title/` format
-5. **YouTube**: Any format works
+- Provide canonical desktop URLs when possible for the most stable output.
+- Remove query parameters if you encounter site-specific issues (rare with the current implementation).
+- Monitor extractor logs (`backend/app/services/extractors/*`) for provider-specific rate limits.
 
-### Current Implementation:
-- ✅ Mobile URL expansion implemented (httpx with follow_redirects)
-- ✅ Detects mobile patterns: `/t/`, `/s/`, `vm.tiktok.com`, `redd.it`, `youtu.be`
-- ⚠️ Some edge cases still need handling (query params, certain video structures)
-
----
-
-## 🔧 Technical Notes
-
-### TikTok Limitations:
-- Data structure varies by video
-- Some videos return different JSON schema
-- Mobile app links sometimes point to unavailable videos
-- **Root cause**: TikTok frequently changes their HTML structure
-
-### Reddit Limitations:
-- Mobile URLs include tracking params (`?share_id=...`)
-- Node.js extractor expects clean URLs
-- **Solution**: Strip query params before passing to extractor
-
-### YouTube:
-- No limitations - yt-dlp is battle-tested and handles everything
-
----
-
-## ✅ Recommendation for MVP
-
-**Current Status**: Good enough to proceed with LLM integration!
-
-- YouTube: 100% reliable
-- TikTok: 80% reliable with desktop URLs
-- Reddit: 90% reliable with desktop URLs
-
-The extractors work well enough to demonstrate the full content processing pipeline. Edge cases can be fixed incrementally.
+With these improvements, you can safely accept links from mobile devices, copied share URLs, or shortened routes without additional preprocessing.

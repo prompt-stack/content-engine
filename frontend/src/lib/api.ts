@@ -25,6 +25,9 @@ import type {
   Capture,
   CaptureListRequest,
   CaptureSearchRequest,
+  GoogleOAuthStatus,
+  GoogleOAuthStart,
+  GoogleOAuthDisconnect,
   APIError,
 } from './types';
 
@@ -398,6 +401,28 @@ export const api = {
         method: 'POST',
         body: JSON.stringify({ url }),
       });
+    },
+  },
+
+  // --------------------------------------------------------------------------
+  // Authentication / OAuth
+  // --------------------------------------------------------------------------
+
+  auth: {
+    google: {
+      start: (): Promise<GoogleOAuthStart> => {
+        return apiRequest<GoogleOAuthStart>('/api/auth/google/start');
+      },
+
+      status: (): Promise<GoogleOAuthStatus> => {
+        return apiRequest<GoogleOAuthStatus>('/api/auth/google/status');
+      },
+
+      disconnect: (): Promise<GoogleOAuthDisconnect> => {
+        return apiRequest<GoogleOAuthDisconnect>('/api/auth/google/disconnect', {
+          method: 'DELETE',
+        });
+      },
     },
   },
 };

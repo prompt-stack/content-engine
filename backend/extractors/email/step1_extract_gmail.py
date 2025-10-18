@@ -43,7 +43,7 @@ def get_enabled_senders_from_config() -> List[str]:
     return enabled_senders
 
 
-def extract_from_gmail(days_back: float = None, senders: List[str] = None, max_results: int = None, extraction_id: str = None):
+def extract_from_gmail(days_back: float = None, senders: List[str] = None, max_results: int = None, extraction_id: str = None, token_file: str = None):
     """
     Step 1: Extract newsletters from Gmail and save raw HTML
 
@@ -52,6 +52,7 @@ def extract_from_gmail(days_back: float = None, senders: List[str] = None, max_r
         senders: List of sender emails (default: from config)
         max_results: Max newsletters (default: from config)
         extraction_id: Pre-generated extraction ID (default: generate timestamp)
+        token_file: Path to user's OAuth token JSON file (default: use legacy token)
 
     Returns:
         Path to extraction directory
@@ -100,7 +101,19 @@ def extract_from_gmail(days_back: float = None, senders: List[str] = None, max_r
 
     # Extract from Gmail
     print("📧 Connecting to Gmail...\n")
-    extractor = GmailExtractor()
+
+    # Load token data if provided
+    token_data = None
+    if token_file:
+        try:
+            with open(token_file, 'r') as f:
+                token_data = json.load(f)
+            print("✅ Using per-user OAuth token\n")
+        except Exception as e:
+            print(f"⚠️  Failed to load token file: {e}")
+            print("   Falling back to legacy token\n")
+
+    extractor = GmailExtractor(token_data=token_data)
     newsletters = extractor.search_newsletters(
         days_back=days_back,
         max_results=max_results,

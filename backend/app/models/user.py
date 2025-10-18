@@ -8,6 +8,7 @@ import enum
 
 if TYPE_CHECKING:
     from .capture import Capture
+    from .google_token import GoogleToken
 
 
 class UserTier(str, enum.Enum):
@@ -87,6 +88,12 @@ class User(SQLAlchemyBaseUserTable[int], Base):
         "Capture",
         back_populates="user",
         cascade="all, delete-orphan"
+    )
+    google_token: Mapped[Optional["GoogleToken"]] = relationship(
+        "GoogleToken",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        uselist=False  # One-to-one relationship
     )
 
     @property

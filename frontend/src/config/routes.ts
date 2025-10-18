@@ -28,6 +28,7 @@ export const PROTECTED_ROUTE_PREFIXES = [
   '/vault',       // Content Vault - saved captures
   '/newsletters', // Newsletter Extractions & Config
   '/extract',     // Content Extraction
+  '/settings',    // User Settings & Account Management
 ] as const;
 
 /**

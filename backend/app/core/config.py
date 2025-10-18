@@ -41,6 +41,9 @@ class Settings(BaseSettings):
         # Vercel deployments handled by regex in main.py
     ]
 
+    # Frontend URL (for OAuth redirects)
+    FRONTEND_URL: str = "http://localhost:3456"
+
     # LLM Providers
     OPENAI_API_KEY: str = ""
     ANTHROPIC_API_KEY: str = ""
@@ -54,6 +57,7 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: str = ""
     GOOGLE_CLIENT_SECRET: str = ""
     GOOGLE_REDIRECT_URI: str = ""
+    GOOGLE_TOKEN_ENCRYPTION_KEY: str = "dev-encryption-key-change-in-production"
 
     # Clerk Authentication
     CLERK_PUBLISHABLE_KEY: str = ""

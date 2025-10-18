@@ -10,6 +10,7 @@ import { api } from '@/lib/api';
 interface ResolvedLink {
   url: string;
   original_url?: string;
+  curator_description?: string;
 }
 
 interface Newsletter {
@@ -39,10 +40,13 @@ export default function NewslettersPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [expandedExtractionId, setExpandedExtractionId] = useState<string | null>(null);
+  const [googleConnected, setGoogleConnected] = useState(false);
+  const [checkingConnection, setCheckingConnection] = useState(true);
 
-  // Load extractions on mount
+  // Load extractions and check Gmail connection on mount
   useEffect(() => {
     loadExtractions();
+    checkGoogleConnection();
   }, []);
 
   async function loadExtractions() {
@@ -55,6 +59,19 @@ export default function NewslettersPage() {
       setError(error instanceof Error ? error.message : 'Failed to load extractions');
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function checkGoogleConnection() {
+    try {
+      setCheckingConnection(true);
+      const status = await api.auth.google.status();
+      setGoogleConnected(status.connected && !status.is_expired);
+    } catch (error) {
+      console.error('Error checking Google connection:', error);
+      setGoogleConnected(false);
+    } finally {
+      setCheckingConnection(false);
     }
   }
 
@@ -117,8 +134,33 @@ export default function NewslettersPage() {
         </div>
       )}
 
+      {/* Gmail Connection Warning */}
+      {!checkingConnection && !googleConnected && (
+        <div className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+          <div className="flex items-start gap-3">
+            <span className="text-2xl">⚠️</span>
+            <div className="flex-1">
+              <p className="font-medium text-amber-800 dark:text-amber-200">
+                Gmail Not Connected
+              </p>
+              <p className="text-amber-700 dark:text-amber-300 mt-1 text-sm">
+                You need to connect your Gmail account before you can extract newsletters.
+              </p>
+              <Link href="/settings" className="inline-block mt-3">
+                <Button size="sm" variant="default">
+                  Go to Settings to Connect Gmail
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Extract Form Feature Component */}
-      <NewsletterExtractForm onSuccess={handleExtractionSuccess} />
+      <NewsletterExtractForm
+        onSuccess={handleExtractionSuccess}
+        disabled={!googleConnected}
+      />
 
       {/* Extractions List Feature Component */}
       <NewsletterList

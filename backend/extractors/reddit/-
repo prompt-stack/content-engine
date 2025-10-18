@@ -1,54 +1,312 @@
-# Railway Postgres Instance | Where do you Host your Postgres?
+# I’ve been tracking what people are building with Claude Skills since launch - here’s the wildest stuff I’ve found (with links)
 
-**Posted by** u/[deleted] in r/learnprogramming
-**Score:** 2 points (100% upvoted)
-**Comments:** 4
-**Posted:** 3/31/2023, 5:26:34 AM
+**Posted by** u/Zestyclose-Ad-9003 in r/ClaudeAI
+**Score:** 434 points (92% upvoted)
+**Comments:** 76
+**Posted:** 10/18/2025, 3:28:48 AM
 
 ---
 
-Hello!
+So Claude Skills dropped last week and honestly, I’ve been down a rabbit hole watching what the community’s been shipping. For those who haven’t tried it yet - Skills are basically persistent instructions/code/resources that Claude can load when it needs them. Once you install a Skill, Claude just knows how to do that thing across all your conversations.
 
-I am getting pretty far along in my dev journey and I am getting way more confident. I am currently working on an API in go and have a few live projects deployed for my current job.
+The crazy part? People are building genuinely useful stuff in HOURS, not weeks.
 
-Up to this point, I have been using mongo db and I have came to the realization that for most of my projects I need structured data long-term. I can spin up an instance of postgres on railway, but I do not know if this is the best option cost-wise.
+Here’s what I’ve found so far:
 
-Does anyone have any opinions about the best place to host your postgres instance?
+🔥 The Meta One: Skill-Creator
 
-Also, I've considered just building a docker image with both my api and postgres running together, or even just using sqlite. I guess I am a little concerned about keeping my data if I shift my place of deployment.
+Anthropic made a Skill that builds Skills for you. Yeah, you read that right.
+You just describe what you want in plain English, and it writes the SKILL.md file for you. I tested it yesterday and it’s actually really good.
+Demo (47 seconds): https://youtube.com/watch?v=kS1MJFZWMq4
 
-For instance, if I simply go with sqlite for the time being, and I get tons of data, I am not sure how I would get that data out of my deployment and migrate it to another database.
+🤖 Auto-Generation Tool: Skill Seekers
 
-Any thoughts?
+u/Critical-Pea-8782 built something wild - a tool that auto-generates Claude Skills from ANY documentation site.
+- Feed it a docs URL
+- Wait 25 minutes
+- Get a production-ready Skill
+
+It has presets for React, Vue, Django, Godot, FastAPI… basically any major framework.
+GitHub: https://github.com/yusufkaraaslan/Skill_Seekers
+I tried this with the Godot docs and it actually works. The Skill it generated knows way more about Godot than base Claude.
+
+📚 Community Collections
+
+A few people have started curating all the Skills being created:
+
+BehiSecc’s Collection:
+https://github.com/BehiSecc/awesome-claude-skills
+Includes: CSV analyzers, research assistants, YouTube transcript fetchers, EPUB parsers, git automation, and a bunch more.
+
+travisvn’s Collection:
+https://github.com/travisvn/awesome-claude-skills
+Similar vibe but with more enterprise/workflow focus. Both are actively maintained and honestly just browsing these gives you ideas.
+
+🎨 Official Anthropic Skills Pack
+
+Anthropic shipped 15 Skills out of the gate. The document creation ones are actually really impressive:
+- docx - Creates proper Word docs (not just markdown pretending to be Word)
+- pptx - Actual PowerPoint files with layouts, charts, etc.
+- xlsx - Excel with real formulas
+- pdf - Form filling and manipulation
+- canvas-design - Visual layouts in PNG/PDF
+- brand-guidelines - Keeps everything on-brand
+- algorithmic-art - Generative art with p5.js
+- slack-gif-creator - Makes GIFs that fit Slack’s constraints
+
+Plus more for internal comms, web testing, MCP server creation, etc.
+GitHub: https://github.com/anthropics/skills
+The document-skills folder is particularly interesting if you want to see how Anthropic approaches complex Skills.
+
+🧠 Simon Willison’s Take: “Bigger Than MCP”
+
+Simon Willison (the guy who reverse-engineered Skills before the official announcement) wrote a really good technical breakdown:
+https://simonwillison.net/2025/Oct/16/claude-skills/
+
+TLDR: Skills are more token-efficient than MCP and way easier to share. Each Skill only uses a few dozen tokens until it’s actually needed, then Claude loads the full details.
+His take is that Skills might end up being more important than MCP in the long run. Honestly? After using both, I kinda see his point.
+
+🎬 Official Demo: Skills Chaining
+
+Anthropic’s demo shows Skills working together automatically:
+PowerPoint Skill → Brand Guidelines Skill → Poster Design Skill
+All in one conversation. Claude just switches between them as needed.
+Video: https://youtube.com/watch?v=IoqpBKrNaZI
+
+🤔 My Honest Take
+
+I’ve been using Claude for months and Skills genuinely feel different. It’s not just “better prompts” - it’s more like giving Claude actual expertise that sticks around.
+The best part? Everything’s open-source. You can fork Skills, modify them, share them with your team. The barrier to entry is super low.
+
+Downsides I’ve noticed:
+- Some Skills work better than others (canvas-design got roasted on HN)
+- You need Claude Pro/Team/Enterprise (not available on free tier)
+- It’s still early - some rough edges
+But overall? This feels like a real step forward in making AI actually useful for specific workflows.
+
+📢 What are you building?
+
+Has anyone else been experimenting with Skills? What have you built? What Skills do you wish existed?
+I’m particularly curious if anyone’s made Skills for:
+- API documentation (specific to your company)
+- Data analysis workflows
+- Content creation pipelines
+- Design systems
+
+Drop your Skills in the comments - let’s build this library together 👇
+
+**Flair:** Built with Claude
 
 ---
 
 ## Comments
 
-u/truthseeker1990 • 2 points
-Is this for learning or for the projects you mentioned in current job?
+u/Credtz • 56 points
+Can we ban the term production ready? Also it’s kinda like having Claude auto pick the correct project for a task which is where people would’ve put this type of custom instructioning and acc it’s useful.
 
-  u/[deleted] • 2 points
-  For learning. All of my projects I have live in my job are "bots" that automate tasks.  
-  
-  
-  For example, I have a few bots that go run analytics on our data and then messages it out / updates digital signage in our business.  
-  
-  
-  Another one runs and gets time punch errors. Another generates reimbursement invoices from our credit card statements. Tasks like this.  
-  
-  
-  BUT I am working on a web app which can help with some of our internal systems. Right now we rely heavily on good forms and spread sheets but I believe I could simplify by creating a web app. BUT it would all be heavily dependent on the data fed into the app.
+  u/satansprinter • 23 points
+  Why ban the term? Its a dead give away for me its made with claude
 
-    u/truthseeker1990 • 1 points
-    I would probably go with docker and docker-compose to set up the db and server and dependencies. Make sure to set it up so the data persists.
+    u/FengMinIsVeryLoud • -4 points
+    because dario and his team arent able to create products which can create production ready products.
+    
+    openai is way closer to "can".
+
+  u/bitspace • 4 points
+  &gt;Can we ban the term production ready?
+  
+  Why, except for the fact that absolutely nobody who's ever posted in this subreddit has actually shipped anything to production?
 
 ---
 
-u/[deleted] • 1 points
-Supabase uses Postgres for their DB. You can host 2 projects for free.
+u/austegard • 16 points
+List of Python libraries available in the environment: https://claude.ai/public/artifacts/87ae1fd6-3817-4af9-8459-8d5c6b9bc490
 
-Railway is good but they do shut off your free projects pretty quick for inactivity. I ended up putting 20 bucks on my railway account and am now running express servers for two portfolio projects for a couple bucks a month.
+(From Claude running `pip list --format=freeze | sort` in the skills execution environment)
+
+---
+
+u/Basic_Investigator44 • 12 points
+Very helpful! Thanks a lot
+
+---
+
+u/EzraCy123 • 11 points
+Can anyone describe the difference btw asking Claude to use skill x to do y, or making a Claude agent whose assignment is to do y (where agent prompt contains instructions that would effectively be content equivalent to skill x?
+
+  u/delphianQ • 7 points
+  Skills mean same context window, but claude will more naturally invoke the skill. Agent is separate context window, but more hamfisted delegation.
+  
+  With work you can already make an agent skill like, but it will never be as smooth.
+
+  u/Key-Singer-2193 • 4 points
+  It is called reinventing the wheel. Anthropic is trying to be innovative and get ahead of the curve so they keep coming up with stuff like this.
+  
+  
+  Its bespoke 
+
+    u/elbiot • 2 points
+    When the wheel has only been around for a year I think it's reasonable to reinvent it a few times
+
+    u/Brilliant-Lettuce544 • 1 points
+    And OpenAI is obviously playing catchup with things like ACP (Agentic Commerce Protocol) or wtf they called it
+
+---
+
+u/142857t • 15 points
+Very helpful post but one small comment: the formatting is broken. I assume you copied from somewhere (e.g. output of LLM) and the bullet points are completely messed up, making certain parts confusing to read.
+
+  u/Zestyclose-Ad-9003 • -22 points
+  Thanks for the feedback. Will keep the formatting right 
+  To clarify, Its a messup between notion to Reddit copy paste :)
+
+    u/m-shottie • 27 points
+    🤦‍♂️ Please, this has definitely been through an LLM
+    
+    Edit: to match OPs edit - they were claiming an LLM was not used to produce the post.
+
+      u/Infinite-Rent1903 • 8 points
+      That always have the same style and  tone “so, I was …”
+
+        u/drop_carrier • 31 points
+        So \[thing happened\] and honestly? \["hot take"\] \[rabbit hole\] \[deep dive\]
+        
+        \[The crazy part?\] / \[here's what blew my mind\]
+        
+        \[List stuff from LLM output request about topic\]
+        
+        \[emoji header list\]
+        
+        \[It's not x, it's y\]
+        
+        \[call to action\]
+        
+        It's \*not hard\* to get an LLM to sound genuine and use your own unique tone of voice.
+
+          u/AI_4U • 8 points
+          Hahah fuckin nailed it
+
+          u/ProfessionalAnt1352 • 6 points
+          genuinely, it takes bare minimum effort to get them to talk naturally
+
+          u/bitspace • 2 points
+          Jesus I'm going to write some kind of reddit post filter using this template because it's _spot on_
+
+            u/drop_carrier • 1 points
+            Thanks. I run a weekly ‘no-hype’ newsletter for stuff like this. Link in bio. And if you ever write that filter I would LOVE to know.
+
+    u/142857t • 6 points
+    I mean, no problem with the LLM usage if any! The point is that you have clearly put effort into researching for this which is super helpful.
+
+      u/Zestyclose-Ad-9003 • -4 points
+      fixed it :D
+
+    u/exboozeme • 1 points
+    Notion is the absolute worst to copy out of. They clearly made it so brutal so you can’t easily get your content out.
+
+---
+
+u/ascendant23 • 10 points
+I mean, at the end of the day, it's basically "premade prompt parts with progressive disclosure," right? So, super useful as a feature, but not really anything you couldn't already do by copy pasting useful instructions from Notepad or something. Like, yes, this does seem smart for them to have built into the UI, but I don't think it's anywhere near as game-changing as MCP, which basically lets you use the same set of tools anywhere regardless of which model provider / framework / etc.
+
+  u/Throwaway_bicycling • 3 points
+  Willison’s post makes the important point that this approach to skills is pretty generic, so you might well see a lot of this implemented much more broadly. Like today you can feed skills to Gemini CLI in your prompt and it will basically work. Less fancy than having Claude itself figure out what skills to use, so maybe the tokens savings isn’t as large, but I’m betting other systems will build on the idea.
+
+---
+
+u/tehsilentwarrior • 6 points
+It’s sort of bash scripts isn’t it?
+
+  u/Zestyclose-Ad-9003 • 3 points
+  Indeed if you zoom out from it
+
+---
+
+u/EarthlingSil • 3 points
+Can Skills be used to create a account wide prompt that Claude must follow for every single conversation, like the one available in LM Studio?
+
+  u/ProfessionalAnt1352 • 3 points
+  if you're on web you can use projects and simply throw that in the project instructions. not the references, the actual instructions block. it gets sent up in your initial message as if it was part of the prompt.   
+    
+  alternatively when starting claude through your console you can start it through a .bat that auto sends up the initial prompt when running it.
+  
+  apologies if I misunderstood your question, but I believe this is sort of what you're looking for?
+
+  u/elbiot • 0 points
+  In CC that's CLAUDE.md
+  
+  But there's no "must follow" for LLMs. All you can do is put stuff in the context and it's up to you to make that context sufficient for conditioning the output the way you want
+
+---
+
+u/JohanTHEDEV • 3 points
+This feels really powerful, I see more need for "in the moment workflows" rather then n8n type of automations. And the space is emerging.
+
+---
+
+u/Pack_New69 • 2 points
+Dang! I can’t wait to try it…
+
+---
+
+u/adampao • 2 points
+Thanks for the post. I haven’t had the chance to play with skills yet, but it’s next on to-do list. It sounded like a super useful tool from the release announcement, and it seems like it’s delivering.
+
+---
+
+u/Thump604 • 2 points
+I just explained this toClaude it now have skills put to work!  This ish is amazing!!
+
+---
+
+u/tomba08 • 2 points
+This awesome, a lot of recources right here, gonna write this on my newsletter
+
+---
+
+u/Necessary-Shame-2732 • 2 points
+Lotta LLM haters for a ClaudeAi subreddit 😂 thanks op, stoked to learn more!
+
+---
+
+u/IcedColdMine • 2 points
+What even is Claude skills
+
+  u/elbiot • 1 points
+  A very detailed prompt specific to a particular task that gets dropped into context when needed
+
+---
+
+u/Key-Singer-2193 • 2 points
+Can anthropic fix their console.anthropic.com
+
+
+Have any of you logged in and tried to use that site on your phone? It's terrible yet they keep pushing out these new features instead of taking care of home-base first 
+
+---
+
+u/Original_Buffalo2485 • 1 points
+I'm not gonna read this all but is "skill" free? I'm a free user and I've seen it but I couldn't turn it on so
+
+  u/uncoolbob • 1 points
+  It's for paid accounts only.
+
+---
+
+u/takaji10 • 1 points
+Has anyone made a skill that handles translation of documents? I'm trying, but the output always fails for one reason or another...
+
+---
+
+u/Maralitabambolo • 1 points
+Skills, agents, hooks, MCP servers…the one thing tech people suck at is making things simple for the mass. 
+
+Yes skills are useful, but specifically for coders, what does it change? The design part is nice and I expect designers to have fun with it, fun but maybe break those out by profession / need might help.
+
+---
+
+u/ProfessionalAnt1352 • 1 points
+How many of these skills are viable with the new usage limits? This isn't a rant, this is a genuine question as I can't figure out a way to reliably use claude for everyday tasks now on current usage limits
 
 ---
 

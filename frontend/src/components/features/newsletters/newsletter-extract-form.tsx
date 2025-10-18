@@ -8,9 +8,10 @@ import { api } from '@/lib/api';
 
 interface NewsletterExtractFormProps {
   onSuccess: (extractionId: string) => void;
+  disabled?: boolean;
 }
 
-export function NewsletterExtractForm({ onSuccess }: NewsletterExtractFormProps) {
+export function NewsletterExtractForm({ onSuccess, disabled = false }: NewsletterExtractFormProps) {
   // Form controls
   const [timeUnit, setTimeUnit] = useState<'hours' | 'days'>('days');
   const [timeValue, setTimeValue] = useState(7);
@@ -172,7 +173,7 @@ export function NewsletterExtractForm({ onSuccess }: NewsletterExtractFormProps)
                   setTimeUnit('hours');
                   setTimeValue(1);
                 }}
-                disabled={extracting}
+                disabled={extracting || disabled}
                 className={`flex-1 px-3 py-2 rounded-md border text-sm font-medium transition-colors ${
                   timeUnit === 'hours'
                     ? 'bg-primary text-primary-foreground border-primary'
@@ -186,7 +187,7 @@ export function NewsletterExtractForm({ onSuccess }: NewsletterExtractFormProps)
                   setTimeUnit('days');
                   setTimeValue(1);
                 }}
-                disabled={extracting}
+                disabled={extracting || disabled}
                 className={`flex-1 px-3 py-2 rounded-md border text-sm font-medium transition-colors ${
                   timeUnit === 'days'
                     ? 'bg-primary text-primary-foreground border-primary'
@@ -207,7 +208,7 @@ export function NewsletterExtractForm({ onSuccess }: NewsletterExtractFormProps)
               value={timeValue}
               onChange={(e) => setTimeValue(Number(e.target.value))}
               className="w-full px-3 py-2 border rounded-md bg-background"
-              disabled={extracting}
+              disabled={extracting || disabled}
             >
               {timeUnit === 'hours' ? (
                 <>
@@ -237,7 +238,7 @@ export function NewsletterExtractForm({ onSuccess }: NewsletterExtractFormProps)
               value={maxResults}
               onChange={(e) => setMaxResults(Number(e.target.value))}
               className="w-full px-3 py-2 border rounded-md bg-background"
-              disabled={extracting}
+              disabled={extracting || disabled}
             >
               <option value={1}>1</option>
               <option value={2}>2</option>
@@ -305,11 +306,11 @@ export function NewsletterExtractForm({ onSuccess }: NewsletterExtractFormProps)
         {/* Extract Button */}
         <Button
           onClick={handleExtract}
-          disabled={extracting}
+          disabled={extracting || disabled}
           className="w-full"
           size="lg"
         >
-          {extracting ? 'Extracting...' : 'Extract'}
+          {extracting ? 'Extracting...' : disabled ? 'Connect Gmail to Extract' : 'Extract'}
         </Button>
       </div>
 

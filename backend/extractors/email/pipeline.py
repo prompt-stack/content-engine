@@ -21,7 +21,7 @@ from step3_resolve_redirects import resolve_links_from_file
 from step4_filter_content import filter_content_from_file
 
 
-def run_pipeline(days_back=None, senders=None, max_results=None, max_links_per_newsletter=30, extraction_id=None):
+def run_pipeline(days_back=None, senders=None, max_results=None, max_links_per_newsletter=30, extraction_id=None, token_file=None):
     """
     Run complete newsletter extraction pipeline
 
@@ -31,6 +31,7 @@ def run_pipeline(days_back=None, senders=None, max_results=None, max_links_per_n
         max_results: Max newsletters (None = use config)
         max_links_per_newsletter: Limit processing per newsletter
         extraction_id: Pre-generated extraction ID (None = generate new)
+        token_file: Path to user's OAuth token JSON file (None = use legacy token)
 
     Returns:
         Path to extraction directory
@@ -44,7 +45,8 @@ def run_pipeline(days_back=None, senders=None, max_results=None, max_links_per_n
         days_back=days_back,
         senders=senders,
         max_results=max_results,
-        extraction_id=extraction_id
+        extraction_id=extraction_id,
+        token_file=token_file
     )
 
     if not extraction_dir:
@@ -131,6 +133,7 @@ Examples:
         help='Max links per newsletter (default: 30)'
     )
     parser.add_argument('--extraction-id', type=str, help='Pre-generated extraction ID')
+    parser.add_argument('--token-file', type=str, help='Path to user OAuth token JSON file')
 
     args = parser.parse_args()
 
@@ -139,5 +142,6 @@ Examples:
         senders=args.senders,
         max_results=args.max,
         max_links_per_newsletter=args.max_links,
-        extraction_id=args.extraction_id
+        extraction_id=args.extraction_id,
+        token_file=args.token_file
     )

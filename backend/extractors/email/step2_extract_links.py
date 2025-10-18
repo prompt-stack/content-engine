@@ -43,9 +43,110 @@ def extract_links_from_html(html_content: str) -> List[str]:
     return decoded_links
 
 
+def find_context_for_link(link_elem) -> str:
+    """
+    Multi-level context extraction for a link element.
+
+    Tries multiple strategies to find meaningful context:
+    1. Link text itself (headline in link)
+    2. Following sibling paragraphs (description after headline)
+    3. Parent container text (description around link)
+
+    Args:
+        link_elem: BeautifulSoup link element
+
+    Returns:
+        Context string or None
+    """
+    # Skip patterns (buttons, navigation, etc.)
+    SKIP_PATTERNS = [
+        "TRY NOW", "LEARN MORE", "START SECURE AUTH", "SUBSCRIBE",
+        "GET STARTED", "SIGN UP", "VIEW ALL", "READ MORE", "CLICK HERE",
+        "READ ONLINE", "UNSUBSCRIBE", "ADVERTISE", "TWITTER", "LINKEDIN",
+        "FACEBOOK", "INSTAGRAM", "SHARE", "FORWARD"
+    ]
+
+    def is_meaningful(text: str) -> bool:
+        """Check if text is meaningful context (not a button/nav)."""
+        if not text or len(text) < 15:
+            return False
+        if text.upper() in SKIP_PATTERNS:
+            return False
+        if text.isupper() and len(text) < 50:  # All-caps short text = button
+            return False
+        return True
+
+    # LEVEL 1: Link text itself (headline)
+    link_text = link_elem.get_text(strip=True)
+
+    # LEVEL 2: Following sibling paragraphs (TheRundown pattern)
+    # Look for description in next few siblings
+    description = None
+    current = link_elem
+
+    # Navigate up to find a container (h4, div, tr, etc.)
+    for _ in range(5):  # Check up to 5 parent levels
+        parent = current.parent
+        if not parent:
+            break
+        current = parent
+
+        # Check siblings at each level (for nested table structures)
+        for sibling in parent.find_next_siblings(limit=5):
+            # Look in paragraphs and table cells
+            desc_elems = sibling.find_all(['p', 'div', 'td'], limit=5)
+            for elem in desc_elems:
+                elem_text = elem.get_text(strip=True)
+                # Look for description patterns
+                if elem_text and len(elem_text) > 50:
+                    # Clean up: remove "The Rundown:" prefix, etc.
+                    if 'The Rundown:' in elem_text:
+                        elem_text = elem_text.split('The Rundown:', 1)[1].strip()
+                    if 'The details:' in elem_text:
+                        elem_text = elem_text.split('The details:', 1)[1].strip()
+
+                    # Extract first 200 chars
+                    desc = elem_text[:200]
+                    if is_meaningful(desc):
+                        description = desc
+                        break
+            if description:
+                break
+        if description:
+            break
+
+    # LEVEL 3: Parent container text (inline description)
+    if not description:
+        parent = link_elem.parent
+        if parent:
+            # Get parent text excluding the link text
+            parent_text = parent.get_text(strip=True)
+            if link_text in parent_text:
+                # Remove link text to get surrounding context
+                parent_text = parent_text.replace(link_text, '', 1).strip()
+                if is_meaningful(parent_text):
+                    description = parent_text[:200]
+
+    # Combine headline + description
+    if is_meaningful(link_text):
+        if description:
+            # Format: "Headline - Description..."
+            combined = f"{link_text} - {description}"
+            return combined[:300]  # Limit total length
+        else:
+            return link_text
+    elif description:
+        return description
+
+    return None
+
+
 def extract_links_with_context(html_content: str) -> List[Dict]:
     """
     Extract links WITH curator descriptions from HTML
+
+    Uses multi-level context extraction to find both headlines and descriptions.
+    Works across different newsletter formats (TheRundown, AlphaSignal, etc.)
 
     Args:
         html_content: Raw HTML string
@@ -55,36 +156,23 @@ def extract_links_with_context(html_content: str) -> List[Dict]:
     """
     soup = BeautifulSoup(html_content, 'html.parser')
 
-    # Button/CTA texts to skip (not meaningful article descriptions)
-    SKIP_TEXTS = [
-        "TRY NOW", "LEARN MORE", "START SECURE AUTH", "SUBSCRIBE",
-        "GET STARTED", "SIGN UP", "VIEW ALL", "READ MORE", "CLICK HERE"
-    ]
-
     enriched_links = []
     seen_urls = set()  # Avoid duplicates
 
     for a in soup.find_all('a', href=True):
         url = html.unescape(a['href'])
-        text = a.get_text(strip=True)
 
         # Skip duplicate URLs
         if url in seen_urls:
             continue
         seen_urls.add(url)
 
-        # Determine if text is a meaningful description
-        # Keep if: >20 chars, not a button text, and has some substance
-        has_context = (
-            text and
-            len(text) > 20 and
-            text not in SKIP_TEXTS and
-            not text.isupper()  # Skip all-caps (usually buttons)
-        )
+        # Extract context using multi-level strategy
+        context = find_context_for_link(a)
 
         enriched_links.append({
             "url": url,
-            "curator_description": text if has_context else None
+            "curator_description": context
         })
 
     return enriched_links

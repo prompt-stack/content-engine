@@ -40,47 +40,79 @@ from pathlib import Path
 
 class GmailExtractor:
     """Extract and process emails from Gmail based on config"""
-    
+
     # If modifying these scopes, delete the token file.
     SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
-    
-    def __init__(self, credentials_file='credentials.json', token_file='token.pickle'):
+
+    def __init__(self, credentials_file='credentials.json', token_file='token.pickle', token_data: Optional[Dict] = None):
         """
         Initialize the Gmail Newsletter Extractor
-        
+
         Args:
-            credentials_file: Path to OAuth2 credentials JSON file
-            token_file: Path to store/retrieve authentication token
+            credentials_file: Path to OAuth2 credentials JSON file (legacy)
+            token_file: Path to store/retrieve authentication token (legacy)
+            token_data: OAuth token data dictionary (new, per-user approach)
         """
         self.credentials_file = credentials_file
         self.token_file = token_file
+        self.token_data = token_data
         self.service = None
         self._authenticate()
         
     def _authenticate(self):
         """Authenticate and return Gmail service instance"""
         creds = None
-        
-        # Token file stores the user's access and refresh tokens
-        if os.path.exists(self.token_file):
-            with open(self.token_file, 'rb') as token:
-                creds = pickle.load(token)
-        
-        # If there are no (valid) credentials available, let the user log in
-        if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-            else:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    self.credentials_file, self.SCOPES)
-                creds = flow.run_local_server(port=0)
-            
-            # Save the credentials for the next run
-            with open(self.token_file, 'wb') as token:
-                pickle.dump(creds, token)
-        
+
+        # NEW: If token_data is provided, use it (per-user OAuth tokens)
+        if self.token_data:
+            try:
+                from datetime import datetime
+                expiry = None
+                if self.token_data.get("expiry"):
+                    expiry = datetime.fromisoformat(self.token_data["expiry"])
+
+                creds = Credentials(
+                    token=self.token_data.get("token"),
+                    refresh_token=self.token_data.get("refresh_token"),
+                    token_uri=self.token_data.get("token_uri", "https://oauth2.googleapis.com/token"),
+                    client_id=self.token_data.get("client_id"),
+                    client_secret=self.token_data.get("client_secret"),
+                    scopes=self.token_data.get("scopes", self.SCOPES),
+                    expiry=expiry
+                )
+
+                # Refresh if expired
+                if creds.expired and creds.refresh_token:
+                    creds.refresh(Request())
+                    print("🔄 Refreshed expired Google OAuth token")
+
+                print("✅ Successfully authenticated with user's Google OAuth token")
+            except Exception as e:
+                raise Exception(f"Failed to authenticate with provided token data: {e}")
+
+        # LEGACY: Fall back to token file approach
+        else:
+            # Token file stores the user's access and refresh tokens
+            if os.path.exists(self.token_file):
+                with open(self.token_file, 'rb') as token:
+                    creds = pickle.load(token)
+
+            # If there are no (valid) credentials available, let the user log in
+            if not creds or not creds.valid:
+                if creds and creds.expired and creds.refresh_token:
+                    creds.refresh(Request())
+                else:
+                    flow = InstalledAppFlow.from_client_secrets_file(
+                        self.credentials_file, self.SCOPES)
+                    creds = flow.run_local_server(port=0)
+
+                # Save the credentials for the next run
+                with open(self.token_file, 'wb') as token:
+                    pickle.dump(creds, token)
+
+            print("✅ Successfully authenticated with Gmail API (legacy token file)")
+
         self.service = build('gmail', 'v1', credentials=creds)
-        print("✅ Successfully authenticated with Gmail API")
     
     def get_user_profile(self) -> Dict:
         """Get the authenticated user's Gmail profile"""

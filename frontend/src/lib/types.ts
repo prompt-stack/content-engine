@@ -272,6 +272,27 @@ export interface CaptureSearchRequest {
 }
 
 // ----------------------------------------------------------------------------
+// Authentication / OAuth
+// ----------------------------------------------------------------------------
+
+export interface GoogleOAuthStatus {
+  connected: boolean;
+  email: string | null;
+  expires_at: string | null;
+  is_expired: boolean;
+}
+
+export interface GoogleOAuthStart {
+  authorization_url: string;
+  state: string;
+}
+
+export interface GoogleOAuthDisconnect {
+  success: boolean;
+  message: string;
+}
+
+// ----------------------------------------------------------------------------
 // Error Responses
 // ----------------------------------------------------------------------------
 

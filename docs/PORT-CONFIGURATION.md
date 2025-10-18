@@ -1,32 +1,41 @@
-# Port Configuration
+# Port Configuration (October 2025)
 
-## Default Ports (Non-Standard to Avoid Conflicts)
+Content Engine supports two common development setups:
 
-Content Engine uses **non-standard ports** by default to avoid conflicts with other services:
+1. **Direct uvicorn + local services** (recommended) – API on **9765**, Postgres on **7654** (see `backend/.env.local`).
+2. **Docker Compose** – API published as **8765**, Postgres **5433**, Redis **6380** unless overridden.
 
-| Service    | Default Port | Standard Port | Why Different? |
-|------------|--------------|---------------|----------------|
-| FastAPI    | **8765**     | 8000          | Avoid conflicts with other APIs |
-| PostgreSQL | **5433**     | 5432          | Avoid conflicts with local Postgres |
-| Redis      | **6380**     | 6379          | Avoid conflicts with local Redis |
+The table below summarises the defaults:
 
-## How to Change Ports
+| Service    | uvicorn (local) | Docker Compose publish | Standard Port | Notes |
+|------------|-----------------|------------------------|---------------|-------|
+| FastAPI    | 9765            | 8765 (`API_PORT`)      | 8000          | Frontend `.env.local` points to 9765; set `NEXT_PUBLIC_API_URL` accordingly |
+| PostgreSQL | 7654            | 5433 (`POSTGRES_PORT`) | 5432          | `use-local.sh` configures `DATABASE_URL` to use 7654 |
+| Redis      | 6380            | 6380 (`REDIS_PORT`)    | 6379          | Only required if you enable Redis features |
 
-### Option 1: Edit Root `.env` File (Recommended)
+> **Tip**: The backend never hardcodes ports. All listeners derive from environment variables or Docker runtime values.
 
-Edit `/.env` in the project root:
+---
+
+## Changing Ports
+
+### A. uvicorn / Manual Development
+
+1. Edit `backend/.env.local` (or the live `backend/.env`):
+   ```env
+   DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:7654/content_engine
+   ```
+   Adjust the host/port as needed.
+
+2. Run uvicorn with the target port: `python3 -m uvicorn app.main:app --reload --port 5000`.
+
+3. Update `frontend/.env.local` so `NEXT_PUBLIC_API_URL` matches the new port.
+
+### B. Docker Compose
+
+`docker-compose.yml` honours the following environment variables:
 
 ```bash
-# content-engine/.env
-API_PORT=8765        # Change to any available port
-POSTGRES_PORT=5433   # Change to any available port
-REDIS_PORT=6380      # Change to any available port
-```
-
-### Option 2: Environment Variables
-
-```bash
-# Set before running docker-compose
 export API_PORT=9000
 export POSTGRES_PORT=5434
 export REDIS_PORT=6381
@@ -34,80 +43,50 @@ export REDIS_PORT=6381
 docker-compose up -d
 ```
 
-### Option 3: Inline with docker-compose
+You can also inline them:
 
 ```bash
-API_PORT=9000 POSTGRES_PORT=5434 REDIS_PORT=6381 docker-compose up -d
+API_PORT=9000 POSTGRES_PORT=5434 docker-compose up backend postgres
 ```
 
-## Backend Configuration
+> Remember to update `DATABASE_URL` / `REDIS_URL` in `backend/.env` so the application connects to the published ports when running outside Docker.
 
-The backend also needs to know these ports. Edit `backend/.env`:
+---
+
+## Resolving Port Conflicts
+
+If you encounter `bind: address already in use`:
 
 ```bash
-# backend/.env
-API_PORT=8765
-POSTGRES_PORT=5433
-DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5433/content_engine
-REDIS_PORT=6380
-REDIS_URL=redis://localhost:6380/0
+lsof -i :9765   # or the port you selected
 ```
 
-**Important**: The `DATABASE_URL` and `REDIS_URL` must match the ports in root `.env`.
+Either stop the conflicting service or choose a new port and update the relevant environment variables.
 
-## Port Conflicts?
+---
 
-If you get an error like:
-```
-Error: bind: address already in use
-```
+## Production Considerations
 
-Someone is using that port. Check what's running:
+- **Railway** assigns the `PORT` automatically. The Docker image listens on `0.0.0.0:8000`, and FastAPI respects Railway’s `PORT` entrypoint during deployment.
+- **Database and Redis** connections in production are provided via connection strings (`DATABASE_URL`, `REDIS_URL`); no manual port mapping is necessary.
+- The frontend expects `NEXT_PUBLIC_API_URL=https://content-engine-production.up.railway.app` in Vercel.
+
+---
+
+## Quick Reference
 
 ```bash
-# Check what's on port 8765
-lsof -i :8765
+# Health check (uvicorn default)
+curl http://localhost:9765/health
 
-# Check what's on port 5433
-lsof -i :5433
-
-# Check what's on port 6380
-lsof -i :6380
-```
-
-Then either:
-1. Stop the conflicting service
-2. Change to a different port in `.env`
-
-## Production Deployment
-
-For production (Railway, Render, etc.), the platform assigns ports automatically via:
-- `PORT` environment variable (for the API)
-- Database connection strings (Neon, etc.)
-
-Your app will use these automatically in production.
-
-## Accessing Services
-
-After starting with `docker-compose up -d`:
-
-```bash
-# API health check
+# Health check (Docker default)
 curl http://localhost:8765/health
 
-# API documentation
-open http://localhost:8765/docs
+# Connect to local Postgres (uvicorn setup)
+psql postgresql://postgres:postgres@localhost:7654/content_engine
 
-# Connect to PostgreSQL
+# Connect to Docker Postgres
 psql postgresql://postgres:postgres@localhost:5433/content_engine
-
-# Connect to Redis
-redis-cli -p 6380
 ```
 
-## Summary
-
-✅ **All ports are configurable via environment variables**
-✅ **No hardcoded ports in code**
-✅ **Easy to change if conflicts occur**
-✅ **Works seamlessly in Docker and production**
+Make sure the frontend and backend agree on the API URL, especially when switching between Docker and direct uvicorn workflows.

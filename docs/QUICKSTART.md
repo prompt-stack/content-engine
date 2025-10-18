@@ -1,169 +1,148 @@
-# Content Engine - Quick Start
+# Content Engine – Quick Start (October 2025)
 
-## What You Have Now
+This guide matches the current production-ready stack:
 
-A working FastAPI backend with:
-- ✅ Reddit extractor (Python port complete)
-- ✅ Docker setup (PostgreSQL + Redis + FastAPI)
-- ✅ API endpoints with auto-docs
-- ✅ Base extractor class for easy extension
-- ✅ Configuration with environment variables
+- **Frontend**: Next.js 15 on Vercel with Clerk authentication.
+- **Backend**: FastAPI on Railway backed by PostgreSQL.
+- **Features**: Reddit, YouTube, TikTok, Article extractors plus the Gmail newsletter pipeline, LLM processing, capture vault, and protected frontend routes.
 
-## Getting Started
+---
 
-### 1. Start the services
+## 1. Prerequisites
 
-```bash
-cd /Users/hoff/My\ Drive/tools/data-processing/content-engine
+1. **Environment variables**
+   - `frontend/.env.local` – set `NEXT_PUBLIC_API_URL` and Clerk publishable key.
+   - `backend/.env` – set `DATABASE_URL`, `CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and provider keys (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `DEEPSEEK_API_KEY`, `TAVILY_API_KEY`, etc.).
+2. **Clerk project**  
+   - Use the existing test instance (`cute-mayfly-11.clerk.accounts.dev`) or update both apps with your own keys.
+3. **Tooling**  
+   - Python 3.11+, Node 20+, npm (or pnpm).
+   - Local PostgreSQL/Redis if you are not using Railway for development.
 
-# Start all services
-make up
+---
 
-# Or manually:
-docker-compose up -d
-```
-
-### 2. Check API is running
+## 2. Run the Backend (FastAPI)
 
 ```bash
-# Health check
-curl http://localhost:8765/health
+cd backend
+pip install -r requirements.txt
 
-# API documentation
-open http://localhost:8765/docs
+# Copy local defaults and point to localhost:9765
+./use-local.sh
+
+python3 -m uvicorn app.main:app --reload --port 9765
 ```
 
-**Note**: Using port **8765** (not 8000) to avoid conflicts. Change in `.env` if needed.
+- Health check: `curl http://localhost:9765/health`
+- Docs: http://localhost:9765/docs
 
-### 3. Test Reddit extraction
+> **Docker option**  
+> `docker-compose up backend postgres redis` exposes the API on **8765** unless you override `API_PORT`. If you use Docker, update the frontend API URL accordingly.
+
+---
+
+## 3. Run the Frontend (Next.js + Clerk)
 
 ```bash
-curl -X POST http://localhost:8765/api/extract/reddit \
-  -H "Content-Type: application/json" \
-  -d '{
-    "url": "https://www.reddit.com/r/programming/comments/abc123/...",
-    "max_comments": 10
-  }'
+cd frontend
+npm install
+npm run dev -- --port 3456
 ```
 
-Or visit http://localhost:8765/docs and test interactively!
+Open http://localhost:3456, sign in with Clerk (test email/passcode), and the backend will create the user record automatically (JIT provisioning). Protected routes (`/vault`, `/extract`, `/newsletters`) are unlocked immediately after login.
 
-## Project Structure
+---
+
+## 4. Calling the API
+
+Protected endpoints require:
+
+- A Clerk session token (`Authorization: Bearer <token>`).  
+- `X-API-Key` header **only if** `API_SECRET_KEY` is set (used in production for high-cost routes).
+
+```bash
+TOKEN="<your clerk session token>"
+API="http://localhost:9765"
+
+curl -X POST "$API/api/extract/auto"   -H "Authorization: Bearer $TOKEN"   -H "Content-Type: application/json"   -d '{"url":"https://www.youtube.com/watch?v=dQw4w9WgXcQ"}'
+```
+
+Implemented extractors (`backend/app/api/endpoints/extractors.py`):
+
+- `POST /api/extract/auto` – auto-detects platform.
+- `POST /api/extract/reddit`
+- `POST /api/extract/youtube`
+- `POST /api/extract/tiktok`
+- `POST /api/extract/article`
+
+Each response includes `capture_id` so the content appears immediately in the `/vault`.
+
+---
+
+## 5. Newsletter Pipeline
+
+Configure Gmail OAuth credentials in `backend/.env` and run:
+
+```bash
+curl -X POST "$API/api/newsletters/extract"   -H "Authorization: Bearer $TOKEN"   -H "Content-Type: application/json"   -d '{"days_back": 3, "max_results": 10}'
+```
+
+Review results in the `/newsletters` page (configurable via `/newsletters/config`).
+
+---
+
+## 6. Project Layout (Current)
 
 ```
 content-engine/
 ├── backend/
 │   ├── app/
-│   │   ├── api/endpoints/         # API routes
-│   │   │   └── extractors.py      # ✅ Reddit endpoint working
-│   │   ├── core/
-│   │   │   └── config.py          # Settings
-│   │   ├── db/                    # Database setup
-│   │   ├── models/                # SQLAlchemy models
-│   │   │   ├── user.py            # User + tiers
-│   │   │   └── content.py         # Content + newsletters
-│   │   └── services/
-│   │       └── extractors/
-│   │           ├── base.py        # Base extractor class
-│   │           └── reddit_extractor.py  # ✅ Working!
-│   ├── .env                       # Configuration
-│   ├── requirements.txt           # Python deps
-│   └── Dockerfile
-├── docker-compose.yml
-├── Makefile
-└── README.md
+│   │   ├── api/endpoints/         # Extractors, newsletters, captures, LLM, search
+│   │   ├── core/                  # Settings, Clerk integration
+│   │   ├── models/                # Users, captures, newsletters, LLM usage
+│   │   └── services/              # Extractors, LLM clients, Tavily search
+│   ├── scripts/                   # Owner promotion, social credential helpers
+│   └── use-local.sh / use-railway.sh
+├── frontend/
+│   ├── app/                       # Route groups with (protected) layout
+│   ├── src/config/routes.ts       # Protected route prefixes (validated during build)
+│   └── src/lib/api.ts             # Central API client with Clerk token injection
+└── docs/                          # Architecture, setup, audits, integrations
 ```
 
-## Next Steps
+---
 
-### Phase 1: Port Remaining Extractors (2-4 hours)
-
-1. **TikTok** - Port from `/content-hub/backend/extractors/tiktok/tiktok-extractor.js`
-2. **YouTube** - Port from `/content-hub/backend/extractors/youtube/youtube-extractor.js`
-3. **Article** - Port from `/content-hub/backend/extractors/article/article-extractor.js`
-
-Each follows the same pattern as Reddit:
-```python
-class TikTokExtractor(BaseExtractor):
-    @property
-    def platform(self) -> str:
-        return "tiktok"
-
-    @property
-    def url_patterns(self) -> list[str]:
-        return [r"tiktok\.com/@[\w.-]+/video/\d+"]
-
-    async def extract(self, url: str) -> Dict[str, Any]:
-        # Your extraction logic
-        return self._standardize_output(...)
-```
-
-### Phase 2: Port LLM Services (1-2 hours)
-
-Copy from `/dev/projects/prompt-stack/web/backend/app/services/llm/`:
-- `llm_service.py` → `/backend/app/services/llm/llm_service.py`
-- Already has OpenAI, Anthropic, Gemini, DeepSeek
-
-### Phase 3: Build Content Orchestration (2-3 hours)
-
-Create `ContentService` that combines:
-1. Extractor (get content)
-2. LLM (process content)
-3. Database (save results)
-
-### Phase 4: Newsletter Pipeline (3-4 hours)
-
-The killer feature! Port email extractor and create pipeline:
-```python
-# One API call does everything:
-POST /api/newsletter/process
-{
-  "gmail_query": "label:newsletters after:2025-01-01",
-  "generate_digest": true
-}
-```
-
-## Development Commands
+## 7. Useful Commands
 
 ```bash
-# View logs
-make logs
+# Backend
+cd backend
+pytest
+ruff check .
 
-# API logs only
-make logs-api
+# Frontend
+cd frontend
+npm run lint
+npm run validate:routes   # Ensures (protected) routes stay synced
 
-# Stop services
-make down
-
-# Clean everything (including volumes)
-make clean
-
-# Restart
-make down && make up
+# Combined (docker)
+cd ..
+docker-compose up
 ```
 
-## Testing
+---
 
-```bash
-# Run tests
-make test
+## 8. Deploying to Vercel & Railway
 
-# Or manually:
-docker-compose exec backend pytest
-```
+1. **Railway (backend)**
+   - Set all secrets (`DATABASE_URL`, Clerk keys, provider API keys, optional `API_SECRET_KEY`).
+   - Railway builds from `backend/Dockerfile` and runs on the platform-assigned port.
+2. **Vercel (frontend)**
+   - `NEXT_PUBLIC_API_URL=https://content-engine-production.up.railway.app`
+   - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` (matching Railway `CLERK_SECRET_KEY`).
+3. **Clerk** – enable the production domain (`*.vercel.app`) in the dashboard.
+4. **Validation**
+   - Run `npm run validate:routes` before deploying the frontend.
+   - Hit `/health` on Railway to confirm readiness.
 
-## Configuration
-
-Edit `backend/.env` to configure:
-- Database URL (use Neon for production)
-- LLM API keys (OpenAI, Anthropic, etc.)
-- Feature flags
-
-## What's Next?
-
-1. **Want to test locally?** Start Docker and test Reddit extraction
-2. **Ready to add more extractors?** Follow Phase 1 above
-3. **Want to add LLM processing?** Follow Phase 2 & 3
-4. **Want the newsletter feature?** Follow Phase 4
-
-All the hard architectural decisions are done. Now it's just porting code!
+With those steps, your production deployment matches the local experience, and all protected routes remain secured by Clerk + middleware.

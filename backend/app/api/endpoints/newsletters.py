@@ -112,10 +112,13 @@ async def run_extraction_pipeline(
         user_id: User ID who owns this extraction
     """
     import asyncio
+    import json
     from concurrent.futures import ThreadPoolExecutor
+    from app.crud import google_token as google_token_crud
 
     # Create new database session for background task
     async with async_session_maker() as db:
+        token_file = None  # Initialize for cleanup in finally block
         try:
             # Update: Starting
             await crud.update_extraction_progress(
@@ -126,13 +129,33 @@ async def run_extraction_pipeline(
                 status=ExtractionStatus.PROCESSING.value
             )
 
+            # Get user's decrypted Google OAuth token
+            token_data = await google_token_crud.get_decrypted_token(db, user_id)
+            if not token_data:
+                await crud.fail_extraction(
+                    db=db,
+                    extraction_id=extraction_id,
+                    error_message="No Google account connected. Please connect Gmail in Settings."
+                )
+                return
+
+            # Save token to extraction directory for pipeline to use
+            # This allows the subprocess to access the user's OAuth token
+            extraction_dir = OUTPUT_DIR / f"extraction_{extraction_id}"
+            extraction_dir.mkdir(parents=True, exist_ok=True)
+
+            token_file = extraction_dir / "user_token.json"
+            with open(token_file, 'w') as f:
+                json.dump(token_data, f)
+
             # Build pipeline command
             cmd = [
                 "python3.11",
                 str(EXTRACTORS_DIR / "pipeline.py"),
                 "--days", str(days_back_value),
                 "--max", str(max_results),
-                "--extraction-id", extraction_id  # Pass extraction ID to ensure directory names match
+                "--extraction-id", extraction_id,  # Pass extraction ID to ensure directory names match
+                "--token-file", str(token_file)  # Pass token file path
             ]
 
             # Add senders if provided
@@ -234,6 +257,13 @@ async def run_extraction_pipeline(
                 extraction_id=extraction_id,
                 error_message=f"Unexpected error: {str(e)}"
             )
+        finally:
+            # Clean up token file for security
+            if token_file and token_file.exists():
+                try:
+                    token_file.unlink()
+                except Exception:
+                    pass  # Best effort cleanup
 
 
 # =============================================================================

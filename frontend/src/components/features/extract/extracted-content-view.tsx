@@ -40,8 +40,64 @@ export function ExtractedContentView({ data }: ExtractedContentViewProps) {
     URL.revokeObjectURL(url);
   };
 
+  // Create prompt with content for AI platforms
+  const createAIPrompt = () => {
+    let prompt = "Please analyze this content:\n\n";
+
+    if (data.title) {
+      prompt += `Title: ${data.title}\n`;
+    }
+    if (data.author) {
+      prompt += `Author: ${data.author}\n`;
+    }
+    if (data.source) {
+      prompt += `Source: ${data.source}\n`;
+    }
+
+    prompt += `\n${data.content || ''}`;
+
+    return prompt;
+  };
+
+  const handleOpenInChatGPT = () => {
+    const prompt = createAIPrompt();
+    // Copy to clipboard and open ChatGPT
+    navigator.clipboard.writeText(prompt);
+    window.open('https://chatgpt.com/', '_blank');
+    // Show brief notification
+    setError('✅ Content copied! Paste it in ChatGPT (Cmd/Ctrl+V)');
+    setTimeout(() => setError(null), 4000);
+  };
+
+  const handleOpenInClaude = () => {
+    const prompt = createAIPrompt();
+    // Copy to clipboard and open Claude
+    navigator.clipboard.writeText(prompt);
+    window.open('https://claude.ai/new', '_blank');
+    // Show brief notification
+    setError('✅ Content copied! Paste it in Claude (Cmd/Ctrl+V)');
+    setTimeout(() => setError(null), 4000);
+  };
+
+  const handleOpenInGemini = () => {
+    const prompt = createAIPrompt();
+    // Copy to clipboard and open Gemini
+    navigator.clipboard.writeText(prompt);
+    window.open('https://gemini.google.com/app', '_blank');
+    // Show brief notification
+    setError('✅ Content copied! Paste it in Gemini (Cmd/Ctrl+V)');
+    setTimeout(() => setError(null), 4000);
+  };
+
   return (
     <>
+      {/* Notification for AI platform copy */}
+      {error && (
+        <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md text-sm">
+          <p className="text-blue-800 dark:text-blue-200">{error}</p>
+        </div>
+      )}
+
       <Card>
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
@@ -68,6 +124,15 @@ export function ExtractedContentView({ data }: ExtractedContentViewProps) {
               </Button>
               <Button onClick={handleDownloadJSON} variant="outline" size="sm">
                 ⬇️ JSON
+              </Button>
+              <Button onClick={handleOpenInChatGPT} variant="outline" size="sm" title="Copy content & open ChatGPT">
+                🤖 ChatGPT
+              </Button>
+              <Button onClick={handleOpenInClaude} variant="outline" size="sm" title="Copy content & open Claude">
+                💬 Claude
+              </Button>
+              <Button onClick={handleOpenInGemini} variant="outline" size="sm" title="Copy content & open Gemini">
+                ✨ Gemini
               </Button>
             </div>
           </div>
