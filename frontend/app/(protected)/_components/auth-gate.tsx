@@ -24,7 +24,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     // Preserve the current URL so user returns here after signing in
     if (isLoaded && !isSignedIn && typeof window !== 'undefined') {
       redirectToSignIn({
-        returnBackUrl: window.location.href
+        redirectUrl: window.location.href
       });
     }
   }, [isLoaded, isSignedIn, redirectToSignIn]);
