@@ -1,0 +1,108 @@
+erDiagram
+    USERS ||--o{ CAPTURES : "owns"
+    USERS ||--o{ EXTRACTIONS : "runs"
+    USERS ||--o{ NEWSLETTER_CONFIG : "configures"
+    USERS ||--o{ CONTENTS : "creates"
+    USERS ||--o{ NEWSLETTERS : "receives"
+
+    EXTRACTIONS ||--o{ EMAIL_CONTENT : "contains"
+    EMAIL_CONTENT ||--o{ EXTRACTED_LINKS : "includes"
+
+    USERS {
+        int id PK "Primary key"
+        string email UK "Unique email (max 320 chars)"
+        string hashed_password "Bcrypt hashed password (max 1024 chars)"
+        bool is_active "Account active flag"
+        bool is_superuser "Superuser flag"
+        bool is_verified "Email verified flag"
+        enum role "USER | ADMIN | SUPERADMIN | OWNER"
+        enum tier "FREE | STARTER | PRO | BUSINESS | OWNER"
+        int requests_this_month "Monthly API request counter"
+        datetime requests_reset_at "Next reset date for quota"
+        string clerk_user_id UK "Clerk user ID (user_xxxxx) - Primary auth method"
+        string oauth_provider "OAuth provider name (clerk, google, github, etc)"
+        string google_id UK "Google OAuth ID (legacy)"
+        string google_email "Google account email (legacy)"
+        string google_picture "Google profile picture URL (legacy)"
+        bool twitter_connected "Twitter OAuth connected"
+        bool linkedin_connected "LinkedIn OAuth connected"
+        bool reddit_connected "Reddit OAuth connected"
+        bool youtube_connected "YouTube OAuth connected"
+        bool facebook_connected "Facebook OAuth connected"
+        bool instagram_connected "Instagram OAuth connected"
+        datetime created_at "Account creation timestamp"
+        datetime updated_at "Last update timestamp"
+    }
+
+    CAPTURES {
+        int id PK "Primary key (auto-increment)"
+        int user_id FK "Foreign key to users.id (CASCADE delete)"
+        string title "Capture title (max 255 chars, indexed)"
+        text content "Main content body"
+        jsonb meta "Flexible metadata (device, source, etc)"
+        datetime created_at "Capture timestamp (indexed, server default NOW())"
+    }
+
+    EXTRACTIONS {
+        string id PK "Extraction session ID (e.g. 20251015_162827)"
+        int user_id FK "Foreign key to users.id (CASCADE delete, nullable)"
+        datetime created_at "Extraction start time (indexed)"
+        int days_back "Gmail API: days to look back (nullable)"
+        int max_results "Gmail API: max emails to fetch (nullable)"
+    }
+
+    EMAIL_CONTENT {
+        int id PK "Primary key (auto-increment)"
+        string extraction_id FK "Foreign key to extractions.id (CASCADE delete)"
+        string subject "Email subject line (max 1024 chars)"
+        string sender "Email sender address (max 256 chars, indexed)"
+        string date "Email date as ISO string (max 100 chars)"
+    }
+
+    EXTRACTED_LINKS {
+        int id PK "Primary key (auto-increment)"
+        int content_id FK "Foreign key to email_content.id (CASCADE delete)"
+        text url "Resolved final URL"
+        text original_url "Original tracking/redirect URL (nullable)"
+    }
+
+    NEWSLETTER_CONFIG {
+        int id PK "Primary key (auto-increment)"
+        int user_id FK "Foreign key to users.id (CASCADE delete, unique)"
+        json config_data "Complete config as JSON (filters, sources, etc)"
+        datetime created_at "Config creation timestamp"
+        datetime updated_at "Config last update timestamp"
+    }
+
+    CONTENTS {
+        int id PK "Primary key"
+        int user_id FK "Foreign key to users.id"
+        enum platform "TIKTOK | YOUTUBE | REDDIT | ARTICLE | EMAIL | BETTING"
+        string url "Content source URL (max 2048 chars, indexed)"
+        string title "Content title (max 1024 chars, nullable)"
+        string author "Content author (max 256 chars, nullable)"
+        text content "Extracted content text (nullable)"
+        json content_content_metadata "Content metadata (NOTE: typo in schema)"
+        enum status "PENDING | EXTRACTING | PROCESSING | COMPLETED | FAILED"
+        text error_message "Error details if status=FAILED (nullable)"
+        text summary "LLM-generated summary (nullable)"
+        json entities "LLM-extracted entities (people, orgs, locations)"
+        string sentiment "LLM sentiment analysis (max 50 chars, nullable)"
+        json categories "LLM-generated categories/tags"
+        datetime extracted_at "Content extraction timestamp (nullable)"
+        datetime processed_at "LLM processing timestamp (nullable)"
+        datetime created_at "Record creation timestamp"
+        datetime updated_at "Record update timestamp"
+    }
+
+    NEWSLETTERS {
+        int id PK "Primary key"
+        int user_id FK "Foreign key to users.id"
+        string title "Newsletter title (max 512 chars)"
+        text digest "Generated newsletter digest"
+        int source_count "Number of content sources used"
+        json source_content_ids "Array of content IDs used"
+        json content_metadata "Newsletter metadata"
+        datetime generated_at "Newsletter generation timestamp"
+        datetime created_at "Record creation timestamp"
+    }

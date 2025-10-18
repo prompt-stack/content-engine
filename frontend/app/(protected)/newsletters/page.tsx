@@ -5,8 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/primitives/ui/button';
 import { NewsletterExtractForm } from '@/components/features/newsletters/newsletter-extract-form';
 import { NewsletterList } from '@/components/features/newsletters/newsletter-list';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9765';
+import { api } from '@/lib/api';
 
 interface ResolvedLink {
   url: string;
@@ -49,15 +48,11 @@ export default function NewslettersPage() {
   async function loadExtractions() {
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/api/newsletters/extractions`, {
-        credentials: 'include'
-      });
-      if (!response.ok) throw new Error('Failed to fetch extractions');
-      const data = await response.json();
+      const data = await api.newsletters.extractions();
       setExtractions(data);
     } catch (error) {
       console.error('Error loading extractions:', error);
-      setError('Failed to load extractions');
+      setError(error instanceof Error ? error.message : 'Failed to load extractions');
     } finally {
       setLoading(false);
     }

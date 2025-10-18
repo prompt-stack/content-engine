@@ -43,14 +43,15 @@ def get_enabled_senders_from_config() -> List[str]:
     return enabled_senders
 
 
-def extract_from_gmail(days_back: int = None, senders: List[str] = None, max_results: int = None):
+def extract_from_gmail(days_back: float = None, senders: List[str] = None, max_results: int = None, extraction_id: str = None):
     """
     Step 1: Extract newsletters from Gmail and save raw HTML
 
     Args:
-        days_back: Days to look back (default: from config)
+        days_back: Days to look back (supports fractional days for hours, default: from config)
         senders: List of sender emails (default: from config)
         max_results: Max newsletters (default: from config)
+        extraction_id: Pre-generated extraction ID (default: generate timestamp)
 
     Returns:
         Path to extraction directory
@@ -72,8 +73,8 @@ def extract_from_gmail(days_back: int = None, senders: List[str] = None, max_res
     print(f"   Max results: {max_results}")
     print(f"   Senders: {', '.join(senders) if senders else 'ALL'}\n")
 
-    # Create extraction directory
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    # Create extraction directory using provided ID or generate new timestamp
+    timestamp = extraction_id if extraction_id else datetime.now().strftime('%Y%m%d_%H%M%S')
     extraction_dir = Path(__file__).parent / "output" / f"extraction_{timestamp}"
     extraction_dir.mkdir(parents=True, exist_ok=True)
 
@@ -185,17 +186,22 @@ Examples:
 
   # Override senders
   python3.11 step1_extract_gmail.py --senders @therundown.ai @alphasignal.ai
+
+  # Use specific extraction ID (for API integration)
+  python3.11 step1_extract_gmail.py --extraction-id 20251017_103045
         ''',
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument('--days', type=int, help='Days to look back')
+    parser.add_argument('--days', type=float, help='Days to look back (supports fractional days for hours)')
     parser.add_argument('--max', type=int, help='Maximum newsletters')
     parser.add_argument('--senders', nargs='+', help='Filter by sender emails')
+    parser.add_argument('--extraction-id', type=str, help='Pre-generated extraction ID')
 
     args = parser.parse_args()
 
     extract_from_gmail(
         days_back=args.days,
         senders=args.senders,
-        max_results=args.max
+        max_results=args.max,
+        extraction_id=args.extraction_id
     )

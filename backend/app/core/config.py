@@ -55,6 +55,10 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_SECRET: str = ""
     GOOGLE_REDIRECT_URI: str = ""
 
+    # Clerk Authentication
+    CLERK_PUBLISHABLE_KEY: str = ""
+    CLERK_SECRET_KEY: str = ""
+
     # Rate Limiting (requests per month)
     RATE_LIMIT_FREE: int = 100
     RATE_LIMIT_STARTER: int = 1000

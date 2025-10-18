@@ -12,7 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_async_session, async_session_maker
 from app.crud import newsletter_extraction as crud
-from app.api.deps import get_current_active_user
+from app.core.clerk import get_current_user_from_clerk
 from app.models.user import User
 from app.models.newsletter_extraction import ExtractionStatus
 
@@ -245,7 +245,7 @@ async def extract_newsletters(
     request: NewsletterExtractRequest,
     background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_user_from_clerk)
 ):
     """
     Extract newsletters and links from email sources (ASYNC - returns immediately).
@@ -311,7 +311,7 @@ async def extract_newsletters(
 async def get_extraction_status(
     extraction_id: str,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_user_from_clerk)
 ):
     """
     Get current status of an extraction job.
@@ -433,7 +433,7 @@ async def extract_content(
 @router.get("/extractions", response_model=List[dict])
 async def list_extractions(
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_user_from_clerk)
 ):
     """
     List all newsletter extractions from database for the authenticated user.
@@ -678,7 +678,7 @@ class TestURLResponse(BaseModel):
 @router.get("/config", response_model=Dict)
 async def get_email_config(
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_user_from_clerk)
 ):
     """
     Get the current email extractor configuration for the authenticated user.
@@ -716,7 +716,7 @@ async def get_email_config(
 async def update_email_config(
     config: Dict,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_user_from_clerk)
 ):
     """
     Update the email extractor configuration for the authenticated user.

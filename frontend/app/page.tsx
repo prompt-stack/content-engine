@@ -80,6 +80,15 @@ export default function Home() {
             <Button size="lg" variant="outline" className="w-full sm:w-auto">Content Vault</Button>
           </Link>
         </div>
+
+        <div className="mt-4 pt-4 border-t border-border">
+          <p className="text-xs text-muted-foreground mb-2">Developer Tools</p>
+          <Link href="/playground/progress">
+            <Button size="sm" variant="ghost" className="text-xs">
+              🎮 Progress Indicator Demo
+            </Button>
+          </Link>
+        </div>
       </div>
     </main>
   );

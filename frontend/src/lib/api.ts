@@ -48,19 +48,45 @@ async function parseError(response: Response): Promise<string> {
 }
 
 /**
- * Generic API request wrapper with error handling
+ * Get Clerk session token for authenticated requests
+ */
+async function getAuthToken(): Promise<string | null> {
+  try {
+    // Check if we're in a browser environment and Clerk is available
+    if (typeof window !== 'undefined' && (window as any).Clerk) {
+      const session = await (window as any).Clerk.session?.getToken();
+      return session || null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Generic API request wrapper with error handling and auth
  */
 async function apiRequest<T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<T> {
   try {
+    // Get auth token from Clerk
+    const token = await getAuthToken();
+
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    };
+
+    // Add Authorization header if we have a token
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const response = await fetch(`${API_BASE}${endpoint}`, {
       ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options?.headers,
-      },
+      headers,
     });
 
     if (!response.ok) {
@@ -331,6 +357,50 @@ export const api = {
 
     count: (): Promise<{ user_id: number; total_captures: number }> => {
       return apiRequest<{ user_id: number; total_captures: number }>('/api/capture/stats/count');
+    },
+  },
+
+  // --------------------------------------------------------------------------
+  // Newsletters
+  // --------------------------------------------------------------------------
+
+  newsletters: {
+    extractions: (): Promise<any[]> => {
+      return apiRequest<any[]>('/api/newsletters/extractions');
+    },
+
+    extractionStatus: (extractionId: string): Promise<any> => {
+      return apiRequest<any>(`/api/newsletters/extractions/${extractionId}/status`);
+    },
+
+    extract: (params: {
+      days_back?: number;
+      hours_back?: number;
+      max_results?: number;
+      senders?: string[];
+    }): Promise<{ status: string; extraction_id: string; message: string }> => {
+      return apiRequest('/api/newsletters/extract', {
+        method: 'POST',
+        body: JSON.stringify(params),
+      });
+    },
+
+    config: (): Promise<any> => {
+      return apiRequest<any>('/api/newsletters/config');
+    },
+
+    updateConfig: (config: any): Promise<{ status: string; message: string }> => {
+      return apiRequest('/api/newsletters/config', {
+        method: 'PUT',
+        body: JSON.stringify(config),
+      });
+    },
+
+    testUrl: (url: string): Promise<{ url: string; is_valid: boolean; reason: string }> => {
+      return apiRequest('/api/newsletters/config/test-url', {
+        method: 'POST',
+        body: JSON.stringify({ url }),
+      });
     },
   },
 };

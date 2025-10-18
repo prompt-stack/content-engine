@@ -1,0 +1,54 @@
+# Railway Postgres Instance | Where do you Host your Postgres?
+
+**Posted by** u/[deleted] in r/learnprogramming
+**Score:** 2 points (100% upvoted)
+**Comments:** 4
+**Posted:** 3/31/2023, 5:26:34 AM
+
+---
+
+Hello!
+
+I am getting pretty far along in my dev journey and I am getting way more confident. I am currently working on an API in go and have a few live projects deployed for my current job.
+
+Up to this point, I have been using mongo db and I have came to the realization that for most of my projects I need structured data long-term. I can spin up an instance of postgres on railway, but I do not know if this is the best option cost-wise.
+
+Does anyone have any opinions about the best place to host your postgres instance?
+
+Also, I've considered just building a docker image with both my api and postgres running together, or even just using sqlite. I guess I am a little concerned about keeping my data if I shift my place of deployment.
+
+For instance, if I simply go with sqlite for the time being, and I get tons of data, I am not sure how I would get that data out of my deployment and migrate it to another database.
+
+Any thoughts?
+
+---
+
+## Comments
+
+u/truthseeker1990 • 2 points
+Is this for learning or for the projects you mentioned in current job?
+
+  u/[deleted] • 2 points
+  For learning. All of my projects I have live in my job are "bots" that automate tasks.  
+  
+  
+  For example, I have a few bots that go run analytics on our data and then messages it out / updates digital signage in our business.  
+  
+  
+  Another one runs and gets time punch errors. Another generates reimbursement invoices from our credit card statements. Tasks like this.  
+  
+  
+  BUT I am working on a web app which can help with some of our internal systems. Right now we rely heavily on good forms and spread sheets but I believe I could simplify by creating a web app. BUT it would all be heavily dependent on the data fed into the app.
+
+    u/truthseeker1990 • 1 points
+    I would probably go with docker and docker-compose to set up the db and server and dependencies. Make sure to set it up so the data persists.
+
+---
+
+u/[deleted] • 1 points
+Supabase uses Postgres for their DB. You can host 2 projects for free.
+
+Railway is good but they do shut off your free projects pretty quick for inactivity. I ended up putting 20 bucks on my railway account and am now running express servers for two portfolio projects for a couple bucks a month.
+
+---
+

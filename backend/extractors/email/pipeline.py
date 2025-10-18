@@ -21,7 +21,7 @@ from step3_resolve_redirects import resolve_links_from_file
 from step4_filter_content import filter_content_from_file
 
 
-def run_pipeline(days_back=None, senders=None, max_results=None, max_links_per_newsletter=30):
+def run_pipeline(days_back=None, senders=None, max_results=None, max_links_per_newsletter=30, extraction_id=None):
     """
     Run complete newsletter extraction pipeline
 
@@ -30,6 +30,7 @@ def run_pipeline(days_back=None, senders=None, max_results=None, max_links_per_n
         senders: List of sender emails (None = use config)
         max_results: Max newsletters (None = use config)
         max_links_per_newsletter: Limit processing per newsletter
+        extraction_id: Pre-generated extraction ID (None = generate new)
 
     Returns:
         Path to extraction directory
@@ -42,7 +43,8 @@ def run_pipeline(days_back=None, senders=None, max_results=None, max_links_per_n
     extraction_dir = extract_from_gmail(
         days_back=days_back,
         senders=senders,
-        max_results=max_results
+        max_results=max_results,
+        extraction_id=extraction_id
     )
 
     if not extraction_dir:
@@ -119,7 +121,7 @@ Examples:
         ''',
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument('--days', type=int, help='Days to look back')
+    parser.add_argument('--days', type=float, help='Days to look back (supports fractional days for hours)')
     parser.add_argument('--max', type=int, help='Maximum newsletters')
     parser.add_argument('--senders', nargs='+', help='Filter by sender emails')
     parser.add_argument(
@@ -128,6 +130,7 @@ Examples:
         default=30,
         help='Max links per newsletter (default: 30)'
     )
+    parser.add_argument('--extraction-id', type=str, help='Pre-generated extraction ID')
 
     args = parser.parse_args()
 
@@ -135,5 +138,6 @@ Examples:
         days_back=args.days,
         senders=args.senders,
         max_results=args.max,
-        max_links_per_newsletter=args.max_links
+        max_links_per_newsletter=args.max_links,
+        extraction_id=args.extraction_id
     )

@@ -20,6 +20,7 @@ import re
 import html
 from pathlib import Path
 from typing import List, Dict
+from bs4 import BeautifulSoup
 
 
 def extract_links_from_html(html_content: str) -> List[str]:
@@ -40,6 +41,53 @@ def extract_links_from_html(html_content: str) -> List[str]:
     decoded_links = [html.unescape(link) for link in raw_links]
 
     return decoded_links
+
+
+def extract_links_with_context(html_content: str) -> List[Dict]:
+    """
+    Extract links WITH curator descriptions from HTML
+
+    Args:
+        html_content: Raw HTML string
+
+    Returns:
+        List of dicts with 'url' and 'curator_description' keys
+    """
+    soup = BeautifulSoup(html_content, 'html.parser')
+
+    # Button/CTA texts to skip (not meaningful article descriptions)
+    SKIP_TEXTS = [
+        "TRY NOW", "LEARN MORE", "START SECURE AUTH", "SUBSCRIBE",
+        "GET STARTED", "SIGN UP", "VIEW ALL", "READ MORE", "CLICK HERE"
+    ]
+
+    enriched_links = []
+    seen_urls = set()  # Avoid duplicates
+
+    for a in soup.find_all('a', href=True):
+        url = html.unescape(a['href'])
+        text = a.get_text(strip=True)
+
+        # Skip duplicate URLs
+        if url in seen_urls:
+            continue
+        seen_urls.add(url)
+
+        # Determine if text is a meaningful description
+        # Keep if: >20 chars, not a button text, and has some substance
+        has_context = (
+            text and
+            len(text) > 20 and
+            text not in SKIP_TEXTS and
+            not text.isupper()  # Skip all-caps (usually buttons)
+        )
+
+        enriched_links.append({
+            "url": url,
+            "curator_description": text if has_context else None
+        })
+
+    return enriched_links
 
 
 def extract_links_from_directory(extraction_dir: Path):
@@ -93,12 +141,15 @@ def extract_links_from_directory(extraction_dir: Path):
         with open(html_path, 'r', encoding='utf-8') as f:
             html_content = f.read()
 
-        # Extract links
-        decoded_links = extract_links_from_html(html_content)
-        link_count = len(decoded_links)
+        # Extract links WITH curator descriptions
+        enriched_links = extract_links_with_context(html_content)
+        link_count = len(enriched_links)
         total_links += link_count
 
-        print(f"      Extracted: {link_count} links (decoded HTML entities)")
+        # Count how many have meaningful descriptions
+        with_context_count = sum(1 for link in enriched_links if link['curator_description'])
+
+        print(f"      Extracted: {link_count} links ({with_context_count} with curator descriptions)")
         print()
 
         # Store results
@@ -108,7 +159,7 @@ def extract_links_from_directory(extraction_dir: Path):
             "newsletter_sender": sender,
             "newsletter_date": newsletter['date'],
             "html_file": html_file,
-            "links": decoded_links,
+            "links": enriched_links,
             "link_count": link_count
         })
 

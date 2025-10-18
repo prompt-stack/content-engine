@@ -11,7 +11,7 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_async_session
-from app.api.deps import get_current_active_user
+from app.core.clerk import get_current_user_from_clerk
 from app.models.user import User
 from app.crud import capture as crud
 
@@ -87,7 +87,7 @@ class CaptureDetail(BaseModel):
 async def capture_text(
     request: CaptureRequest,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_user_from_clerk)
 ):
     """
     Capture text content directly.
@@ -120,7 +120,7 @@ async def list_captures(
     limit: int = 50,
     offset: int = 0,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_user_from_clerk)
 ):
     """
     List all captures for the current user (newest first).
@@ -159,7 +159,7 @@ async def search_captures(
     q: str,
     limit: int = 50,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_user_from_clerk)
 ):
     """
     Search captures by query string.
@@ -198,7 +198,7 @@ async def search_captures(
 async def get_capture(
     capture_id: int,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_user_from_clerk)
 ):
     """
     Get a specific capture by ID (full content).
@@ -227,7 +227,7 @@ async def get_capture(
 async def delete_capture(
     capture_id: int,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_user_from_clerk)
 ):
     """
     Delete a capture.
@@ -249,7 +249,7 @@ async def delete_capture(
 @router.get("/stats/count")
 async def get_capture_count(
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_user_from_clerk)
 ):
     """
     Get total number of captures for current user.

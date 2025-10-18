@@ -25,6 +25,7 @@ class YouTubeExtractor(BaseExtractor):
             r"youtube\.com/embed/[\w-]+",
             r"youtube\.com/v/[\w-]+",
             r"youtube\.com/shorts/[\w-]+",
+            r"youtube\.com/live/[\w-]+",
         ]
 
     async def extract(self, url: str) -> Dict[str, Any]:
@@ -112,7 +113,7 @@ class YouTubeExtractor(BaseExtractor):
     def _extract_video_id(self, url: str) -> str:
         """Extract video ID from YouTube URL."""
         patterns = [
-            r"(?:youtube\.com/watch\?v=|youtu\.be/|youtube\.com/embed/|youtube\.com/v/)([a-zA-Z0-9_-]{11})",
+            r"(?:youtube\.com/watch\?v=|youtu\.be/|youtube\.com/embed/|youtube\.com/v/|youtube\.com/live/)([a-zA-Z0-9_-]{11})",
             r"youtube\.com/shorts/([a-zA-Z0-9_-]{11})",
         ]
 

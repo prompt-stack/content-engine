@@ -92,8 +92,9 @@ async def health():
 
 
 # Include routers
-from app.api.endpoints import extractors, llm, media, search, prompts, newsletters, capture
+from app.api.endpoints import auth, extractors, llm, media, search, prompts, newsletters, capture
 
+app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(extractors.router, prefix="/api/extract", tags=["extractors"])
 app.include_router(llm.router, prefix="/api/llm", tags=["llm"])
 app.include_router(media.router, prefix="/api/media", tags=["media"])

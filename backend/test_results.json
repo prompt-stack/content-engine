@@ -1,0 +1,218 @@
+{
+  "timestamp": "2025-10-16T17:23:42.675544",
+  "summary": {
+    "total": 31,
+    "passed": 17,
+    "failed": 6,
+    "skipped": 8
+  },
+  "results": [
+    {
+      "name": "Root health check",
+      "method": "GET",
+      "endpoint": "/",
+      "status_code": 200,
+      "expected_status": 200,
+      "success": true,
+      "response_time": 0.001474
+    },
+    {
+      "name": "Detailed health check",
+      "method": "GET",
+      "endpoint": "/health",
+      "status_code": 200,
+      "expected_status": 200,
+      "success": true,
+      "response_time": 0.00133
+    },
+    {
+      "name": "Extract YouTube video",
+      "method": "POST",
+      "endpoint": "/api/extract/youtube",
+      "status_code": 200,
+      "expected_status": 200,
+      "success": true,
+      "response_time": 7.931594
+    },
+    {
+      "name": "Extract Reddit post",
+      "method": "POST",
+      "endpoint": "/api/extract/reddit",
+      "status_code": 400,
+      "expected_status": 400,
+      "success": true,
+      "response_time": 0.415148
+    },
+    {
+      "name": "Extract TikTok video",
+      "method": "POST",
+      "endpoint": "/api/extract/tiktok",
+      "status_code": 200,
+      "expected_status": 400,
+      "success": false,
+      "response_time": 1.317503
+    },
+    {
+      "name": "Extract article",
+      "method": "POST",
+      "endpoint": "/api/extract/article",
+      "status_code": 400,
+      "expected_status": 200,
+      "success": false,
+      "response_time": 1.730518
+    },
+    {
+      "name": "Auto-detect and extract",
+      "method": "POST",
+      "endpoint": "/api/extract/auto",
+      "status_code": 500,
+      "expected_status": 200,
+      "success": false,
+      "response_time": 0.00943
+    },
+    {
+      "name": "Create capture",
+      "method": "POST",
+      "endpoint": "/api/capture/text",
+      "status_code": 200,
+      "expected_status": 200,
+      "success": true,
+      "response_time": 0.011749
+    },
+    {
+      "name": "List all captures",
+      "method": "GET",
+      "endpoint": "/api/capture/list",
+      "status_code": 200,
+      "expected_status": 200,
+      "success": true,
+      "response_time": 0.008976
+    },
+    {
+      "name": "Search captures",
+      "method": "GET",
+      "endpoint": "/api/capture/search?q=test",
+      "status_code": 200,
+      "expected_status": 200,
+      "success": true,
+      "response_time": 0.008915
+    },
+    {
+      "name": "Get specific capture",
+      "method": "GET",
+      "endpoint": "/api/capture/13",
+      "status_code": 200,
+      "expected_status": 200,
+      "success": true,
+      "response_time": 0.006608
+    },
+    {
+      "name": "Get capture count",
+      "method": "GET",
+      "endpoint": "/api/capture/stats/count",
+      "status_code": 200,
+      "expected_status": 200,
+      "success": true,
+      "response_time": 0.008337
+    },
+    {
+      "name": "Delete capture",
+      "method": "DELETE",
+      "endpoint": "/api/capture/13",
+      "status_code": 200,
+      "expected_status": 200,
+      "success": true,
+      "response_time": 0.008091
+    },
+    {
+      "name": "List LLM providers",
+      "method": "GET",
+      "endpoint": "/api/llm/providers",
+      "status_code": 200,
+      "expected_status": 200,
+      "success": true,
+      "response_time": 0.001082
+    },
+    {
+      "name": "Generate with LLM",
+      "method": "POST",
+      "endpoint": "/api/llm/generate",
+      "status_code": 200,
+      "expected_status": 200,
+      "success": true,
+      "response_time": 1.751176
+    },
+    {
+      "name": "Process content with LLM",
+      "method": "POST",
+      "endpoint": "/api/llm/process-content",
+      "status_code": 200,
+      "expected_status": 200,
+      "success": true,
+      "response_time": 2.122793
+    },
+    {
+      "name": "List media providers",
+      "method": "GET",
+      "endpoint": "/api/media/providers",
+      "status_code": 200,
+      "expected_status": 200,
+      "success": true,
+      "response_time": 0.00137
+    },
+    {
+      "name": "Get search capabilities",
+      "method": "GET",
+      "endpoint": "/api/search/capabilities",
+      "status_code": 200,
+      "expected_status": 200,
+      "success": true,
+      "response_time": 0.001148
+    },
+    {
+      "name": "List all prompts",
+      "method": "GET",
+      "endpoint": "/api/prompts/list",
+      "status_code": 200,
+      "expected_status": 404,
+      "success": false,
+      "response_time": 0.001626
+    },
+    {
+      "name": "List prompt categories",
+      "method": "GET",
+      "endpoint": "/api/prompts/categories",
+      "status_code": 200,
+      "expected_status": 404,
+      "success": false,
+      "response_time": 0.001204
+    },
+    {
+      "name": "List newsletter digests",
+      "method": "GET",
+      "endpoint": "/api/newsletters/digests",
+      "status_code": 200,
+      "expected_status": 200,
+      "success": true,
+      "response_time": 0.001862
+    },
+    {
+      "name": "List resolved links",
+      "method": "GET",
+      "endpoint": "/api/newsletters/resolved",
+      "status_code": 404,
+      "expected_status": 200,
+      "success": false,
+      "response_time": 0.001045
+    },
+    {
+      "name": "Get newsletter config",
+      "method": "GET",
+      "endpoint": "/api/newsletters/config",
+      "status_code": 200,
+      "expected_status": 200,
+      "success": true,
+      "response_time": 0.009496
+    }
+  ]
+}

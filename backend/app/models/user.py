@@ -57,6 +57,9 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     requests_this_month: Mapped[int] = mapped_column(Integer, default=0)
     requests_reset_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
 
+    # Clerk Authentication
+    clerk_user_id: Mapped[Optional[str]] = mapped_column(String(255), unique=True, nullable=True, index=True)
+
     # OAuth authentication (Google, GitHub, etc.)
     oauth_provider: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)  # "google", "github", etc.
     google_id: Mapped[Optional[str]] = mapped_column(String(255), unique=True, nullable=True, index=True)

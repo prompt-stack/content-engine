@@ -243,7 +243,8 @@ def filter_content_from_file(extraction_dir: Path):
                     valid_articles.append({
                         "url": resolved_url,
                         "original_url": link_info.get('original_url'),
-                        "is_redirect": link_info.get('is_redirect', False)
+                        "is_redirect": link_info.get('is_redirect', False),
+                        "curator_description": link_info.get('curator_description')  # PRESERVE curator description!
                     })
                     total_valid += 1
             else:

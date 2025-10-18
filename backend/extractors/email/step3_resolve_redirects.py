@@ -181,7 +181,11 @@ def resolve_links_from_file(extraction_dir: Path, max_links_per_newsletter: int 
         print(f"      Links: {len(links)} total")
 
         # Filter obvious junk BEFORE resolving
-        candidate_links = [link for link in links if not is_obvious_junk(link)]
+        # Links are now objects: {"url": "...", "curator_description": "..."}
+        candidate_links = [
+            link for link in links
+            if not is_obvious_junk(link.get('url') if isinstance(link, dict) else link)
+        ]
         filtered_count = len(links) - len(candidate_links)
         total_filtered += filtered_count
 
@@ -192,11 +196,13 @@ def resolve_links_from_file(extraction_dir: Path, max_links_per_newsletter: int 
         tracking_links = []
 
         tracking_domains = ['link.', '/c?', '/fb/', '/click/', '/track/', '/redirect/', '/r/']
-        for link in candidate_links:
-            if any(tracker in link.lower() for tracker in tracking_domains):
-                tracking_links.append(link)
+        for link_obj in candidate_links:
+            # Extract URL from object
+            url = link_obj.get('url') if isinstance(link_obj, dict) else link_obj
+            if any(tracker in url.lower() for tracker in tracking_domains):
+                tracking_links.append(link_obj)
             else:
-                direct_links.append(link)
+                direct_links.append(link_obj)
 
         # Process direct links first (more likely to be content)
         prioritized_links = direct_links + tracking_links
@@ -204,10 +210,12 @@ def resolve_links_from_file(extraction_dir: Path, max_links_per_newsletter: int 
         # DEDUPLICATION: Find unique links only
         unique_links = []
         seen_in_newsletter = set()
-        for link in prioritized_links[:max_links_per_newsletter]:
-            if link not in seen_in_newsletter:
-                seen_in_newsletter.add(link)
-                unique_links.append(link)
+        for link_obj in prioritized_links[:max_links_per_newsletter]:
+            # Extract URL for deduplication
+            url = link_obj.get('url') if isinstance(link_obj, dict) else link_obj
+            if url not in seen_in_newsletter:
+                seen_in_newsletter.add(url)
+                unique_links.append(link_obj)
 
         duplicate_count = len(prioritized_links[:max_links_per_newsletter]) - len(unique_links)
         total_duplicates += duplicate_count
@@ -219,15 +227,19 @@ def resolve_links_from_file(extraction_dir: Path, max_links_per_newsletter: int 
 
         # Resolve redirects with progress feedback
         resolved_links = []
-        for i, link in enumerate(unique_links, 1):
+        for i, link_obj in enumerate(unique_links, 1):
+            # Extract URL and curator description
+            url = link_obj.get('url') if isinstance(link_obj, dict) else link_obj
+            curator_desc = link_obj.get('curator_description') if isinstance(link_obj, dict) else None
+
             # Check cache first
-            if link in resolution_cache:
-                result = resolution_cache[link]
-                print(f"      [{i}/{len(unique_links)}] Cached: {link[:50]}...")
+            if url in resolution_cache:
+                result = resolution_cache[url].copy()  # Copy to avoid mutation
+                print(f"      [{i}/{len(unique_links)}] Cached: {url[:50]}...")
             else:
-                print(f"      [{i}/{len(unique_links)}] Resolving: {link[:50]}...", end='', flush=True)
-                result = resolve_redirect(link)
-                resolution_cache[link] = result  # Cache result
+                print(f"      [{i}/{len(unique_links)}] Resolving: {url[:50]}...", end='', flush=True)
+                result = resolve_redirect(url)
+                resolution_cache[url] = result  # Cache result
 
                 # Progress indicator
                 if result['status'] == 'success':
@@ -236,6 +248,8 @@ def resolve_links_from_file(extraction_dir: Path, max_links_per_newsletter: int 
                     print(f" ✗ {result['status']}")
 
             if result:
+                # PRESERVE curator_description through the pipeline
+                result['curator_description'] = curator_desc
                 resolved_links.append(result)
                 if result['status'] == 'success':
                     total_resolved += 1

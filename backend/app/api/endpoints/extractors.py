@@ -11,7 +11,8 @@ from app.services.extractors.article_extractor import ArticleExtractor
 from app.services.extractors.base import PlatformDetector, ExtractionError
 from app.db.session import get_async_session
 from app.crud import capture as crud
-from app.api.deps import get_current_active_user, verify_api_key
+from app.api.deps import verify_api_key
+from app.core.clerk import get_current_user_from_clerk
 from app.models.user import User
 
 router = APIRouter()
@@ -40,7 +41,7 @@ class ExtractResponse(BaseModel):
 async def extract_reddit(
     extract_request: ExtractRequest,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(get_current_active_user),
+    current_user: User = Depends(get_current_user_from_clerk),
     _: bool = Depends(verify_api_key)
 ):
     """
@@ -95,7 +96,7 @@ async def extract_reddit(
 async def extract_tiktok(
     extract_request: ExtractRequest,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(get_current_active_user),
+    current_user: User = Depends(get_current_user_from_clerk),
     _: bool = Depends(verify_api_key)
 ):
     """
@@ -141,7 +142,7 @@ async def extract_tiktok(
 async def extract_youtube(
     extract_request: ExtractRequest,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(get_current_active_user),
+    current_user: User = Depends(get_current_user_from_clerk),
     _: bool = Depends(verify_api_key)
 ):
     """
@@ -187,7 +188,7 @@ async def extract_youtube(
 async def extract_article(
     extract_request: ExtractRequest,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(get_current_active_user),
+    current_user: User = Depends(get_current_user_from_clerk),
     _: bool = Depends(verify_api_key)
 ):
     """
@@ -233,7 +234,7 @@ async def extract_article(
 async def extract_auto(
     extract_request: ExtractRequest,
     db: AsyncSession = Depends(get_async_session),
-    current_user: User = Depends(get_current_active_user),
+    current_user: User = Depends(get_current_user_from_clerk),
     _: bool = Depends(verify_api_key)
 ):
     """

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/primitives/ui/button';
 import { Input } from '@/components/primitives/ui/input';
 import { Card } from '@/components/primitives/ui/card';
+import { api } from '@/lib/api';
 
 interface ContentFiltering {
   description: string;
@@ -18,8 +19,6 @@ interface Config {
   content_filtering: ContentFiltering;
   [key: string]: any;
 }
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9765';
 
 export default function NewsletterConfigPage() {
   const [config, setConfig] = useState<Config | null>(null);
@@ -41,8 +40,7 @@ export default function NewsletterConfigPage() {
 
   const loadConfig = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/newsletters/config`);
-      const data = await response.json();
+      const data = await api.newsletters.config();
       setConfig(data);
     } catch (error) {
       console.error('Failed to load config:', error);
@@ -56,22 +54,11 @@ export default function NewsletterConfigPage() {
 
     setSaving(true);
     try {
-      const response = await fetch(`${API_URL}/api/newsletters/config`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(config),
-      });
-
-      if (response.ok) {
-        alert('Configuration saved successfully!');
-      } else {
-        alert('Failed to save configuration');
-      }
+      await api.newsletters.updateConfig(config);
+      alert('Configuration saved successfully!');
     } catch (error) {
       console.error('Failed to save config:', error);
-      alert('Failed to save configuration');
+      alert(error instanceof Error ? error.message : 'Failed to save configuration');
     } finally {
       setSaving(false);
     }
@@ -84,15 +71,7 @@ export default function NewsletterConfigPage() {
     setTestResult(null);
 
     try {
-      const response = await fetch(`${API_URL}/api/newsletters/config/test-url`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url: testUrl }),
-      });
-
-      const data = await response.json();
+      const data = await api.newsletters.testUrl(testUrl);
       setTestResult(data);
     } catch (error) {
       console.error('Failed to test URL:', error);
