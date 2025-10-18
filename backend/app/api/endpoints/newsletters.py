@@ -186,11 +186,30 @@ async def run_extraction_pipeline(
 
             # Check if pipeline failed
             if result.returncode != 0:
-                error_msg = result.stderr or result.stdout or "Pipeline failed with no error message"
+                error_output = result.stderr or result.stdout or "Pipeline failed with no error message"
+
+                # Check if this was just "no newsletters found" (not an error, just empty result)
+                if "No newsletters found" in error_output or "⚠️  No newsletters found" in error_output:
+                    # Complete extraction with empty results and helpful message
+                    await crud.complete_extraction(
+                        db=db,
+                        extraction_id=extraction_id,
+                        newsletters_data=[]
+                    )
+                    # Update with helpful message
+                    await crud.update_extraction_progress(
+                        db=db,
+                        extraction_id=extraction_id,
+                        progress=100,
+                        progress_message="No newsletters found in the specified time range. Try a longer time window or check your sender filters."
+                    )
+                    return
+
+                # Actual error - fail the extraction
                 await crud.fail_extraction(
                     db=db,
                     extraction_id=extraction_id,
-                    error_message=error_msg
+                    error_message=error_output
                 )
                 return
 

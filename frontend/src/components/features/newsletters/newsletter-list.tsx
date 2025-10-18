@@ -95,6 +95,24 @@ export function NewsletterList({
           <p className="text-muted-foreground">No extractions yet. Click "Extract" above to get started!</p>
         </Card>
       ) : (
+        <>
+          {/* Show helpful hint if most recent extraction found 0 results */}
+          {extractions.length > 0 && extractions[0].newsletter_count === 0 && (
+            <Card className="p-6 mb-4 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">💡</span>
+                <div>
+                  <p className="font-medium text-amber-900 dark:text-amber-100">
+                    No newsletters found in your last extraction
+                  </p>
+                  <p className="text-sm text-amber-800 dark:text-amber-200 mt-1">
+                    Try increasing the time window (e.g., 7 or 14 days) or check if you're subscribed to the selected newsletters.
+                  </p>
+                </div>
+              </div>
+            </Card>
+          )}
+
         <Accordion>
           {extractions.map((extraction) => (
             <AccordionItem
@@ -184,6 +202,7 @@ export function NewsletterList({
             </AccordionItem>
           ))}
         </Accordion>
+        </>
       )}
     </div>
   );
