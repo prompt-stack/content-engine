@@ -1,179 +1,405 @@
 # Content Engine - Architecture
 
+> **Last Updated:** October 2025
+> **Status:** Production-ready system with Clerk authentication
+
 ## Overview
 
-Content Engine is a production-ready API for extracting content from multiple platforms and processing it with LLMs. Built with FastAPI, SQLAlchemy, and async Python.
+Content Engine is a full-stack application for extracting, processing, and organizing content from multiple platforms. Users can extract content from Reddit, YouTube, TikTok, articles, and newsletters, with all data secured by user-specific authentication.
+
+**Live Production:**
+- Frontend: https://content-engine-frontend-green.vercel.app
+- Backend API: https://content-engine-production.up.railway.app
+- Database: Railway PostgreSQL
+
+---
 
 ## Tech Stack
 
+### Frontend
+- **Next.js 15.5** - React framework with App Router
+- **Clerk** - Authentication & user management
+- **TypeScript** - Type-safe development
+- **Tailwind CSS** - Styling
+- **Vercel** - Deployment platform
+
 ### Backend
-- **FastAPI 0.115**: Modern async Python web framework
-- **SQLAlchemy 2.0**: Async ORM with PostgreSQL
-- **Alembic**: Database migrations
-- **Pydantic**: Request/response validation
-- **httpx**: Async HTTP client
+- **FastAPI 0.115** - Modern async Python web framework
+- **SQLAlchemy 2.0** - Async ORM with PostgreSQL
+- **Alembic** - Database migrations
+- **Pydantic** - Request/response validation
+- **httpx** - Async HTTP client
+- **Clerk SDK** - JWT verification
 
 ### Database
-- **PostgreSQL 16**: Primary database with pgvector support
-- **Redis 7**: Caching, rate limiting, Celery backend
+- **PostgreSQL 16** - Relational database (Railway)
+- **User-specific data isolation** - All content linked to users
 
-### Background Jobs
-- **Celery**: Newsletter processing, batch jobs
+### Extractors (All Implemented ✅)
+- **Reddit** - Public JSON API + comment extraction
+- **YouTube** - yt-dlp for video transcripts
+- **TikTok** - Caption extraction
+- **Article** - Readability.js for clean text extraction
+- **Email/Newsletter** - Gmail API integration
 
-### Extractors
-- **Reddit**: Public JSON API (no auth)
-- **YouTube**: yt-dlp for transcripts
-- **TikTok**: Direct API calls
-- **Article**: Readability + Playwright fallback
+### LLM Integration (Available)
+- **OpenAI** - GPT-4, GPT-3.5
+- **Anthropic** - Claude 3.5
+- **Google** - Gemini Pro
+- **DeepSeek** - Cost-effective option ($0.14/M tokens)
 
-### LLM Integration
-- **OpenAI**: GPT-4, GPT-3.5
-- **Anthropic**: Claude 3.5
-- **Google**: Gemini Pro
-- **DeepSeek**: Most cost-effective ($0.14/M tokens)
+---
+
+## System Architecture
+
+### High-Level Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        USER BROWSER                          │
+│                  (Clerk Session + JWT Token)                 │
+└───────────────────────┬─────────────────────────────────────┘
+                        │
+                        ├─ Sign In/Out (Clerk Modal)
+                        │
+                        ↓
+┌─────────────────────────────────────────────────────────────┐
+│                 FRONTEND (Next.js on Vercel)                 │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │ Middleware (middleware.ts)                           │   │
+│  │  - Protects routes: /vault, /extract, /newsletters  │   │
+│  │  - Verifies Clerk session                           │   │
+│  └──────────────────────────────────────────────────────┘   │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │ Protected Pages (app/(protected)/)                   │   │
+│  │  - AuthGate component verifies authentication       │   │
+│  │  - Returns user to original page after sign-in      │   │
+│  └──────────────────────────────────────────────────────┘   │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │ API Client (src/lib/api.ts)                         │   │
+│  │  - Gets JWT from Clerk: window.Clerk.session.token  │   │
+│  │  - Adds Authorization header to all requests        │   │
+│  └──────────────────────────────────────────────────────┘   │
+└───────────────────────────┬─────────────────────────────────┘
+                            │
+                Authorization: Bearer <jwt-token>
+                            │
+                            ↓
+┌─────────────────────────────────────────────────────────────┐
+│                BACKEND API (FastAPI on Railway)              │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │ Clerk Auth (app/core/clerk.py)                       │   │
+│  │  1. Verify JWT signature with Clerk JWKS            │   │
+│  │  2. Extract clerk_user_id from token                │   │
+│  │  3. Query database for user                         │   │
+│  │  4. If not found: Create user (JIT provisioning)    │   │
+│  │  5. Return User object to endpoint                  │   │
+│  └──────────────────────────────────────────────────────┘   │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │ API Endpoints                                        │   │
+│  │  - extractors.py: /api/extract/*                    │   │
+│  │  - newsletters.py: /api/newsletters/*               │   │
+│  │  - capture.py: /api/capture/*                       │   │
+│  │  - llm.py: /api/llm/*                               │   │
+│  │  All protected with: Depends(get_current_user)      │   │
+│  └──────────────────────────────────────────────────────┘   │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │ Extractors (app/services/extractors/)               │   │
+│  │  - RedditExtractor ✅                                │   │
+│  │  - YouTubeExtractor ✅                               │   │
+│  │  - TikTokExtractor ✅                                │   │
+│  │  - ArticleExtractor ✅                               │   │
+│  │  - EmailExtractor ✅                                 │   │
+│  └──────────────────────────────────────────────────────┘   │
+└───────────────────────────┬─────────────────────────────────┘
+                            │
+                            ↓
+┌─────────────────────────────────────────────────────────────┐
+│            DATABASE (PostgreSQL on Railway)                  │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │ users                                                │   │
+│  │  - id (PK)                                           │   │
+│  │  - clerk_user_id (UK, Primary auth method)          │   │
+│  │  - email, role, tier                                │   │
+│  │  - requests_this_month (quota tracking)             │   │
+│  └──────────────────────────────────────────────────────┘   │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │ captures (user-specific content)                     │   │
+│  │  - id, user_id (FK)                                  │   │
+│  │  - title, content, meta                             │   │
+│  └──────────────────────────────────────────────────────┘   │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │ extractions (newsletter sessions)                    │   │
+│  │  - id, user_id (FK)                                  │   │
+│  │  - created_at, days_back, max_results               │   │
+│  └──────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
 
 ## Architecture Layers
 
-### 1. API Layer (`app/api/endpoints/`)
+### 1. Frontend Layer (Next.js)
 
-RESTful endpoints with OpenAPI documentation.
+**Location:** `/frontend/`
 
+#### Route Protection
+- **Middleware** (`middleware.ts`) - Server-side route protection
+  - Uses Clerk's `clerkMiddleware` to protect routes
+  - Matches routes from centralized config (`src/config/routes.ts`)
+  - Returns 401 for unauthenticated requests
+
+- **Auth Gate** (`app/(protected)/_components/auth-gate.tsx`) - Client-side
+  - Waits for Clerk to load
+  - Redirects to sign-in if needed
+  - Preserves return URL
+
+- **Single Source of Truth** (`src/config/routes.ts`)
+  ```typescript
+  export const PROTECTED_ROUTE_PREFIXES = [
+    '/vault',
+    '/newsletters',
+    '/extract',
+  ] as const;
+  ```
+
+- **Build-Time Validation** (`scripts/validate-protected-routes.mjs`)
+  - Ensures folder structure matches config
+  - Prevents drift between middleware and routes
+
+#### API Client
+**Location:** `/frontend/src/lib/api.ts`
+
+Centralized client with automatic JWT injection:
+```typescript
+// Automatic authentication for all API calls
+const extractions = await api.newsletters.extractions();
+const capture = await api.captures.create({ content: "..." });
+```
+
+### 2. Backend API Layer
+
+**Location:** `/backend/app/api/endpoints/`
+
+#### Implemented Endpoints
+
+**Extractors** (`extractors.py`) - ✅ All platforms implemented
 ```python
-# extractors.py - Content extraction endpoints
-POST /api/extract/reddit
-POST /api/extract/youtube
-POST /api/extract/auto     # Auto-detect platform
+POST /api/extract/auto        # Auto-detect platform
+POST /api/extract/reddit       # Reddit posts + comments
+POST /api/extract/youtube      # Video transcripts
+POST /api/extract/tiktok       # TikTok captions
+POST /api/extract/article      # Web articles
 
-# content.py - Content management
-GET  /api/content/{id}
-GET  /api/content/user/{user_id}
-POST /api/content/process  # Extract + LLM process
-
-# newsletter.py - Newsletter pipeline
-POST /api/newsletter/process
-GET  /api/newsletter/{id}
+# All return standardized format:
+{
+  "platform": "reddit",
+  "title": "...",
+  "author": "...",
+  "content": "...",
+  "metadata": {...},
+  "capture_id": 123  # Saved to user's vault
+}
 ```
 
-### 2. Service Layer (`app/services/`)
-
-Business logic and external integrations.
-
-#### Extractors (`services/extractors/`)
-```
-base.py                    # BaseExtractor class
-reddit_extractor.py        # ✅ Complete
-youtube_extractor.py       # TODO
-tiktok_extractor.py        # TODO
-article_extractor.py       # TODO
-email_extractor.py         # TODO
+**Newsletters** (`newsletters.py`)
+```python
+POST /api/newsletters/extract          # Extract from Gmail
+GET  /api/newsletters/extractions      # List user's extractions
+GET  /api/newsletters/extractions/{id} # Get extraction details
+GET  /api/newsletters/config           # Get user config
+PUT  /api/newsletters/config           # Update config
+POST /api/newsletters/config/test-url  # Test URL extraction
 ```
 
-**Base Extractor Pattern**:
+**Captures** (`capture.py`) - User's content vault
+```python
+GET  /api/capture/list                # User's saved content
+GET  /api/capture/{id}                # Single capture
+POST /api/capture/text                # Save text capture
+DELETE /api/capture/{id}              # Delete capture
+GET  /api/capture/stats/count         # Count user's captures
+```
+
+**LLM** (`llm.py`) - Text generation
+```python
+POST /api/llm/generate               # Generate with multiple providers
+```
+
+**Authentication** (`auth.py`)
+```python
+GET /api/auth/me                     # Current user info
+```
+
+### 3. Service Layer
+
+**Location:** `/backend/app/services/`
+
+#### Extractors (All Implemented ✅)
+
+**Base Extractor Pattern** (`extractors/base.py`)
 ```python
 class BaseExtractor(ABC):
     @property
     @abstractmethod
     def platform(self) -> str: pass
 
-    @property
-    @abstractmethod
-    def url_patterns(self) -> list[str]: pass
-
     @abstractmethod
     async def extract(self, url: str) -> Dict[str, Any]: pass
 
-    def can_handle(self, url: str) -> bool:
-        # Pattern matching
-```
-
-#### LLM Services (`services/llm/`)
-```
-base.py                    # Base LLM interface
-openai_service.py          # OpenAI implementation
-anthropic_service.py       # Claude implementation
-gemini_service.py          # Google Gemini
-deepseek_service.py        # DeepSeek (cheapest)
-llm_factory.py             # Factory pattern
-```
-
-**LLM Service Interface**:
-```python
-class BaseLLMService(ABC):
     @abstractmethod
-    async def generate(self, prompt: str, **kwargs) -> str: pass
-
-    @abstractmethod
-    async def embed(self, text: str) -> List[float]: pass
+    def can_handle(self, url: str) -> bool: pass
 ```
 
-#### Content Processors (`services/processors/`)
-```
-summarizer.py              # Summarization
-entity_extractor.py        # Named entity extraction
-sentiment_analyzer.py      # Sentiment analysis
-categorizer.py             # Auto-categorization
-```
-
-#### Orchestration (`services/content_service.py`)
+**Platform Detector** (`extractors/base.py`)
 ```python
-class ContentService:
-    async def extract_and_process(
-        self,
-        url: str,
-        tasks: List[str] = ['summarize'],
-        save_to_db: bool = True
-    ) -> Content:
-        """
-        1. Detect platform
-        2. Extract content
-        3. Process with LLM
-        4. Save to database
-        5. Return result
-        """
+class PlatformDetector:
+    @staticmethod
+    def detect(url: str) -> Optional[str]:
+        # Returns: "reddit", "youtube", "tiktok", "article", or None
 ```
 
-### 3. Model Layer (`app/models/`)
+**Implemented Extractors:**
+- `reddit_extractor.py` - Posts + top-level comments with metadata
+- `youtube_extractor.py` - Video transcripts via yt-dlp
+- `tiktok_extractor.py` - Caption extraction
+- `article_extractor.py` - Clean article text
+- `email/pipeline.py` - Gmail newsletter extraction with link resolution
 
-SQLAlchemy ORM models with async support.
+#### LLM Services
+
+**Factory Pattern** (`llm/llm_factory.py`)
+```python
+LLMFactory.create("openai")     # GPT-4
+LLMFactory.create("anthropic")  # Claude
+LLMFactory.create("gemini")     # Gemini Pro
+LLMFactory.create("deepseek")   # Most cost-effective
+```
+
+### 4. Authentication System
+
+**Location:** `/backend/app/core/clerk.py`
+
+#### Clerk JWT Verification
 
 ```python
-# User model with tiers
-class User(SQLAlchemyBaseUserTable):
-    tier: UserTier  # free, starter, pro, business
-    requests_this_month: int
-    rate_limit: property  # Based on tier
+async def get_current_user_from_clerk(
+    authorization: Optional[str] = Header(None),
+    db: AsyncSession = Depends(get_async_session)
+) -> User:
+    """
+    1. Extract JWT from Authorization header
+    2. Fetch Clerk's JWKS (public keys)
+    3. Verify JWT signature and expiration
+    4. Extract clerk_user_id from JWT claims
+    5. Query database for user
+    6. If not found: Create new user (JIT provisioning)
+    7. Return User object
+    """
+```
 
-# Content model
-class Content:
-    platform: Platform
-    url: str
+#### Just-In-Time (JIT) User Provisioning
+
+**First-time user flow:**
+```
+User signs in with GitHub via Clerk
+        ↓
+User makes first API call
+        ↓
+Backend verifies JWT (clerk_user_id: "user_34DOE0...")
+        ↓
+Query database: User with clerk_user_id exists?
+        ↓
+NO → Create new user:
+     INSERT INTO users (
+       clerk_user_id,
+       email,
+       role = 'USER',
+       tier = 'FREE',
+       oauth_provider = 'clerk'
+     )
+        ↓
+Return User object to endpoint
+```
+
+#### Endpoint Protection
+
+```python
+# Old way (removed):
+@router.post("/api/extract/auto")
+async def extract_auto(
+    user: User = Depends(get_current_active_user),  # ❌ Removed
+    _: bool = Depends(verify_api_key)  # ❌ Removed
+):
+    pass
+
+# New way (Clerk only):
+@router.post("/api/extract/auto")
+async def extract_auto(
+    user: User = Depends(get_current_user_from_clerk)  # ✅ Only this
+):
+    # user.id - Database ID
+    # user.clerk_user_id - Clerk user ID
+    # user.email
+    # user.role, user.tier
+    pass
+```
+
+### 5. Database Layer
+
+**Location:** `/backend/app/models/`, `/backend/app/db/`
+
+#### Core Models
+
+**User Model** (`models/user.py`)
+```python
+class User(Base):
+    id: int                           # Primary key
+    clerk_user_id: str                # Unique, primary auth method
+    email: str                        # From Clerk
+    role: UserRole                    # USER, ADMIN, OWNER
+    tier: UserTier                    # FREE, STARTER, PRO, BUSINESS
+    requests_this_month: int          # Quota tracking
+    requests_reset_at: datetime       # Monthly reset
+
+    # OAuth fields (legacy, can be removed)
+    google_id, google_email, google_picture
+
+    # Relationships
+    captures: List[Capture]
+    extractions: List[Extraction]
+    newsletter_config: NewsletterConfig
+```
+
+**Capture Model** (`models/capture.py`)
+```python
+class Capture(Base):
+    id: int                           # Primary key
+    user_id: int                      # Foreign key (CASCADE delete)
     title: str
-    author: str
-    content: str (Text)
-    metadata: dict (JSON)
-
-    # LLM processing results
-    summary: str (Text)
-    entities: dict (JSON)
-    sentiment: str
-    categories: list (JSON)
-
-    status: ProcessingStatus
-
-# Newsletter model
-class Newsletter:
-    title: str
-    digest: str (Text)
-    source_count: int
-    source_content_ids: list (JSON)
+    content: Text
+    meta: dict                        # JSON metadata
+    created_at: datetime
 ```
 
-### 4. Database Layer (`app/db/`)
+**Extraction Model** (`models/extraction.py`)
+```python
+class Extraction(Base):
+    id: str                           # Session ID (e.g., "20251015_162827")
+    user_id: int                      # Foreign key (CASCADE delete)
+    created_at: datetime
+    days_back: int
+    max_results: int
 
-Async SQLAlchemy session management.
+    # Relationships
+    email_content: List[EmailContent]
+```
+
+#### Session Management
 
 ```python
-# session.py
+# Async session factory
 engine = create_async_engine(DATABASE_URL)
 async_session_maker = async_sessionmaker(engine)
 
@@ -182,233 +408,341 @@ async def get_async_session() -> AsyncSession:
         yield session
 ```
 
-### 5. Configuration (`app/core/`)
+### 6. Configuration
 
-Pydantic settings with environment variables.
+**Location:** `/backend/app/core/config.py`
 
 ```python
 class Settings(BaseSettings):
-    # Auto-loaded from .env
+    # Database
     DATABASE_URL: str
-    REDIS_URL: str
-    OPENAI_API_KEY: str
-    # ...
 
-    @property
-    def has_openai(self) -> bool:
-        return bool(self.OPENAI_API_KEY)
+    # Clerk Authentication
+    CLERK_PUBLISHABLE_KEY: str
+    CLERK_SECRET_KEY: str
+
+    # LLM Providers
+    OPENAI_API_KEY: Optional[str]
+    ANTHROPIC_API_KEY: Optional[str]
+    GEMINI_API_KEY: Optional[str]
+    DEEPSEEK_API_KEY: Optional[str]
+
+    # Feature Flags
+    ENABLE_EXTRACTORS: bool = True
+    ENABLE_LLM: bool = True
+
+    # CORS
+    CORS_ORIGINS: List[str] = [
+        "http://localhost:3456",
+        "https://content-engine-frontend-green.vercel.app"
+    ]
 
     @property
     def default_llm_provider(self) -> str:
-        # Prefer DeepSeek for cost
+        """Prefer DeepSeek for cost efficiency"""
+        if self.DEEPSEEK_API_KEY:
+            return "deepseek"
+        # ... fallback logic
 ```
 
-## Data Flow
+---
 
-### Simple Extraction
-```
-User Request
-    ↓
-POST /api/extract/reddit
-    ↓
-RedditExtractor.extract()
-    ↓
-Standardized Output
-    ↓
-JSON Response
-```
+## Data Flows
 
-### Full Processing Pipeline
-```
-User Request
-    ↓
-POST /api/content/process
-    ↓
-ContentService.extract_and_process()
-    ↓
-┌─────────────────────┐
-│ 1. Detect Platform  │ → PlatformDetector
-├─────────────────────┤
-│ 2. Extract Content  │ → RedditExtractor/etc
-├─────────────────────┤
-│ 3. LLM Processing   │ → DeepSeekService
-│    - Summarize      │
-│    - Extract NER    │
-│    - Sentiment      │
-├─────────────────────┤
-│ 4. Save to DB       │ → Content model
-├─────────────────────┤
-│ 5. Return Result    │ → JSON response
-└─────────────────────┘
-```
+### Content Extraction Flow
 
-### Newsletter Pipeline (Killer Feature)
 ```
-User Request: "Process my newsletters"
-    ↓
-POST /api/newsletter/process
-{
-  "gmail_query": "label:newsletters after:2025-01-01",
-  "generate_digest": true
-}
-    ↓
-NewsletterService.process_newsletters()
-    ↓
-┌─────────────────────────────┐
-│ 1. Gmail Extraction         │ → EmailExtractor
-│    - Fetch newsletters      │
-│    - Extract links          │
-├─────────────────────────────┤
-│ 2. Batch Content Extraction │ → ContentService (Celery)
-│    - For each link:         │
-│      → Detect platform      │
-│      → Extract              │
-│      → Process with LLM     │
-├─────────────────────────────┤
-│ 3. Digest Generation        │ → Claude
-│    - Combine summaries      │
-│    - Find common themes     │
-│    - Generate digest        │
-├─────────────────────────────┤
-│ 4. Save Newsletter          │ → Newsletter model
-└─────────────────────────────┘
-    ↓
-Return digest + processed content
+User visits /extract page
+        ↓
+Enters Reddit URL, clicks "Extract"
+        ↓
+Frontend: POST /api/extract/auto
+Headers: { Authorization: "Bearer <jwt>" }
+Body: { url: "https://reddit.com/r/..." }
+        ↓
+Backend: get_current_user_from_clerk()
+  - Verify JWT ✅
+  - Load/create user ✅
+        ↓
+Backend: PlatformDetector.detect(url) → "reddit"
+        ↓
+Backend: RedditExtractor.extract(url)
+  - Fetch post JSON
+  - Extract top 20 comments
+  - Format as clean text
+        ↓
+Backend: Save to database
+  INSERT INTO captures (
+    user_id = user.id,
+    title = post_title,
+    content = post + comments,
+    meta = {platform, author, url, ...}
+  )
+        ↓
+Backend: Return extraction result
+  { title, content, metadata, capture_id }
+        ↓
+Frontend: Show success + link to /vault
 ```
 
-## Authentication & Authorization
+### Newsletter Extraction Flow
 
-### FastAPI Users
+```
+User visits /newsletters page
+        ↓
+Clicks "Extract Newsletters"
+        ↓
+Frontend: POST /api/newsletters/extract
+Headers: { Authorization: "Bearer <jwt>" }
+Body: { days: 7, max_results: 10 }
+        ↓
+Backend: Authenticate user
+        ↓
+Backend: EmailExtractor.extract()
+  1. Connect to Gmail API
+  2. Fetch emails from last 7 days
+  3. Extract links from each email
+  4. Resolve redirects/tracking URLs
+  5. Save to database:
+     - Extraction session
+     - EmailContent records
+     - ExtractedLinks
+        ↓
+Backend: Return extraction ID
+        ↓
+Frontend: Show list of extracted links
+        ↓
+User clicks link to view details
+```
+
+### User-Specific Data Isolation
+
+All endpoints filter by `user_id`:
 ```python
-# Provides:
-- JWT authentication
-- User registration/login
-- OAuth2 (Google, GitHub, etc.)
-- Email verification
-- Password reset
+# Captures - only user's content
+captures = await db.execute(
+    select(Capture)
+    .where(Capture.user_id == current_user.id)
+    .order_by(Capture.created_at.desc())
+)
 
-# Usage:
-current_user = Depends(fastapi_users.current_user())
+# Extractions - only user's sessions
+extractions = await db.execute(
+    select(Extraction)
+    .where(Extraction.user_id == current_user.id)
+)
 ```
 
-### Rate Limiting (Redis)
-```python
-# Based on user tier:
-- Free:     100 requests/month
-- Starter:  1,000 requests/month
-- Pro:      10,000 requests/month
-- Business: 50,000 requests/month
-
-# Middleware checks:
-if user.requests_this_month >= user.rate_limit:
-    raise HTTPException(429, "Rate limit exceeded")
-```
-
-## Background Jobs (Celery)
-
-```python
-# celery_app.py
-@celery_app.task
-def process_newsletter_batch(newsletter_id: int):
-    """Process newsletter links in background."""
-    # Long-running task
-    # Updates status in database
-    # Sends notification when done
-```
+---
 
 ## Deployment
 
-### Local Development
+### Production Stack
+
+| Component | Platform | URL |
+|-----------|----------|-----|
+| Frontend | Vercel | https://content-engine-frontend-green.vercel.app |
+| Backend | Railway | https://content-engine-production.up.railway.app |
+| Database | Railway | PostgreSQL 16 (managed) |
+
+### Deployment Process
+
+**Backend (Railway):**
+1. Push to GitHub `main` branch
+2. Railway auto-detects changes
+3. Runs Alembic migrations automatically
+4. Deploys new backend version
+5. Health check: `/health` endpoint
+
+**Frontend (Vercel):**
+1. Push to GitHub `main` branch
+2. Vercel auto-builds Next.js app
+3. Runs `npm run validate:routes` (build-time validation)
+4. Deploys to production domain
+5. Updates alias automatically
+
+### Environment Variables
+
+**Railway (Backend):**
 ```bash
-docker-compose up -d
-# PostgreSQL:  localhost:5432
-# Redis:       localhost:6379
-# FastAPI:     localhost:8000
+# Set via CLI
+railway variables --set "CLERK_PUBLISHABLE_KEY=pk_..."
+railway variables --set "CLERK_SECRET_KEY=sk_..."
+railway variables --set "OPENAI_API_KEY=sk-..."
+
+# Or use Railway dashboard
 ```
 
-### Production (Railway + Neon)
-```yaml
-# Railway:
-- FastAPI backend (auto-scaling)
-- Redis instance
-- Celery workers
+**Vercel (Frontend):**
+```bash
+# Set via CLI for all environments
+echo "pk_..." | vercel env add NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY production
+echo "sk_..." | vercel env add CLERK_SECRET_KEY production
+echo "https://content-engine-production.up.railway.app" | vercel env add NEXT_PUBLIC_API_URL production
 
-# Neon:
-- PostgreSQL database (serverless)
-- Automatic backups
-- pgvector for embeddings
+# Or use Vercel dashboard
 ```
 
-## Cost Analysis
+### Database Migrations
 
-### Infrastructure (Neon + Railway)
-- **Neon Free**: 10 projects, 3GB each = $0/mo
-- **Railway Starter**: $5/mo credit = ~$5/mo
-- **Total**: $5-20/mo
+**Automatic on Railway:**
+```bash
+# Defined in start.sh (runs before server starts)
+alembic upgrade head
+```
 
-### LLM Costs (per 1,000 requests)
-**Newsletter workflow** (extract 10 links, summarize each):
-- **DeepSeek**: 100K tokens = $0.06 ✅ CHEAPEST
-- **OpenAI GPT-3.5**: 100K tokens = $0.30
-- **Claude**: 100K tokens = $3.00
-- **GPT-4**: 100K tokens = $15.00
+**Local development:**
+```bash
+# Create migration
+alembic revision --autogenerate -m "description"
 
-**Recommendation**: Default to DeepSeek, offer premium LLMs as upsell.
+# Apply migration
+alembic upgrade head
+
+# Rollback one step
+alembic downgrade -1
+```
+
+---
 
 ## Security
 
-1. **Environment Variables**: All secrets in `.env`, never in code
-2. **JWT Authentication**: Secure token-based auth
-3. **Rate Limiting**: Prevent abuse
-4. **Input Validation**: Pydantic models validate all inputs
-5. **SQL Injection**: SQLAlchemy ORM prevents SQL injection
-6. **CORS**: Configured per environment
+### Authentication
+- ✅ JWT tokens (Clerk) with JWKS verification
+- ✅ Secure token storage (httpOnly cookies via Clerk)
+- ✅ Server-side middleware protection
+- ✅ Client-side Auth Gate for UX
+- ✅ Return URL preservation after sign-in
+
+### Authorization
+- ✅ User-specific data isolation (all queries filter by `user_id`)
+- ✅ Role-based access control (USER, ADMIN, OWNER)
+- ✅ Tier-based quotas (FREE, STARTER, PRO, BUSINESS)
+
+### Data Protection
+- ✅ All secrets in environment variables
+- ✅ CORS configured per environment
+- ✅ SQL injection prevention (SQLAlchemy ORM)
+- ✅ Input validation (Pydantic models)
+- ✅ CASCADE delete (user deletion removes all data)
+
+### API Security
+- ✅ Rate limiting per user tier
+- ✅ Request quota tracking (`requests_this_month`)
+- ✅ HTTPS only in production
+- ✅ No API keys (removed old system)
+
+---
 
 ## Monitoring
 
-```python
-# Health check endpoint
-GET /health
+### Health Check
+
+```bash
+curl https://content-engine-production.up.railway.app/health
+
 {
   "status": "healthy",
+  "environment": "production",
   "features": {
     "openai": true,
+    "anthropic": true,
+    "gemini": true,
     "deepseek": true,
-    "gmail": false
+    "gmail": false,
+    "tavily": true,
+    "default_llm": "deepseek"
   }
 }
-
-# Metrics endpoint (future)
-GET /metrics
-- Request counts
-- Error rates
-- Processing times
-- LLM token usage
 ```
 
-## Testing
+### User Endpoint
 
-```python
-# Unit tests
-tests/test_extractors.py
-tests/test_llm_services.py
+```bash
+curl https://content-engine-production.up.railway.app/api/auth/me \
+  -H "Authorization: Bearer <jwt>"
 
-# Integration tests
-tests/test_api.py
-tests/test_pipeline.py
-
-# Run tests
-pytest
-pytest --cov=app tests/
+{
+  "id": 2,
+  "clerk_user_id": "user_34DOE0...",
+  "email": "you@github.com",
+  "role": "user",
+  "tier": "free",
+  "requests_this_month": 5,
+  "created_at": "2025-10-17T..."
+}
 ```
 
-## Next Development Phases
+---
 
-1. ✅ **Phase 1**: Core infrastructure + Reddit extractor
-2. **Phase 2**: Port remaining extractors (TikTok, YouTube, Article)
-3. **Phase 3**: Port LLM services
-4. **Phase 4**: Build ContentService orchestration
-5. **Phase 5**: Newsletter pipeline
-6. **Phase 6**: Authentication + rate limiting
-7. **Phase 7**: Frontend dashboard
-8. **Phase 8**: Deployment + monitoring
+## Cost Analysis
+
+### Infrastructure
+
+| Service | Plan | Cost |
+|---------|------|------|
+| Vercel (Frontend) | Hobby | $0/mo (5GB bandwidth included) |
+| Railway (Backend + DB) | Starter | ~$5-10/mo |
+| Clerk (Auth) | Free | $0/mo (up to 10,000 MAU) |
+| **Total** | | **~$5-10/mo** |
+
+### LLM Costs (Optional)
+
+Per 1,000 content extractions with summaries (100K tokens):
+- **DeepSeek**: $0.06 ✅ Most cost-effective
+- **OpenAI GPT-3.5**: $0.30
+- **Claude 3.5**: $3.00
+- **GPT-4**: $15.00
+
+**Note:** LLM processing is optional. Core extraction is free.
+
+---
+
+## Development Phases
+
+### ✅ Completed
+1. ✅ Core infrastructure (FastAPI + SQLAlchemy + PostgreSQL)
+2. ✅ All extractors (Reddit, YouTube, TikTok, Article, Email)
+3. ✅ LLM integration (OpenAI, Claude, Gemini, DeepSeek)
+4. ✅ Newsletter extraction pipeline
+5. ✅ Clerk authentication + JIT provisioning
+6. ✅ User-specific data isolation
+7. ✅ Frontend (Next.js) with protected routes
+8. ✅ Production deployment (Vercel + Railway)
+9. ✅ Database migrations (Alembic)
+
+### 🚧 Future Enhancements
+1. Advanced LLM features (summarization, entity extraction, sentiment)
+2. Batch processing for newsletter digests
+3. Webhook notifications for completed extractions
+4. Search/filtering in vault
+5. Export functionality (PDF, Markdown, JSON)
+6. Admin dashboard for user management
+7. Usage analytics and metrics
+8. Stripe integration for paid tiers
+
+---
+
+## Related Documentation
+
+- **Authentication:** `/docs/AUTH-INTEGRATION.md` - Complete auth system guide
+- **Protected Routes:** `/frontend/docs/PROTECTED_ROUTES.md` - Frontend route protection
+- **CORS:** `/docs/CORS-CONFIGURATION.md` - CORS setup and troubleshooting
+- **Database:** `/docs/database-schema.mmd` - Database schema diagram
+- **API Docs:** `/backend/README.md` - Backend API documentation
+
+---
+
+## Summary
+
+Content Engine is a **production-ready, full-stack application** with:
+
+✅ **Secure authentication** via Clerk with JIT user provisioning
+✅ **User-specific data isolation** - Every user has their own vault
+✅ **Multi-platform extraction** - Reddit, YouTube, TikTok, Articles, Emails
+✅ **Optional LLM processing** - Summarization and analysis
+✅ **Protected frontend routes** - Seamless auth UX
+✅ **Scalable deployment** - Vercel + Railway
+✅ **Comprehensive documentation** - Every system documented
+
+**Ready for users and future growth! 🚀**
