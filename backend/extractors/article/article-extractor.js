@@ -38,8 +38,17 @@ async function fetchPage(url) {
     throw new Error(`Invalid content type: ${contentType}`);
   }
 
+  let html = await response.text();
+
+  // Uncomment hidden tables for Sports Reference sites (Pro Football Reference, etc.)
+  // These sites hide tables in HTML comments and use JavaScript to display them
+  if (url.includes('sports-reference.com') || url.includes('-reference.com')) {
+    console.error('Detected Sports Reference site - uncommenting hidden tables...');
+    html = html.replace(/<!--([\s\S]*?)-->/g, '$1');
+  }
+
   return {
-    html: await response.text(),
+    html: html,
     url: response.url // Final URL after redirects
   };
 }
@@ -301,11 +310,17 @@ async function fetchPageWithPlaywright(url) {
     }
     
     // Get the rendered HTML
-    const html = await page.content();
+    let html = await page.content();
     const finalUrl = page.url();
-    
+
     await browser.close();
-    
+
+    // Uncomment hidden tables for Sports Reference sites
+    if (finalUrl.includes('sports-reference.com') || finalUrl.includes('-reference.com')) {
+      console.error('Detected Sports Reference site (Playwright) - uncommenting hidden tables...');
+      html = html.replace(/<!--([\s\S]*?)-->/g, '$1');
+    }
+
     return { html, url: finalUrl };
   } catch (error) {
     await browser.close();
