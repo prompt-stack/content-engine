@@ -7,23 +7,54 @@ import fs from 'fs/promises';
 const USER_AGENT = 'ContentStack/1.0 (https://github.com/contentstack)';
 
 /**
+ * Resolve Reddit short link to full URL by following redirects
+ */
+async function resolveShortLink(url) {
+    // Check if this is a short link
+    if (!/\/r\/[^\/]+\/s\//.test(url)) {
+        return url; // Not a short link, return as-is
+    }
+
+    console.log('🔗 Detected short link, resolving...');
+
+    const response = await fetch(url, {
+        headers: {
+            'User-Agent': USER_AGENT
+        },
+        redirect: 'manual' // Don't follow redirects automatically
+    });
+
+    if (response.status === 301 || response.status === 302) {
+        const location = response.headers.get('location');
+        if (location) {
+            // Clean up the URL (remove query params for cleaner URL)
+            const resolvedUrl = location.split('?')[0];
+            console.log(`✅ Resolved to: ${resolvedUrl}`);
+            return resolvedUrl;
+        }
+    }
+
+    throw new Error('Failed to resolve short link - no redirect found');
+}
+
+/**
  * Fetch Reddit post data using JSON API
  */
 async function fetchRedditData(url) {
     // Add .json to the URL
     const jsonUrl = url.replace(/\/$/, '') + '.json';
-    
+
     const response = await fetch(jsonUrl, {
         headers: {
             'User-Agent': USER_AGENT,
             'Accept': 'application/json'
         }
     });
-    
+
     if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
-    
+
     return await response.json();
 }
 
@@ -60,7 +91,9 @@ function formatComment(comment, depth = 0) {
  */
 export async function extractReddit(url) {
     try {
-        const data = await fetchRedditData(url);
+        // Resolve short links first
+        const resolvedUrl = await resolveShortLink(url);
+        const data = await fetchRedditData(resolvedUrl);
         
         // Extract post data
         const postData = data[0].data.children[0].data;
